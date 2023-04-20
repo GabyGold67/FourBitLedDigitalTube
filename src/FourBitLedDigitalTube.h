@@ -56,6 +56,8 @@ public:
     void send(unsigned char segments, unsigned char port);
     bool print(String text);
     void refresh();
+    bool gauge (int level, char label = ' ');
+    bool gauge (double level, char label = ' ');
 
 };
 

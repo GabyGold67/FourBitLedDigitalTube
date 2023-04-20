@@ -58,14 +58,13 @@ bool TM74HC595LedTube::print(String text){
     //Finds out if there are '.' in the string to display, creates a mask to add them to the display
     //and takes them out of the string to process the chars/digits
     for (unsigned int i{0}; i< text.length(); ++i){
-        if (text.charAt(i) != '.'){
-        tempText += text.charAt(i);
-        }
+        if (text.charAt(i) != '.')
+            tempText += text.charAt(i);
         else{
-        if (i == 0 || text.charAt(i-1) == '.')
-            tempText += " ";
-        if(tempText.length()<=4)
-            tempDpData[3-(tempText.length()-1)] = 0x7F;      
+            if (i == 0 || text.charAt(i-1) == '.')
+                tempText += " ";
+            if(tempText.length()<=4)
+                tempDpData[3-(tempText.length()-1)] = 0x7F;      
         }
     }
     text = tempText;
@@ -73,9 +72,9 @@ bool TM74HC595LedTube::print(String text){
     if (text.length() <= 4){
         for (unsigned int i {0}; i < text.length(); ++i){
             position = charSet.indexOf(text.charAt(i));
-            if ( position > -1){
-            //Character found for translation
-            temp7SegData[3-i] = charLeds[position];
+            if (position > -1){
+                //Character found for translation
+                temp7SegData[3-i] = charLeds[position];
             }
             else{
                 displayable = false;
@@ -91,5 +90,51 @@ bool TM74HC595LedTube::print(String text){
         for (int i {0}; i < 4; ++i)
             _data[i] = temp7SegData[i] & tempDpData[i];  
     }
+    return displayable;
+}
+
+bool TM74HC595LedTube::gauge (int level, char label){
+    bool displayable {true};
+    String readOut {""};
+    if(level < 0 || level > 3){
+        clear();
+        displayable = false;
+    }
+    else{
+        readOut += label;
+        switch (level){
+            case 0:
+                readOut += "   ";
+            case 1:
+                readOut += "_  ";
+            case 2:
+                readOut += "_= ";
+            case 3:
+                readOut += "_=~";
+        };
+        displayable = print(readOut);
+    }
+    return displayable;
+}
+
+bool TM74HC595LedTube::gauge (double level, char label){
+    bool displayable {true};
+    int intLevel {0};
+
+    if(level < 0.0 || level > 1.0){
+        clear();
+        displayable = false;
+    }
+    else{
+        if (level < 0.25)
+            intLevel = 0;
+        else if (level < 0.50)
+            intLevel = 1;
+        else if (level < 0.75)
+            intLevel = 2;
+        else
+            intLevel = 3;        
+    }
+    displayable = gauge(intLevel, label);
     return displayable;
 }
