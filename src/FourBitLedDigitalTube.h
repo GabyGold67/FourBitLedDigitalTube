@@ -1,6 +1,7 @@
 #ifndef FourBitLedDigitalTube_h
 #define FourBitLedDigitalTube_h
 #include <Arduino.h>
+//#include "avr8-stub.h"
 
 class TM74HC595LedTube{
 private:

@@ -96,21 +96,27 @@ bool TM74HC595LedTube::print(String text){
 bool TM74HC595LedTube::gauge (int level, char label){
     bool displayable {true};
     String readOut {""};
-    if(level < 0 || level > 3){
+    if((level < 0) || (level > 3)){
         clear();
         displayable = false;
     }
     else{
         readOut += label;
+        if (readOut == "")
+            readOut = " ";
         switch (level){
             case 0:
                 readOut += "   ";
+                break;
             case 1:
                 readOut += "_  ";
+                break;
             case 2:
                 readOut += "_= ";
+                break;
             case 3:
                 readOut += "_=~";
+                break;
         };
         displayable = print(readOut);
     }
@@ -121,7 +127,7 @@ bool TM74HC595LedTube::gauge (double level, char label){
     bool displayable {true};
     int intLevel {0};
 
-    if(level < 0.0 || level > 1.0){
+    if((level < 0.0) || (level > 1.0)){
         clear();
         displayable = false;
     }
@@ -134,7 +140,7 @@ bool TM74HC595LedTube::gauge (double level, char label){
             intLevel = 2;
         else
             intLevel = 3;        
+        displayable = gauge(intLevel, label);
     }
-    displayable = gauge(intLevel, label);
     return displayable;
 }
