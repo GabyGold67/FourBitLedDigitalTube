@@ -93,6 +93,32 @@ bool TM74HC595LedTube::print(String text){
     return displayable;
 }
 
+bool TM74HC595LedTube::print(int value, bool rgtAlgn, bool zeroPad){
+    bool displayable {true};
+    String readOut {""};    
+    int start {0};
+
+    if((value < -999)||(value>9999)){
+        clear();
+        displayable = false;
+    }
+    else{
+        readOut = String(value);
+        if (rgtAlgn){
+            if (zeroPad)
+                readOut = "0000" + readOut;
+            else
+                readOut = "    " + readOut;
+            start = readOut.length() - 4;
+            readOut = readOut.substring(start);
+        }
+    
+    print(readOut);
+    }
+    
+    return displayable;
+}
+
 bool TM74HC595LedTube::gauge (int level, char label){
     bool displayable {true};
     String readOut {""};

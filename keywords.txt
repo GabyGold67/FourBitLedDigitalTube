@@ -37,7 +37,6 @@ display	KEYWORD2
 home	KEYWORD2
 leftToRight	KEYWORD2
     rightToLeft	KEYWORD2
-refresh KEYWORD2
 setCursor	KEYWORD2
 scrollDisplayLeft	KEYWORD2
 scrollDisplayRight	KEYWORD2
@@ -52,12 +51,8 @@ home	KEYWORD2
 on	KEYWORD2
 off	KEYWORD2
 printRaw	KEYWORD2
-printTime	KEYWORD2
 printDualCounter	KEYWORD2
 blink	KEYWORD2
-setBacklight	KEYWORD2
-setContrast	KEYWORD2
-setCursor	KEYWORD2
 setColonOn	KEYWORD2
 getColonOn	KEYWORD2
 setPrintDelay	KEYWORD2
@@ -65,8 +60,6 @@ encode	KEYWORD2
 encode	KEYWORD2
 shiftLeft	KEYWORD2
 command	KEYWORD2
-comReadByte	KEYWORD2
-comWriteByte	KEYWORD2
 comStart	KEYWORD2
 comStop	KEYWORD2
 comAck	KEYWORD2
