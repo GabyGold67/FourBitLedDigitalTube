@@ -55,7 +55,7 @@ public:
     void clear();    
     void send(unsigned char segments, unsigned char port);
     bool print(String text);
-    bool print(int value, bool lftAlgh = false, bool zeroPad = false);
+    bool print(int value, bool rgtAlgn = false, bool zeroPad = false);
     void refresh();
     bool gauge (int level, char label = ' ');
     bool gauge (double level, char label = ' ');

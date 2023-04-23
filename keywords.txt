@@ -18,52 +18,6 @@ send	    KEYWORD2
 print	    KEYWORD2
 gauge       KEYWORD2
 
-
-
-
-
-
-autoscroll	KEYWORD2
-    noAutoscroll	KEYWORD2
-begin	KEYWORD2
-    end KEYWORD2
-blink	KEYWORD2
-    noBlink	KEYWORD2
-createChar	KEYWORD2
-cursor	KEYWORD2
-    noCursor	KEYWORD2
-display	KEYWORD2
-    noDisplay	KEYWORD2
-home	KEYWORD2
-leftToRight	KEYWORD2
-    rightToLeft	KEYWORD2
-setCursor	KEYWORD2
-scrollDisplayLeft	KEYWORD2
-scrollDisplayRight	KEYWORD2
-setRowOffsets	KEYWORD2
-think       KEYWORD2
-upside
-    noUpside
-
-write	KEYWORD2
-init	KEYWORD2
-home	KEYWORD2
-on	KEYWORD2
-off	KEYWORD2
-printRaw	KEYWORD2
-printDualCounter	KEYWORD2
-blink	KEYWORD2
-setColonOn	KEYWORD2
-getColonOn	KEYWORD2
-setPrintDelay	KEYWORD2
-encode	KEYWORD2
-encode	KEYWORD2
-shiftLeft	KEYWORD2
-command	KEYWORD2
-comStart	KEYWORD2
-comStop	KEYWORD2
-comAck	KEYWORD2
-
 #######################################
 # Constants (LITERAL1)
 #######################################
