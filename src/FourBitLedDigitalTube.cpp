@@ -103,16 +103,18 @@ bool TM74HC595LedTube::print(int value, bool rgtAlgn, bool zeroPad){
         displayable = false;
     }
     else{
-        readOut = String(value);
+        readOut = String(abs(value));
         if (rgtAlgn){
             if (zeroPad)
                 readOut = "0000" + readOut;
             else
                 readOut = "    " + readOut;
             start = readOut.length() - 4;
-            readOut = readOut.substring(start);
-        }
-    
+            if (value >= 0)
+                readOut = readOut.substring(start);  
+            else
+                readOut = "-" + readOut.substring(start + 1);
+        }    
     print(readOut);
     }
     
