@@ -93,7 +93,7 @@ bool TM74HC595LedTube::print(String text){
     return displayable;
 }
 
-bool TM74HC595LedTube::print(int value, bool rgtAlgn, bool zeroPad){
+bool TM74HC595LedTube::print (const int &value, bool rgtAlgn, bool zeroPad){
     bool displayable {true};
     String readOut {""};    
     int start {0};
@@ -121,7 +121,34 @@ bool TM74HC595LedTube::print(int value, bool rgtAlgn, bool zeroPad){
     return displayable;
 }
 
-bool TM74HC595LedTube::gauge (int level, char label){
+bool TM74HC595LedTube::print (const double &value, const unsigned int &decPlaces, bool forceNoIntDig, bool rgtAlgn, bool zeroPad){
+    bool displayable {true};
+    int start {0};
+    String readOut {""};
+
+    if (decPlaces == 0)
+        displayable = print(int(value), rgtAlgn, zeroPad);
+    else if ((value < -999)||(value>9999)||(decPlaces > 4)){
+        displayable = false;
+        clear();
+    }
+    else if ((decPlaces + String(int(value)).length()) > (((value < 0) && (value > (-1))) ? 3 : 4)){    
+        displayable = false;
+        clear();        
+    }
+    else{
+            if (value < 0 && value > -1)
+                readOut = "-";
+            readOut += String(int(value))+ ".";            
+            start = String(value).indexOf('.') + 1;
+            readOut += (String(value)+"0000").substring(start, start + decPlaces);            
+            displayable = print(readOut);
+        }
+
+    return displayable;
+}
+
+bool TM74HC595LedTube::gauge (const int &level, char label){
     bool displayable {true};
     String readOut {""};
     if((level < 0) || (level > 3)){
@@ -148,10 +175,11 @@ bool TM74HC595LedTube::gauge (int level, char label){
         };
         displayable = print(readOut);
     }
+
     return displayable;
 }
 
-bool TM74HC595LedTube::gauge (double level, char label){
+bool TM74HC595LedTube::gauge (const double &level, char label){
     bool displayable {true};
     int intLevel {0};
 
@@ -170,5 +198,6 @@ bool TM74HC595LedTube::gauge (double level, char label){
             intLevel = 3;        
         displayable = gauge(intLevel, label);
     }
+    
     return displayable;
 }

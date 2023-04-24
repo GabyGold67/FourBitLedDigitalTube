@@ -8,8 +8,8 @@ private:
     int _rclk;
     int _dio;
     int _data[4];
-    String charSet {"0123456789AabCcdEFGHIJLlnOoPqrSUY-_=~ "}; //for using indexOf() method
-    unsigned short int charLeds[38] = {
+    String charSet {"0123456789AabCcdEeFGHIiJLlnOoPqrSUY-_=~ "}; //for using indexOf() method
+    unsigned short int charLeds[40] = {
     0xC0, //0
     0xF9, //1
     0xA4, //2
@@ -27,14 +27,16 @@ private:
     0xA7, //c
     0xA1, //d
     0x86, //E
+    0x84, //e
     0x8E, //F
     0xC2, //G
     0x89, //H
     0xF9, //I
+    0xFB, //i
     0xF1, //J
     0xC7, //L
     0xCF, //l
-    0xA9, //n
+    0xAB, //n
     0xC0, //O
     0xA3, //o
     0x8C, //P
@@ -54,11 +56,12 @@ public:
     TM74HC595LedTube(int sclk, int rclk, int dio);
     void clear();    
     void send(unsigned char segments, unsigned char port);
-    bool print(String text);
-    bool print(int value, bool rgtAlgn = false, bool zeroPad = false);
+    bool print (String text);
+    bool print (const int &value, bool rgtAlgn = false, bool zeroPad = false);
+    bool print (const double &value, const unsigned int &decPlaces, bool forceNoIntDig = false, bool rgtAlgn = false, bool zeroPad = false);
     void refresh();
-    bool gauge (int level, char label = ' ');
-    bool gauge (double level, char label = ' ');
+    bool gauge (const int &level, char label = ' ');
+    bool gauge (const double &level, char label = ' ');
 
 };
 
