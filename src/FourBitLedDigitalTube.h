@@ -7,7 +7,7 @@ private:
     int _sclk;
     int _rclk;
     int _dio;
-    int _data[4];
+    int _digit[4];
     String charSet {"0123456789AabCcdEeFGHIiJLlnOoPqrSUY-_=~ "}; //for using indexOf() method
     unsigned short int charLeds[40] = {
     0xC0, //0
@@ -60,6 +60,7 @@ public:
     bool print (const int &value, bool rgtAlgn = false, bool zeroPad = false);
     bool print (const double &value, const unsigned int &decPlaces, bool forceNoIntDig = false, bool rgtAlgn = false, bool zeroPad = false);
     void refresh();
+    void isrRefresh();
     bool gauge (const int &level, char label = ' ');
     bool gauge (const double &level, char label = ' ');
 

@@ -12,16 +12,38 @@ TM74HC595LedTube::TM74HC595LedTube(int sclk, int rclk, int dio)
 }
 
 void  TM74HC595LedTube::refresh(){
-  send(_data[0], 0b0001);
-  send(_data[1], 0b0010);
-  send(_data[2], 0b0100);
-  send(_data[3], 0b1000);
+  send(_digit[0], 0b0001);
+  send(_digit[1], 0b0010);
+  send(_digit[2], 0b0100);
+  send(_digit[3], 0b1000);
   return;
+}
+void TM74HC595LedTube::isrRefresh(){
+    digitalWrite(_rclk, LOW);
+    shiftOut(_dio, _sclk, MSBFIRST, _digit[0]);
+    shiftOut(_dio, _sclk, MSBFIRST, 0b0001);
+    digitalWrite(_rclk, HIGH);
+
+    digitalWrite(_rclk, LOW);
+    shiftOut(_dio, _sclk, MSBFIRST, _digit[1]);
+    shiftOut(_dio, _sclk, MSBFIRST, 0b0010);
+    digitalWrite(_rclk, HIGH);
+
+    digitalWrite(_rclk, LOW);
+    shiftOut(_dio, _sclk, MSBFIRST, _digit[2]);
+    shiftOut(_dio, _sclk, MSBFIRST, 0b0100);
+    digitalWrite(_rclk, HIGH);
+
+    digitalWrite(_rclk, LOW);
+    shiftOut(_dio, _sclk, MSBFIRST, _digit[3]);
+    shiftOut(_dio, _sclk, MSBFIRST, 0b1000);
+    digitalWrite(_rclk, HIGH);
+
 }
 
 void TM74HC595LedTube::clear(){
   //Cleans the contents of the internal DATA array display buffer (All leds off for all digits)
-  _data[0]= _data[1]= _data[2]= _data[3]= 0xFF;
+  _digit[0]= _digit[1]= _digit[2]= _digit[3]= 0xFF;
   refresh();
 }
 
@@ -88,7 +110,7 @@ bool TM74HC595LedTube::print(String text){
     
     if (displayable){
         for (int i {0}; i < 4; ++i)
-            _data[i] = temp7SegData[i] & tempDpData[i];  
+            _digit[i] = temp7SegData[i] & tempDpData[i];  
     }
     return displayable;
 }
@@ -198,6 +220,6 @@ bool TM74HC595LedTube::gauge (const double &level, char label){
             intLevel = 3;        
         displayable = gauge(intLevel, label);
     }
-    
+
     return displayable;
 }
