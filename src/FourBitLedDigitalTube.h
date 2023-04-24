@@ -54,18 +54,17 @@ private:
     void send(unsigned char content);
 public:
     TM74HC595LedTube(int sclk, int rclk, int dio);
+    void begin();
     void clear();    
     void send(unsigned char segments, unsigned char port);
     bool print (String text);
     bool print (const int &value, bool rgtAlgn = false, bool zeroPad = false);
     bool print (const double &value, const unsigned int &decPlaces, bool forceNoIntDig = false, bool rgtAlgn = false, bool zeroPad = false);
     void refresh();
-    void isrRefresh();
     bool gauge (const int &level, char label = ' ');
     bool gauge (const double &level, char label = ' ');
 
 };
-
 
 
 #endif

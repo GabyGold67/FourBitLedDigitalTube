@@ -12,33 +12,17 @@ TM74HC595LedTube::TM74HC595LedTube(int sclk, int rclk, int dio)
 }
 
 void  TM74HC595LedTube::refresh(){
-  send(_digit[0], 0b0001);
-  send(_digit[1], 0b0010);
-  send(_digit[2], 0b0100);
-  send(_digit[3], 0b1000);
+    static int firstRefreshed {0};
+
+    send(_digit[(0 + firstRefreshed)%4], 1<<(0 + firstRefreshed)%4);
+    send(_digit[(1 + firstRefreshed)%4], 1<<(1 + firstRefreshed)%4);
+    send(_digit[(2 + firstRefreshed)%4], 1<<(2 + firstRefreshed)%4);
+    send(_digit[(3 + firstRefreshed)%4], 1<<(3 + firstRefreshed)%4);
+    firstRefreshed++;
+    if (firstRefreshed == 4)
+        firstRefreshed = 0;
+
   return;
-}
-void TM74HC595LedTube::isrRefresh(){
-    digitalWrite(_rclk, LOW);
-    shiftOut(_dio, _sclk, MSBFIRST, _digit[0]);
-    shiftOut(_dio, _sclk, MSBFIRST, 0b0001);
-    digitalWrite(_rclk, HIGH);
-
-    digitalWrite(_rclk, LOW);
-    shiftOut(_dio, _sclk, MSBFIRST, _digit[1]);
-    shiftOut(_dio, _sclk, MSBFIRST, 0b0010);
-    digitalWrite(_rclk, HIGH);
-
-    digitalWrite(_rclk, LOW);
-    shiftOut(_dio, _sclk, MSBFIRST, _digit[2]);
-    shiftOut(_dio, _sclk, MSBFIRST, 0b0100);
-    digitalWrite(_rclk, HIGH);
-
-    digitalWrite(_rclk, LOW);
-    shiftOut(_dio, _sclk, MSBFIRST, _digit[3]);
-    shiftOut(_dio, _sclk, MSBFIRST, 0b1000);
-    digitalWrite(_rclk, HIGH);
-
 }
 
 void TM74HC595LedTube::clear(){
@@ -223,3 +207,50 @@ bool TM74HC595LedTube::gauge (const double &level, char label){
 
     return displayable;
 }
+
+void TM74HC595LedTube::begin(){
+  //Timer Interrupt 1 setup
+  unsigned int freq01 = 900;
+  unsigned int prescaler01 = 256;
+  cli();//stop interrupts
+
+  //set timer1 interrupt at 25Hz
+  TCCR1A = 0;// set entire TCCR1A register to 0
+  TCCR1B = 0;// same for TCCR1B
+  TCNT1  = 0;//initialize counter value to 0
+  // set compare match register for 25hz increments
+  OCR1A = (((16*pow(10,6))/(prescaler01*freq01))-1);// = (16*10^6) / (P1024 * 25Hz) - 1 (must be <65536) = 624  P1024 the prescaler, the 25Hz the intended int frequency
+  // turn on CTC mode
+  TCCR1B |= (1 << WGM12);
+  
+  switch (prescaler01)
+  {
+  case 1:
+    // Set CS10 bit for 1 prescaler
+    TCCR1B |= (1 << CS10);  
+    break;
+  case 8:
+    // Set CS11 bit for 8 prescaler
+    TCCR1B |= (1 << CS11);  
+    break;
+  case 64:
+    // Set CS10 and CS11 bits for 64 prescaler
+    TCCR1B |= (1 << CS11) | (1 << CS10);  
+    break;
+  case 256:
+    // Set CS12 bit for 256 prescaler
+    TCCR1B |= (1 << CS12);  
+    break;
+  default:
+    // Set CS10 and CS12 bits for 1024 prescaler
+    TCCR1B |= (1 << CS12) | (1 << CS10);  
+    break;
+  }
+
+  // enable timer compare interrupt
+  TIMSK1 |= (1 << OCIE1A);
+
+  sei();//allow interrupts
+
+}
+
