@@ -14,12 +14,13 @@ TM74HC595LedTube	KEYWORD1
 
 begin       KEYWORD2
 blink       KEYWORD2
-noBlink     KEYWORD2
 clear	    KEYWORD2
+gauge       KEYWORD2
+noBlink     KEYWORD2
+print	    KEYWORD2
 refresh     KEYWORD2
 send	    KEYWORD2
-print	    KEYWORD2
-gauge       KEYWORD2
+stop        KEYWORD2
 
 ###############################################
 # Constants (LITERAL1)
