@@ -4,6 +4,9 @@
 
 class TM74HC595LedTube{
 private:
+    const unsigned long _minBlinkRate {100};
+    const unsigned long _maxBlinkRate {2000};
+
     int _sclk;
     int _rclk;
     int _dio;
@@ -12,8 +15,8 @@ private:
     unsigned long _blinkTimer {0};
     bool _blinkShowOn {false};
     unsigned long _blinkRate {500};
-    String charSet {"0123456789AabCcdEeFGHhIiJLlnOoPqrStUuY-_=~ "}; //for using indexOf() method
-    unsigned short int charLeds[43] = {
+    String charSet {"0123456789AabCcdEeFGHhIiJLlnOoPqrStUuY-_=~ ."}; //for using indexOf() method
+    unsigned short int charLeds[44] = {
     0xC0, //0
     0xF9, //1
     0xA4, //2
@@ -56,7 +59,8 @@ private:
     0xF7,  //Underscore _
     0xB7,  //Low =
     0xB6,  //~ for Equivalent symbol
-    0xFF  //Space
+    0xFF,  //Space
+    0x7F  //.
     };
     void send(unsigned char content);
 public:
@@ -69,12 +73,17 @@ public:
     void send(unsigned char segments, unsigned char port);
     bool print (String text);
     bool print (const int &value, bool rgtAlgn = false, bool zeroPad = false);
-    bool print (const double &value, const unsigned int &decPlaces, bool forceNoIntDig = false, bool rgtAlgn = false, bool zeroPad = false);
+    bool print (const double &value, const unsigned int &decPlaces, bool rgtAlgn = false, bool zeroPad = false);
     void refresh();
+    //static void intRefresh();
     bool gauge (const int &level, char label = ' ');
     bool gauge (const double &level, char label = ' ');
+    bool setBlinkRate (const int &newRate);
 
 };
 
+// ISR(TIMER1_COMPA_vect){
+//   TM74HC595LedTube::intRefresh();
+// }
 
 #endif

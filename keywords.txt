@@ -21,6 +21,7 @@ print	    KEYWORD2
 refresh     KEYWORD2
 send	    KEYWORD2
 stop        KEYWORD2
+setBlinkRate    KEYWORD2
 
 ###############################################
 # Constants (LITERAL1)

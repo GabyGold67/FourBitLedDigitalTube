@@ -11,7 +11,7 @@ TM74HC595LedTube::TM74HC595LedTube(int sclk, int rclk, int dio)
   clear();
 }
 
-void  TM74HC595LedTube::refresh(){
+void TM74HC595LedTube::refresh(){
     static int firstRefreshed {0};
 
     if (_blink == true){
@@ -156,10 +156,11 @@ bool TM74HC595LedTube::print (const int &value, bool rgtAlgn, bool zeroPad){
     return displayable;
 }
 
-bool TM74HC595LedTube::print (const double &value, const unsigned int &decPlaces, bool forceNoIntDig, bool rgtAlgn, bool zeroPad){
+bool TM74HC595LedTube::print (const double &value, const unsigned int &decPlaces, bool rgtAlgn, bool zeroPad){
     bool displayable {true};
-    int start {0};
     String readOut {""};
+    String pad {""};
+    int start {0};
 
     if (decPlaces == 0)
         displayable = print(int(value), rgtAlgn, zeroPad);
@@ -177,6 +178,23 @@ bool TM74HC595LedTube::print (const double &value, const unsigned int &decPlaces
             readOut += String(int(value))+ ".";            
             start = String(value).indexOf('.') + 1;
             readOut += (String(value)+"0000").substring(start, start + decPlaces);            
+
+            if (rgtAlgn){
+                if (readOut.length() < 5){
+                    if (value < 0)
+                        pad+= "-";
+                    if (zeroPad)
+                        pad += "0000";
+                    else
+                        pad += "    ";
+                    if(value<0)
+                        readOut = pad.substring(0,5-(readOut.length()-1)) + readOut.substring(1);
+                    else
+                        readOut = pad.substring(0,5-(readOut.length())) + readOut;
+                    readOut = readOut.substring(0,5);
+                }
+            }
+
             displayable = print(readOut);
         }
 
@@ -287,20 +305,18 @@ void TM74HC595LedTube::begin(){
 void TM74HC595LedTube::stop(){
     clear();
 
-//   unsigned int freq01 = 900;
-//   unsigned int prescaler01 = 256;
-  cli();//stop interrupts
+    cli();//stop interrupts
 
-  //Clean timer1 interrupt setup
-  TCCR1A = 0;// set entire TCCR1A register to 0
-  TCCR1B = 0;// same for TCCR1B (disables all, including "CTC1 mode on", on the WGM12 bit)
-  TCNT1  = 0;//initialize counter value to 0
-  
-  OCR1A = 0;// set compare match register to 0 for no operation  
-  
-  TIMSK1 &= ~(1 << OCIE1A);// disable timer compare interrupt
+    //Clean timer1 interrupt setup
+    TCCR1A = 0;// set entire TCCR1A register to 0
+    TCCR1B = 0;// same for TCCR1B (disables all, including "CTC1 mode on", on the WGM12 bit)
+    TCNT1  = 0;//initialize counter value to 0
+    
+    OCR1A = 0;// set compare match register to 0 for no operation  
+    
+    TIMSK1 &= ~(1 << OCIE1A);// disable timer compare interrupt
 
-  sei();//allow interrupts
+    sei();//allow interrupts
   
     return;
 }
@@ -319,3 +335,15 @@ bool TM74HC595LedTube::noBlink(){
 
     return true;
 }
+
+bool TM74HC595LedTube::setBlinkRate (const int &newRate){
+    if((newRate >= _minBlinkRate) && newRate <= _maxBlinkRate){
+        _blinkRate = newRate;
+        return true;
+    }
+    return false;
+}
+
+// void TM74HC595LedTube::intRefresh(){
+//     return;
+// }
