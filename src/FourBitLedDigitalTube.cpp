@@ -336,6 +336,10 @@ bool TM74HC595LedTube::noBlink(){
     return true;
 }
 
+    bool TM74HC595LedTube::isBlinking(){
+        return _blink;
+    }
+
 bool TM74HC595LedTube::setBlinkRate (const int &newRate){
     if((newRate >= _minBlinkRate) && newRate <= _maxBlinkRate){
         _blinkRate = newRate;

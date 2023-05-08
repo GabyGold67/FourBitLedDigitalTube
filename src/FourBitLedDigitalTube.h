@@ -79,6 +79,7 @@ public:
     bool gauge (const int &level, char label = ' ');
     bool gauge (const double &level, char label = ' ');
     bool setBlinkRate (const int &newRate);
+    bool isBlinking();
 
 };
 

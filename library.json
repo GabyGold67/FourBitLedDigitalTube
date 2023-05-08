@@ -8,22 +8,18 @@
     "repository":
     {
       "type": "git",
-      "url": "https://github.com/username/hello-world.git"
+      "url": "https://github.com/GabyGold67/FourBitLedDigitalTube"
     },
     "authors":
     [
       {
-        "name": "John Smith",
-        "email": "me@john-smith.com",
-        "url": "https://www.john-smith/contact"
-      },
-      {
-        "name": "Andrew Smith",
-        "email": "me@andrew-smith.com",
-        "url": "https://www.andrew-smith/contact",
+        "name": "Gabriel D. Goldman",
+        "email": "gdgoldman67@hotmail.com",
+        "url": "",
         "maintainer": true
       }
     ],
+
     "license": "MIT",
     "homepage": "https://www.helloworld.org/",
     "dependencies": {
