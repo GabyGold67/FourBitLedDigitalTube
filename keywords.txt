@@ -23,6 +23,7 @@ send	    KEYWORD2
 stop        KEYWORD2
 setBlinkRate    KEYWORD2
 isBlinking  KEYWORD2
+intRefresh  KEYWORD2
 
 ###############################################
 # Constants (LITERAL1)

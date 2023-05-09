@@ -144,13 +144,15 @@ bool TM74HC595LedTube::print (const int &value, bool rgtAlgn, bool zeroPad){
                 readOut = "0000" + readOut;
             else
                 readOut = "    " + readOut;
-            start = readOut.length() - 4;
-            if (value >= 0)
-                readOut = readOut.substring(start);  
+
+            if (value >= 0)            
+                readOut = readOut.substring(readOut.length() - 4);
             else
-                readOut = "-" + readOut.substring(start + 1);
-        }    
-    print(readOut);
+                readOut = readOut.substring(readOut.length() - 3);
+        }
+        if(value<0)
+            readOut = "-" + readOut;
+        print(readOut);
     }
     
     return displayable;
@@ -262,12 +264,12 @@ void TM74HC595LedTube::begin(){
   unsigned int prescaler01 = 256;
   cli();//stop interrupts
 
-  //set timer1 interrupt at 25Hz
+  //set timer1 interrupt at xxHz
   TCCR1A = 0;// set entire TCCR1A register to 0
   TCCR1B = 0;// same for TCCR1B
   TCNT1  = 0;//initialize counter value to 0
   // set compare match register for the selected frequency (defined by the freq and prescaler selected)
-  OCR1A = (((16*pow(10,6))/(prescaler01*freq01))-1);// = (16*10^6) / (P1024 * 25Hz) - 1 (must be <65536) = 624  P1024 the prescaler, the 25Hz the intended int frequency
+  OCR1A = (((16*pow(10,6))/(prescaler01*freq01))-1);// = (16*10^6) / (P256 * 1024Hz) - 1 (must be <65536) = 624  P1024 the prescaler, the 25Hz the intended int frequency
   // turn on CTC mode
   TCCR1B |= (1 << WGM12);
   
@@ -340,7 +342,7 @@ bool TM74HC595LedTube::noBlink(){
         return _blink;
     }
 
-bool TM74HC595LedTube::setBlinkRate (const int &newRate){
+bool TM74HC595LedTube::setBlinkRate (const unsigned long &newRate){
     if((newRate >= _minBlinkRate) && newRate <= _maxBlinkRate){
         _blinkRate = newRate;
         return true;
@@ -348,6 +350,41 @@ bool TM74HC595LedTube::setBlinkRate (const int &newRate){
     return false;
 }
 
-// void TM74HC595LedTube::intRefresh(){
-//     return;
-// }
+void TM74HC595LedTube::intRefresh(){
+    static int firstRefreshed {0};
+
+    if (_blink == true){
+        if (_blinkShowOn == false) {
+            if (_blinkTimer == 0){
+                //turn off all digits
+                send(0xFF, 0b0001);
+                send(0xFF, 0b0010);
+                send(0xFF, 0b0100);
+                send(0xFF, 0b1000);
+                
+                _blinkTimer = millis();
+            }
+            else if((millis() - _blinkTimer) > _blinkRate){
+                _blinkTimer = 0;
+                _blinkShowOn = true;
+            }
+        }
+        else{
+            if (_blinkTimer == 0){
+                _blinkTimer = millis();
+            }
+            else if((millis() - _blinkTimer) > _blinkRate){
+                _blinkTimer = 0;
+                _blinkShowOn = false;
+            }
+        }
+    }
+
+    if((_blink == false)||(_blinkShowOn == true)){
+        send(_digit[firstRefreshed], 1<<firstRefreshed);
+        firstRefreshed++;
+        if (firstRefreshed == 4)
+            firstRefreshed = 0;
+    }
+    return;
+}

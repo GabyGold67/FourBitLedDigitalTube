@@ -75,10 +75,10 @@ public:
     bool print (const int &value, bool rgtAlgn = false, bool zeroPad = false);
     bool print (const double &value, const unsigned int &decPlaces, bool rgtAlgn = false, bool zeroPad = false);
     void refresh();
-    //static void intRefresh();
+    void intRefresh();
     bool gauge (const int &level, char label = ' ');
     bool gauge (const double &level, char label = ' ');
-    bool setBlinkRate (const int &newRate);
+    bool setBlinkRate (const unsigned long &newRate);
     bool isBlinking();
 
 };
