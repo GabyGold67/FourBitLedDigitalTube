@@ -7,9 +7,9 @@ TM74HC595LedTube::TM74HC595LedTube(int sclk, int rclk, int dio)
   pinMode(_sclk, OUTPUT);
   pinMode(_rclk, OUTPUT);
   pinMode(_dio, OUTPUT);
-
   clear();
 }
+
 
 void TM74HC595LedTube::refresh(){
     static int firstRefreshed {0};
@@ -78,6 +78,35 @@ void TM74HC595LedTube::send(unsigned char segments, unsigned char port)
   digitalWrite(_rclk, HIGH);
 }
 
+void TM74HC595LedTube::fastSend(unsigned char content)
+{
+
+  for (int i {7}; i >= 0; i--)
+  {
+    if (content & 0x80)
+      digitalWrite(_dio, HIGH);
+    else
+      digitalWrite(_dio, LOW);
+    content <<= 1;
+    digitalWrite(_sclk, LOW);
+    digitalWrite(_sclk, HIGH);
+  }
+
+}
+
+void TM74HC595LedTube::fastSend(unsigned char segments, unsigned char port)
+// Sends the character 'X' to the digit 'port' of the display
+// Content and Port must be sent in two sequencial parts, character first, port second
+// so this overloaded two char send method uses the one char send method twice and then moves 
+//up the RCLK pin to present the content in the shift register
+{
+  digitalWrite(_rclk, LOW);
+  fastSend(segments);
+  fastSend(port);
+  digitalWrite(_rclk, HIGH);
+}
+
+
 bool TM74HC595LedTube::print(String text){
     //Takes text and tries to display it at the LED tube
     //returns true if found all the characters
@@ -131,7 +160,6 @@ bool TM74HC595LedTube::print(String text){
 bool TM74HC595LedTube::print (const int &value, bool rgtAlgn, bool zeroPad){
     bool displayable {true};
     String readOut {""};    
-    int start {0};
 
     if((value < -999)||(value>9999)){
         clear();
@@ -260,6 +288,7 @@ bool TM74HC595LedTube::gauge (const double &level, char label){
 void TM74HC595LedTube::begin(){
   //Timer Interrupt 1 setup, frequency and prescaler should be modified to get
   //the lowest acceptable (no disturbing flicker) display refresh rate
+
   unsigned int freq01 = 900;
   unsigned int prescaler01 = 256;
   cli();//stop interrupts
@@ -303,7 +332,6 @@ void TM74HC595LedTube::begin(){
   sei();//allow interrupts
 
 }
-
 void TM74HC595LedTube::stop(){
     clear();
 
@@ -338,9 +366,9 @@ bool TM74HC595LedTube::noBlink(){
     return true;
 }
 
-    bool TM74HC595LedTube::isBlinking(){
-        return _blink;
-    }
+bool TM74HC595LedTube::isBlinking(){
+    return _blink;
+}
 
 bool TM74HC595LedTube::setBlinkRate (const unsigned long &newRate){
     if((newRate >= _minBlinkRate) && newRate <= _maxBlinkRate){
@@ -357,10 +385,10 @@ void TM74HC595LedTube::intRefresh(){
         if (_blinkShowOn == false) {
             if (_blinkTimer == 0){
                 //turn off all digits
-                send(0xFF, 0b0001);
-                send(0xFF, 0b0010);
-                send(0xFF, 0b0100);
-                send(0xFF, 0b1000);
+                fastSend(0xFF, 0b0001);
+                fastSend(0xFF, 0b0010);
+                fastSend(0xFF, 0b0100);
+                fastSend(0xFF, 0b1000);
                 
                 _blinkTimer = millis();
             }
@@ -381,7 +409,7 @@ void TM74HC595LedTube::intRefresh(){
     }
 
     if((_blink == false)||(_blinkShowOn == true)){
-        send(_digit[firstRefreshed], 1<<firstRefreshed);
+        fastSend(_digit[firstRefreshed], 1<<firstRefreshed);
         firstRefreshed++;
         if (firstRefreshed == 4)
             firstRefreshed = 0;

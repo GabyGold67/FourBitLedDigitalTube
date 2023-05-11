@@ -16,14 +16,15 @@ begin       KEYWORD2
 blink       KEYWORD2
 clear	    KEYWORD2
 gauge       KEYWORD2
+intRefresh  KEYWORD2
+isBlinking  KEYWORD2
+fastSend    KEYWORD2
 noBlink     KEYWORD2
 print	    KEYWORD2
 refresh     KEYWORD2
 send	    KEYWORD2
-stop        KEYWORD2
 setBlinkRate    KEYWORD2
-isBlinking  KEYWORD2
-intRefresh  KEYWORD2
+stop        KEYWORD2
 
 ###############################################
 # Constants (LITERAL1)
