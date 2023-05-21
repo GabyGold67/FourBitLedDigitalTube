@@ -2,11 +2,11 @@
 #include <FourBitLedDigitalTube.h>
 
 // Pin connected to DS of 74HC595 AKA DIO
-const short dio{A3}; // Pin A3 of Arduino Nano
+const uint8_t dio {A3}; // Pin A3 of Arduino Nano
 // Pin connected to ST_CP of 74HC595 AKA RCLK
-const short rclk{A4}; // Pin A4 of Arduino Nano
+const uint8_t rclk {A4}; // Pin A4 of Arduino Nano
 // Pin connected to SH_CP of 74HC595 AKA SCLK
-const short sclk{A5}; // Pin A5 of Arduino Nano
+const uint8_t sclk {A5}; // Pin A5 of Arduino Nano
 
 TM74HC595LedTube myLedDisp(sclk, rclk, dio);
 
@@ -249,12 +249,15 @@ void loop()
       testResult = myLedDisp.print("....");
       break;
     case 33:
-      testResult = myLedDisp.print("End");
+      testResult = myLedDisp.print("bYe");
       break;
     case 34:
-      testResult = myLedDisp.print("StOP");
+      testResult = myLedDisp.print("End");
       break;
     case 35:
+      testResult = myLedDisp.print("StOP");
+      break;
+    case 36:
       testResult = myLedDisp.print("OFF");
       break;
     default:

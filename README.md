@@ -1,5 +1,5 @@
 # **A 4-bit Led Digital Tube Module easy to use library**
-Developed for the cheap and popular 7-segment 4 digits led displays based on two TM74HC595 (or similar) shift registers, the main focus was set in: ease of use, flexibility and basic prevention of 'misrepresentation' errors
+Developed for the cheap and popular 7-segment 4 digits led displays based on two TM74HC595 (or similar) shift registers, the main focus was set in: ease of use, flexibility and basic prevention of 'misrepresentation' errors.
 
 ![alt text](https://github.com/GabyGold67/FourBitLedDigitalTube/blob/master/extras/4-BitsLedDigitalTubeModule01.jpg "4-Bits LED Digital Tube Module")
 
@@ -22,7 +22,7 @@ The danger of misrepresenting values in the display are usually ignored so when 
 |**blink()**|None|
 |**clear()**|None|
 |**fastRefresh()**|None|
-|**fastSend()**||
+|**fastSend()**|uint8_t **segments**, uint8_t **port**|
 |**gauge()**|int **level** (, char **label**)|
 ||double **level** (, char **label**)|
 |**isBlinking()**|None|
