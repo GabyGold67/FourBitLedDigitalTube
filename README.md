@@ -11,7 +11,7 @@ Integers, floating point or strings they'll show as long as the display is capab
 
 ## Trustworthy representation basic checking:
 The representation of different types of data in this kind of displays is limited, and many implementations of the libraries to drive them take arbitrary or personally biased decisions on how to handle the problem.
-The danger of misrepresenting values in the display are usually ignored so when a value can't be faithfully represented by the display, the data is truncated, sliced, characters are replaced by spaces or whatever criteria the developer defined. When trying to display the value __"90153"__ through the module, displaying __"9015"__ is no better than displaying __"0153"__, those are __misrepresentations__. This library returns a boolean value indicating if it was able to display a trustworthy representation of the value, as long as it is able to. If a trustworthy representation was nos possible it will blank the display. 
+The danger of misrepresenting values in the display are usually ignored so when a value can't be faithfully represented by the display, the data is truncated, sliced, characters are replaced by spaces or whatever criteria the developer defined. When trying to display the value __"90153"__ through the module, displaying __"9015"__ is no better (nor worse) than displaying __"0153"__, those are __misrepresentations__. This library returns a boolean value indicating if it was able to display a trustworthy representation of the value, as long as it is able to. If a trustworthy representation was nos possible it will blank the display. 
 
 # **Included Methods**
 
@@ -21,14 +21,17 @@ The danger of misrepresenting values in the display are usually ignored so when 
 |**begin()**|None|
 |**blink()**|None|
 |**clear()**|None|
-|**gauge()**||
 |**fastRefresh()**|None|
-|**isBlinking()**|None|
 |**fastSend()**||
+|**gauge()**|int **level** (, char **label**)|
+||double **level** (, char **label**)|
+|**isBlinking()**|None|
 |**noBlink()**|None|
-|**print()**||
+|**print()**|String **text**|
+||int **value** (, bool **rgtAlgn** (, bool **zeroPad**))|
+||double **value** (, unsigned int **decPlaces** (, bool **rgtAlgn** (, bool **zeroPad**)))|
 |**refresh()**|None|
-|**send()**||
-|**setBlinkRate()**||
+|**send()**|uint8_t **segments**, uint8_t **port**|
+|**setBlinkRate()**|unsigned long **newRate**|
 |**stop()**|None|
 

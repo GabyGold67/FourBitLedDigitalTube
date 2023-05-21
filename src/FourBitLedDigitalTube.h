@@ -66,19 +66,19 @@ private:
         0xFF, // Space
         0x7F  //.
     };
-    void send(unsigned char content);
-    void fastSend(unsigned char content);
+    void send(const uint8_t &content);
+    void fastSend(uint8_t content);
 
 public:
-    TM74HC595LedTube(int sclk, int rclk, int dio);
+    TM74HC595LedTube(uint8_t sclk, uint8_t rclk, uint8_t dio);
 
     bool begin();
     void stop();
     bool blink();
     bool noBlink();
     void clear();
-    void send(unsigned char segments, unsigned char port);
-    void fastSend(unsigned char segments, unsigned char port);
+    void send(const uint8_t &segments, const uint8_t &port);
+    void fastSend(const uint8_t &segments, const uint8_t &port);
     bool print(String text);
     bool print(const int &value, bool rgtAlgn = false, bool zeroPad = false);
     bool print(const double &value, const unsigned int &decPlaces, bool rgtAlgn = false, bool zeroPad = false);

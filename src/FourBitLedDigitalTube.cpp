@@ -77,7 +77,7 @@ void TM74HC595LedTube::clear(){
     refresh();
 }
 
-void TM74HC595LedTube::send(unsigned char content){
+void TM74HC595LedTube::send(const uint8_t &content){
     //Sends the byte value (char <=> unsigned short int) to the 4 7-segment display bit by bit
     //by using the shiftOut() function. The time added (or not) to send it bit is unknown, so the total time
     //consumed to shift an entire byte is unknown, issue that must be considered when the method is invoked 
@@ -85,7 +85,7 @@ void TM74HC595LedTube::send(unsigned char content){
     shiftOut(_dio, _sclk, MSBFIRST, content);
 }
 
-void TM74HC595LedTube::send(unsigned char segments, unsigned char port){
+void TM74HC595LedTube::send(const uint8_t &segments, const uint8_t &port){
 // Sends the character 'segments' to the digit 'port' of the display
 // Content and Port must be sent in two sequencial parts, character first, port second
 // so this overloaded two char send method uses the one char send method twice and then moves
@@ -97,7 +97,7 @@ void TM74HC595LedTube::send(unsigned char segments, unsigned char port){
     digitalWrite(_rclk, HIGH);
 }
 
-void TM74HC595LedTube::fastSend(unsigned char content){
+void TM74HC595LedTube::fastSend(uint8_t content){
     //Sends the byte value (char <=> unsigned short int) to the 4 7-segment display bit by bit
     //by direct manipulation of the microcontroller pins. There is no time added, so the total time
     //consumed to shift an entire byte is supposed to be the lowest achievable in this level of abstraction.
@@ -114,7 +114,7 @@ void TM74HC595LedTube::fastSend(unsigned char content){
     }
 }
 
-void TM74HC595LedTube::fastSend(unsigned char segments, unsigned char port){
+void TM74HC595LedTube::fastSend(const uint8_t &segments, const uint8_t &port){
     // Sends the character 'segments' to the digit 'port' of the display
     // Content and Port must be sent in two sequencial parts, character first, port second
     // so this overloaded two char fastSend() method uses the one char fastSend() method twice and then moves
