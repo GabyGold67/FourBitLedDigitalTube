@@ -7,7 +7,7 @@ Developed for the cheap and popular 7-segment 4 digits led displays based on two
 Instance the class, notify the object you're ready to go, and start `.print()`ing the data to the display. 
 
 ## Flexibility:
-Integers, floating point or strings they'll display as long as the display is capable of it in a trustworthy way. If you need to represent a percentage or level of completeness a `.gauge()` method is included to represent them in a "Old Motorola brick cell phones style".
+Integers, floating point or strings they'll show as long as the display is capable of doing so in a trustworthy way. If you need to represent a percentage or level of completeness a `.gauge()` method is included to represent them in a "Old Motorola brick cell phones style".
 
 ## Trustworthy representation basic checking
 The representation of different types of data in this kind of displays is limited, and many implementations of the libraries to drive them take arbitrary or personally biased decisions on how to handle the problem.

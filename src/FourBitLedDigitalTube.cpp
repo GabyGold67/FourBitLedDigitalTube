@@ -1,5 +1,20 @@
 #include <Arduino.h>
 #include <FourBitLedDigitalTube.h>
+#include <TimerOne.h>
+
+uint8_t TM74HC595LedTube::displaysCount = 0;
+TM74HC595LedTube *instancesList[MAX_PTR_ARRAY] {};
+
+void intRefresh(){
+    //ISR called by Timer1 to keep the display lit by calling each display's fastRefresh() method
+    for(uint8_t i {0}; i < MAX_PTR_ARRAY; i++)
+        if (instancesList[i] != nullptr){
+            instancesList[i]->fastRefresh();
+        }
+
+    return;
+}
+
 
 TM74HC595LedTube::TM74HC595LedTube(int sclk, int rclk, int dio)
     :_sclk{sclk}, _rclk{rclk}, _dio{dio}
@@ -7,6 +22,12 @@ TM74HC595LedTube::TM74HC595LedTube(int sclk, int rclk, int dio)
     pinMode(_sclk, OUTPUT);
     pinMode(_rclk, OUTPUT);
     pinMode(_dio, OUTPUT);
+
+    _dispInstNbr = displaysCount;
+    displaysCount++;
+
+    _dispInstance = this;
+
     clear();
 }
 
@@ -121,10 +142,10 @@ bool TM74HC595LedTube::print(String text){
 
     if (text.length() <= 4){
         for (unsigned int i {0}; i < text.length(); ++i){
-            position = charSet.indexOf(text.charAt(i));
+            position = _charSet.indexOf(text.charAt(i));
             if (position > -1) {
                 // Character found for translation
-                temp7SegData[3 - i] = charLeds[position];
+                temp7SegData[3 - i] = _charLeds[position];
             }
             else {
                 displayable = false;
@@ -271,70 +292,62 @@ bool TM74HC595LedTube::gauge(const double &level, char label) {
     return displayable;
 }
 
-void TM74HC595LedTube::begin()
+bool TM74HC595LedTube::begin()
 {
-    // Timer Interrupt 1 setup, frequency and prescaler should be modified to get
-    // the lowest acceptable (no disturbing flicker) display refresh rate
-
-    unsigned int freq01 = 900;
-    unsigned int prescaler01 = 256;
-    cli(); // stop interrupts
-
-    // set timer1 interrupt at xxHz
-    TCCR1A = 0; // set entire TCCR1A register to 0
-    TCCR1B = 0; // same for TCCR1B
-    TCNT1 = 0;  // initialize counter value to 0
-    // set compare match register for the selected frequency (defined by the freq and prescaler selected)
-    OCR1A = (((16 * pow(10, 6)) / (prescaler01 * freq01)) - 1); // = (16*10^6) / (P256 * 1024Hz) - 1 (must be <65536) = 624  P1024 the prescaler, the 25Hz the intended int frequency
-    // turn on CTC mode
-    TCCR1B |= (1 << WGM12);
-
-    switch (prescaler01) {
-        case 1:
-            // Set CS10 bit for 1 prescaler
-            TCCR1B |= (1 << CS10);
+    //Verify if the timer interrupt service was started by checking if there are displays added to the pointers vector
+    bool serviceStarted {false};
+    for(uint8_t i {0}; i < MAX_PTR_ARRAY; i++)
+        if (instancesList[i] != nullptr){
+            serviceStarted = true;
             break;
-        case 8:
-            // Set CS11 bit for 8 prescaler
-            TCCR1B |= (1 << CS11);
-            break;
-        case 64:
-            // Set CS10 and CS11 bits for 64 prescaler
-            TCCR1B |= (1 << CS11);
-            TCCR1B |= (1 << CS10);
-            break;
-        case 256:
-            // Set CS12 bit for 256 prescaler
-            TCCR1B |= (1 << CS12);
-            break;
-        default:
-            // Set CS10 and CS12 bits for 1024 prescaler
-            TCCR1B |= (1 << CS12);
-            TCCR1B |= (1 << CS10);
-            break;
+        }
+    if (!serviceStarted){
+        //Initialize the Interrupt timer
+        Timer1.attachInterrupt(intRefresh);
+        Timer1.initialize(2000);
     }
+    
+    // Include the object's pointer to the array of pointers to be serviced by the ISR of a timer, 
+    // if there's available space to hook the object will return true
+    bool result {false};
+    for(uint8_t i {0}; i < MAX_PTR_ARRAY; i++)
+        if (instancesList[i] == nullptr){
+            instancesList[i] = _dispInstance;
+            result = true;
+            break;
+        }
+        else if (instancesList[i] == _dispInstance){
+            // The object pointer was already in the vector, the method will return true because the purpose of including it in te array 
+            // was achieved, although some mistake must have been done in the logic to try to include twice the same display
+            result = true;
+            break;
+        }
 
-    // enable timer compare interrupt
-    TIMSK1 |= (1 << OCIE1A);
+    if (!serviceStarted){
+        Timer1.start();
+    }   
 
-    sei(); // allow interrupts
+    return result;
 }
 
 void TM74HC595LedTube::stop() {
-    clear();
+    //This object's pointer will be deleted from the arrays of pointers. If the array has no more valid pointers the timer will be stopped to avoid loosing processing time.
+    bool result {false};
 
-    cli(); // stop interrupts
+    for(uint8_t i {0}; i < MAX_PTR_ARRAY; i++)
+        if (instancesList[i] == _dispInstance){
+            instancesList[i] = nullptr;
+        }
+        else if (instancesList[i] != nullptr){
+            // There are still objects pointers in the vector, so the refresh dislplay services must continue to work
+            result = true;
+            break;
+        }
 
-    // Clean timer1 interrupt setup
-    TCCR1A = 0; // set entire TCCR1A register to 0
-    TCCR1B = 0; // same for TCCR1B (disables all, including "CTC1 mode on", on the WGM12 bit)
-    TCNT1 = 0;  // initialize counter value to 0
-
-    OCR1A = 0; // set compare match register to 0 for no operation
-
-    TIMSK1 &= ~(1 << OCIE1A); // disable timer compare interrupt
-
-    sei(); // allow interrupts
+    if (!result){
+        Timer1.stop();
+        Timer1.detachInterrupt();
+    }   
 
     return;
 }
@@ -367,7 +380,7 @@ bool TM74HC595LedTube::setBlinkRate(const unsigned long &newRate) {
     return false;
 }
 
-void TM74HC595LedTube::intRefresh(){
+void TM74HC595LedTube::fastRefresh(){
     static int firstRefreshed{0};
 
     if (_blink == true) {

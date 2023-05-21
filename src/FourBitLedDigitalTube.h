@@ -2,21 +2,24 @@
 #define FourBitLedDigitalTube_h
 #include <Arduino.h>
 
-class TM74HC595LedTube
-{
+#define MAX_PTR_ARRAY 4
+class TM74HC595LedTube {
+    static uint8_t displaysCount;
 private:
     const unsigned long _minBlinkRate{100};
     const unsigned long _maxBlinkRate{2000};
+    TM74HC595LedTube *_dispInstance;
     int _sclk;
     int _rclk;
     int _dio;
+    uint8_t _dispInstNbr{0};
     int _digit[4];
     bool _blink{false};
     unsigned long _blinkTimer{0};
     bool _blinkShowOn{false};
     unsigned long _blinkRate{500};
-    String charSet{"0123456789AabCcdEeFGHhIiJLlnOoPqrStUuY-_=~* ."}; // for using indexOf() method
-    unsigned short int charLeds[45] = {
+    String _charSet{"0123456789AabCcdEeFGHhIiJLlnOoPqrStUuY-_=~* ."}; // for using indexOf() method
+    unsigned short int _charLeds[45] = {
         0xC0, // 0
         0xF9, // 1
         0xA4, // 2
@@ -68,7 +71,8 @@ private:
 
 public:
     TM74HC595LedTube(int sclk, int rclk, int dio);
-    void begin();
+
+    bool begin();
     void stop();
     bool blink();
     bool noBlink();
@@ -79,11 +83,12 @@ public:
     bool print(const int &value, bool rgtAlgn = false, bool zeroPad = false);
     bool print(const double &value, const unsigned int &decPlaces, bool rgtAlgn = false, bool zeroPad = false);
     void refresh();
-    void intRefresh();
+    void fastRefresh();
     bool gauge(const int &level, char label = ' ');
     bool gauge(const double &level, char label = ' ');
     bool setBlinkRate(const unsigned long &newRate);
     bool isBlinking();
+
 };
 
 #endif
