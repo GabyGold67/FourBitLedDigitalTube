@@ -15,17 +15,14 @@ void intRefresh(){
     return;
 }
 
-
-TM74HC595LedTube::TM74HC595LedTube(int sclk, int rclk, int dio)
+TM74HC595LedTube::TM74HC595LedTube(uint8_t sclk, uint8_t rclk, uint8_t dio)
     :_sclk{sclk}, _rclk{rclk}, _dio{dio}
 {
     pinMode(_sclk, OUTPUT);
     pinMode(_rclk, OUTPUT);
     pinMode(_dio, OUTPUT);
 
-    _dispInstNbr = displaysCount;
-    displaysCount++;
-
+    _dispInstNbr = displaysCount++;
     _dispInstance = this;
 
     clear();
@@ -37,7 +34,7 @@ void TM74HC595LedTube::refresh(){
     if (_blink == true){
         if (_blinkShowOn == false) {
             if (_blinkTimer == 0){
-                //turn off all digits
+                //turn off all digits without affecting the _digit[] buffer
                 send(0xFF, 0b0001);
                 send(0xFF, 0b0010);
                 send(0xFF, 0b0100);
@@ -75,21 +72,25 @@ void TM74HC595LedTube::refresh(){
 }
 
 void TM74HC595LedTube::clear(){
-  //Cleans the contents of the internal DATA array display buffer (All leds off for all digits)
+  //Cleans the contents of the internal display buffer (All leds off for all digits)
   _digit[0] = _digit[1] = _digit[2] = _digit[3] = 0xFF;
     refresh();
 }
 
 void TM74HC595LedTube::send(unsigned char content){
     //Sends the byte value (char <=> unsigned short int) to the 4 7-segment display bit by bit
+    //by using the shiftOut() function. The time added (or not) to send it bit is unknown, so the total time
+    //consumed to shift an entire byte is unknown, issue that must be considered when the method is invoked 
+    //from an ISR and multiple times depending on the qty of displays being used
     shiftOut(_dio, _sclk, MSBFIRST, content);
 }
 
 void TM74HC595LedTube::send(unsigned char segments, unsigned char port){
-// Sends the character 'X' to the digit 'port' of the display
+// Sends the character 'segments' to the digit 'port' of the display
 // Content and Port must be sent in two sequencial parts, character first, port second
 // so this overloaded two char send method uses the one char send method twice and then moves
-// up the RCLK pin to present the content in the shift register
+// up the RCLK pin to present the content in the shift register. This method depends on the shiftOut() function
+// so consumed time must be considered
     digitalWrite(_rclk, LOW);
     send(segments);
     send(port);
@@ -97,6 +98,11 @@ void TM74HC595LedTube::send(unsigned char segments, unsigned char port){
 }
 
 void TM74HC595LedTube::fastSend(unsigned char content){
+    //Sends the byte value (char <=> unsigned short int) to the 4 7-segment display bit by bit
+    //by direct manipulation of the microcontroller pins. There is no time added, so the total time
+    //consumed to shift an entire byte is supposed to be the lowest achievable in this level of abstraction.
+    //So this is the method suggested to be called from an ISR to keep the ISR time consumed to the lowest
+
     for (int i {7}; i >= 0; i--){
         if (content & 0x80)
             digitalWrite(_dio, HIGH);
@@ -109,10 +115,12 @@ void TM74HC595LedTube::fastSend(unsigned char content){
 }
 
 void TM74HC595LedTube::fastSend(unsigned char segments, unsigned char port){
-// Sends the character 'X' to the digit 'port' of the display
-// Content and Port must be sent in two sequencial parts, character first, port second
-// so this overloaded two char send method uses the one char send method twice and then moves
-// up the RCLK pin to present the content in the shift register
+    // Sends the character 'segments' to the digit 'port' of the display
+    // Content and Port must be sent in two sequencial parts, character first, port second
+    // so this overloaded two char fastSend() method uses the one char fastSend() method twice and then moves
+    // up the RCLK pin to present the content in the shift register. This method doesn't add time delays, 
+    //So this is the method suggested to be called from an ISR to keep the ISR time consumed to the lowest
+
     digitalWrite(_rclk, LOW);
     fastSend(segments);
     fastSend(port);
@@ -339,12 +347,13 @@ void TM74HC595LedTube::stop() {
             instancesList[i] = nullptr;
         }
         else if (instancesList[i] != nullptr){
-            // There are still objects pointers in the vector, so the refresh dislplay services must continue to work
+            // There are still objects pointers in the vector, so the refresh display services must continue active
             result = true;
             break;
         }
 
     if (!result){
+        //There are no more display instances active, there's no point in keeping the ISR active, the timer is stopped and the interrupt service detached
         Timer1.stop();
         Timer1.detachInterrupt();
     }   
@@ -374,9 +383,11 @@ bool TM74HC595LedTube::isBlinking(){
 
 bool TM74HC595LedTube::setBlinkRate(const unsigned long &newRate) {
     if ((newRate >= _minBlinkRate) && newRate <= _maxBlinkRate) {
+        //if the new blinkRate is in the accepted range, change the blinkRate
         _blinkRate = newRate;
         return true;
     }
+    //The value was outside valid range, keep the existing rate and report the error by returning false
     return false;
 }
 
