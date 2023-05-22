@@ -25,6 +25,9 @@ void setup()
 void loop()
 {
   // A mishmash of tests for showing the library methods provided
+  // Some of this tests try to display non supported values, to show the response of the methods.
+  // These failed method calls will display "Er" + testNum to help to identify why this message was set.
+  
   if ((millis() - timer) >= testTime)
   {
     // time to change the test

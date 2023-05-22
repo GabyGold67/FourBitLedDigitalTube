@@ -35,3 +35,42 @@ The danger of misrepresenting values in the display are usually ignored so when 
 |**setBlinkRate()**|unsigned long **newRate**|
 |**stop()**|None|
 
+
+## **Methods definition and use description**
+
+---
+### **TM74HC595LedTube**(uint8_t sclk, uint8_t rclk, uint8_t dio)
+### Description:  
+Class constructor, creates an instance of the class for each display in use.  
+### Parameters:  
+**sclk:** uint8_t (unsigned char), passes the pin number that is connected to the sclk pin of the display. The pin must be free to be used as a digital output.  
+**rclk:** uint8_t (unsigned char), passes the pin number that is connected to the rclk pin of the display. The pin must be free to be used as a digital output.  
+**dio:** uint8_t (unsigned char), passes the pin number that is connected to the dio pin of the display. The pin must be free to be used as a digital output.
+### Return value:  
+The object created.
+
+### Use example:  
+**TM74HC595LedTube** myLedDisp(6, 7, 10);
+
+---
+### **print**(String text);
+### Description:
+Displays the string text if it contains all "displayable" characters, which are the ones included in the following list: **0123456789AabCcdEeFGHhIiJLlnOoPqrStUuY-_.** and the **space**.  
+There are other 3 characters that can be represented in the display, but the conversion from a character to use while programming is language setting dependant, so I assigned them to available non displayable characters of easy access in any keyboard layout in most languages, they can be used as part of the text string to display, and they are:  
+= Builds a character formed by lighting the lower 2 horizontal segments of the digit display, can be described as a "lower equal" symbol.  
+~ Builds a character formed by lighting the 3 horizontal segments of the digit display, can be described as an "equivalent" symbol.  
+'*' (asterisk) Builds a character by lighting the upper 4 segments, forming a little square, can be described as the "degrees" symbol or º.  
+### Parameters:  
+**text:** String, up to four displayable characters long PLUS usable dots, all characters included in the representable characters list. Each valid character might be followed by a "." if needed, without being counted as a character, even spaces and special chars. If two or more consecutive dots are passed a intermediate space is considered to be included between each pair of them.  
+### Return value:  
+true: If the text could be represented.
+false: Otherwise, and the display will be blanked.
+
+### Use example:  
+myLedDisp.**print**("Hi");
+myLedDisp.**print**("Strt");
+myLedDisp.**print**("L.O.L.");
+myLedDisp.**print**("36.7*");
+myLedDisp.**print**("....");
+
+---
