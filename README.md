@@ -11,7 +11,9 @@ Integers, floating point or strings they'll show as long as the display is capab
 
 ## Trustworthy representation basic checking:
 The representation of different types of data in this kind of displays is limited, and many implementations of the libraries to drive them take arbitrary or personally biased decisions on how to handle the problem.
-The danger of misrepresenting values in the display are usually ignored so when a value can't be faithfully represented by the display, the data is truncated, sliced, characters are replaced by spaces or whatever criteria the developer defined. When trying to display the value __"90153"__ through the module, displaying __"9015"__ is no better (nor worse) than displaying __"0153"__, those are __misrepresentations__. This library returns a boolean value indicating if it was able to display a trustworthy representation of the value, as long as it is able to. If a trustworthy representation was nos possible it will blank the display. 
+The danger of misrepresenting values in the display are usually ignored so when a value can't be faithfully represented by the display, the data is truncated, sliced, characters are replaced by spaces or whatever criteria the developer defined. When trying to display the value __"90153"__ through the module, displaying __"9015"__ is no better (nor worse) than displaying __"0153"__, those are __misrepresentations__. This library returns a boolean value indicating if it was able to display a trustworthy representation of the value, as long as it is able to. If a trustworthy representation was nos possible it will blank the display.  
+## Crossplatform:
+This kind of displays need to be periodically refreshed, as it can actively turn on only one digit at a time, so to keep all de digits visible the user must activate each digit independently to generate a "cinematic effect". The library takes care of this, and offers two solutions to do so. The first is to attach the refreshing methods to a timer interrupt service (ISR) of the microcontroller, the second is through methods that the user can call from the main code. The first mechanism frees the user from the load of calling the refreshing methods periodically, specially considering that long looping times (for, while, do included), or the use of delay() could make the display flicker or simply stop until next refresh. The second option is given in the case that the timer/interrupt library used (see de dependencies information provided as I might change it in a future) doesn't support the architecture being used by the developer. In any case the library is capable of work in any platform, using one way or the other.
 
 # **Included Methods**
 
@@ -61,16 +63,16 @@ There are other 3 characters that can be represented in the display, but the con
 ~ Builds a character formed by lighting the 3 horizontal segments of the digit display, can be described as an "equivalent" symbol.  
 '*' (asterisk) Builds a character by lighting the upper 4 segments, forming a little square, can be described as the "degrees" symbol or º.  
 ### Parameters:  
-**text:** String, up to four displayable characters long PLUS usable dots, all characters included in the representable characters list. Each valid character might be followed by a "." if needed, without being counted as a character, even spaces and special chars. If two or more consecutive dots are passed a intermediate space is considered to be included between each pair of them.  
+**text:** String, up to four displayable characters long PLUS usable dots, all characters included in the representable characters list. Each valid character might be followed by a "." if needed, without being counted as a character, even spaces and special chars. If two or more consecutive dots are passed an intermediate space is considered to be included between each pair of them.  
 ### Return value:  
-true: If the text could be represented.
+true: If the text could be represented.  
 false: Otherwise, and the display will be blanked.
 
 ### Use example:  
-myLedDisp.**print**("Hi");
-myLedDisp.**print**("Strt");
-myLedDisp.**print**("L.O.L.");
-myLedDisp.**print**("36.7*");
-myLedDisp.**print**("....");
+myLedDisp.**print**("Hi");  
+myLedDisp.**print**("Strt");  
+myLedDisp.**print**("L.O.L.");  
+myLedDisp.**print**("36.7*");  
+myLedDisp.**print**("....");  
 
 ---

@@ -34,5 +34,5 @@
       }
     ] ,
     "frameworks": "Arduino",
-    "platforms": "atmelavr"
+    "platforms": "*"
   }

@@ -8,14 +8,16 @@ const uint8_t rclk {A4}; // Pin A4 of Arduino Nano
 // Pin connected to SH_CP of 74HC595 AKA SCLK
 const uint8_t sclk {A5}; // Pin A5 of Arduino Nano
 
-TM74HC595LedTube myLedDisp(sclk, rclk, dio);
-
+//Set of variables and constants needed just for Demo purposes
 int testNum{0};
 const int firstTest{-5};
 const int lastTest{0};
 bool testResult{};
 const long testTime{1800};
 unsigned long timer{millis() - (testTime + 1)};
+
+//Display instance creation
+TM74HC595LedTube myLedDisp(sclk, rclk, dio);
 
 void setup()
 {
@@ -33,6 +35,7 @@ void loop()
     // time to change the test
     testNum++;
     if (testNum == firstTest)
+      //Attaching the display refresh to an ISR trough the begin() method
       myLedDisp.begin();
 
     switch (testNum)
@@ -57,39 +60,39 @@ void loop()
       break;
     case 0:
       //print() with a string argument, four characters long AND usable dots, all characters included in the representable characters list
-      //Each valid character might be followed by a "." if needed, whitout being counted as a character, even spaces and special chars
+      //Each valid character might be followed by a "." if needed, without being counted as a character, even spaces and special chars
       testResult = myLedDisp.print("I.F.Y.I.");
       break;
     case 1:
-      //print() with a floating point argument, one decimal digit argument, ONE decimal digit place to display, no alignement specified
+      //print() with a floating point argument, one decimal digit argument, ONE decimal digit place to display, no alignment specified
       testResult = myLedDisp.print(2.3, 1);
       break;
     case 2:
-      //print() with a floating point argument, one decimal digit argument, TWO decimal digit place to display, no alignement specified
+      //print() with a floating point argument, one decimal digit argument, TWO decimal digit places to display, no alignment specified
       testResult = myLedDisp.print(2.3, 2);
       break;
     case 3:
-      //print() with a floating point argument, one decimal digit argument, TWO decimal digit place to display, right alignement specified
+      //print() with a floating point argument, one decimal digit argument, TWO decimal digit places to display, right alignment specified
       testResult = myLedDisp.print(2.3, 2, true);
       break;
     case 4:
-      //print() with a floating point argument, one decimal digit argument, TWO decimal digit place to display, right alignement specified, zero padded specified
+      //print() with a floating point argument, one decimal digit argument, TWO decimal digit places to display, right alignment specified, zero padded specified
       testResult = myLedDisp.print(2.3, 2, true, true);
       break;
     case 5:
-      //print() with a negative floating point argument, one decimal digit argument, TWO decimal digit place to display, no alignement specified
+      //print() with a negative floating point argument, one decimal digit argument, TWO decimal digit places to display, no alignment specified
       testResult = myLedDisp.print(-2.3, 2);
       break;
     case 6:
-      //print() with a floating point argument, one decimal digit argument, ONE decimal digit place to display, right alignement specified
+      //print() with a floating point argument, one decimal digit argument, ONE decimal digit place to display, right alignment specified
       testResult = myLedDisp.print(-2.3, 1, true);
       break;
     case 7:
-      //print() with a floating point argument, one decimal digit argument, ONE decimal digit place to display, right alignement specified, zero padded specified
+      //print() with a floating point argument, one decimal digit argument, ONE decimal digit place to display, right alignment specified, zero padded specified
       testResult = myLedDisp.print(-2.3, 1, true, true);
       break;
     case 8:
-      //gauge() with a floating point argument, 0 <= value <= 1.0, representing a percentage, ranges are:
+      //gauge() with a floating point argument, 0 <= value <= 1.0, representing a percentage, the four ranges are:
       // 0 <= 1st range <0.25
       //0.25 <= 2nd range < 0.50
       //0.50 <= 3rd range < 0.75
@@ -119,22 +122,23 @@ void loop()
       testResult = myLedDisp.gauge(0, 'b');
       break;
     case 12:
-      //blink() activates the option to make the present data and any further data printed to de display to blink until noBlink() is invoked, the initial blink rate is set to 500 millisecs
-      //setBlinkRate() modifies the blink rate to the argument -in milliseconds- argument
+      //blink() activates the option to make the present data and any further data printed to de display to blink until noBlink() is invoked, the initial blink rate is set to 500 milliseconds
+      //setBlinkRate() modifies the blink rate to the argument -in milliseconds- speed
       myLedDisp.blink();
       testResult = myLedDisp.setBlinkRate(600);
       break;
     case 13:
-      // blinking speedup
+      // blinking speedup to 300 milliseconds on - same time off sequence
       testResult = myLedDisp.setBlinkRate(300);
       break;
     case 14:
-      //more blinking speedup
+      //more blinking speedup to 150 milliseconds each
       testResult = myLedDisp.setBlinkRate(150);
       break;
     case 15:
       //noBlink() stops the blinking option for the display
-      myLedDisp.noBlink();
+      //and use of the limited display capabilities to show a message
+      myLedDisp.noBlink();      
       testResult = myLedDisp.print("You");
       break;
     case 16:
@@ -150,8 +154,13 @@ void loop()
         testResult = myLedDisp.print("batt.");
       break;
     case 20:
+      //gauge() with an integer argument, and without the optional heading character parameter, uses de default SPACE character
+      testResult = myLedDisp.gauge(3);
       break;
     case 21:
+      //This counts show: negative integers 3 digits to positive numbers 3 digits
+      //Alignment: left
+      //Zero Padding: No
       for (int i{-150}; i < 151; i++)
       {
         testResult = myLedDisp.print(i);
@@ -160,6 +169,8 @@ void loop()
 
       delay(1000);
 
+      //Alignment: right
+      //Zero Padding: No
       for (int i{-150}; i < 151; i++)
       {
         testResult = myLedDisp.print(i, true);
@@ -168,6 +179,8 @@ void loop()
 
       delay(1000);
 
+      //Alignment: left
+      //Zero Padding: Yes (useless as the left alignment doesn't leave space for the extra 0's)
       for (int i{-150}; i < 151; i++)
       {
         testResult = myLedDisp.print(i, false, true);
@@ -176,6 +189,8 @@ void loop()
 
       delay(1000);
 
+      //Alignment: right
+      //Zero Padding: Yes
       for (int i{150}; i > -151; i--)
       {
         testResult = myLedDisp.print(i, true, true);
@@ -183,6 +198,9 @@ void loop()
       }
       break;
     case 22:
+      //This counts show: positive integers 3 digits to positive integers 4 digits
+      //Alignment: left
+      //Zero Padding: No
       for (int i{950}; i < 1051; i++)
       {
         testResult = myLedDisp.print(i);
@@ -191,6 +209,8 @@ void loop()
       
       delay(1000);
       
+      //Alignment: right
+      //Zero Padding: No
       for (int i{950}; i < 1051; i++)
       {
         testResult = myLedDisp.print(i, true);
@@ -199,6 +219,8 @@ void loop()
       
       delay(1000);
       
+      //Alignment: left
+      //Zero Padding: Yes (useless as the left alignment doesn't leave space for the extra 0's)
       for (int i{950}; i < 1051; i++)
       {
         testResult = myLedDisp.print(i, false, true);
@@ -207,6 +229,8 @@ void loop()
       
       delay(1000);
       
+      //Alignment: right
+      //Zero Padding: Yes
       for (int i{950}; i < 1051; i++)
       {
         testResult = myLedDisp.print(i, true, true);
@@ -214,6 +238,8 @@ void loop()
       }
       break;
     case 23:
+      //This counts show: positive integers 4 digits to positive integers 5 digits. When the count reaches 10,000 the print() returns false,
+      //and an Error message stating the Error and number of test is displayed
       for (int i{9900}; i < 10001; i++)
       {
         testResult = myLedDisp.print(i, true, true);
@@ -221,6 +247,8 @@ void loop()
       }
       break;
     case 24:
+      //This counts show: negative integers 3 digits to negative integers 4 digits. When the count reaches -1,000 the print() returns false,
+      //and an Error message stating the Error and number of test is displayed
       for (int i{-900}; i > -1001; i--)
       {
         testResult = myLedDisp.print(i, true, true);
@@ -228,15 +256,19 @@ void loop()
       }
       break;
     case 25:
+      //Use of the degrees symbol (°) by using the * ASCII character
       testResult = myLedDisp.print("36.7*");
       break;
     case 26:
+      //Use of the c character to express a value in centigrade degrees
       testResult = myLedDisp.print("36.7c");
       break;
     case 27:
+      //Use of the F character to express a value in Fahrenheit degrees
       testResult = myLedDisp.print("98.6F");
       break;
     case 28:
+      //An easy way to use the display to show that a process is ongoing or a "Waiting State"
       testResult = myLedDisp.print("-");
       break;
     case 29:
@@ -249,6 +281,7 @@ void loop()
       testResult = myLedDisp.print("----");
       break;
     case 32:
+      //Also possible using the dots, here showing the 4 dots lit with independence of other characters
       testResult = myLedDisp.print("....");
       break;
     case 33:
@@ -264,13 +297,16 @@ void loop()
       testResult = myLedDisp.print("OFF");
       break;
     default:
+      //Blanking the display
       myLedDisp.clear();
+      //Disattaching the display refresh from the ISR
       myLedDisp.stop();
       testNum = firstTest - 1;
       break;
     }
 
     if (testResult == false)
+      //Use of a combination of characters and an integer converted to a string to display the test that produced an Error.
       myLedDisp.print("Er" + String(testNum));
 
     if ((lastTest > 0) && (testNum > lastTest))
