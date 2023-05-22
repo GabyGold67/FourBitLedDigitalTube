@@ -13,7 +13,7 @@ Integers, floating point or strings they'll show as long as the display is capab
 The representation of different types of data in this kind of displays is limited, and many implementations of the libraries to drive them take arbitrary or personally biased decisions on how to handle the problem.
 The danger of misrepresenting values in the display are usually ignored so when a value can't be faithfully represented by the display, the data is truncated, sliced, characters are replaced by spaces or whatever criteria the developer defined. When trying to display the value __"90153"__ through the module, displaying __"9015"__ is no better (nor worse) than displaying __"0153"__, those are __misrepresentations__. This library returns a boolean value indicating if it was able to display a trustworthy representation of the value, as long as it is able to. If a trustworthy representation was nos possible it will blank the display.  
 ## Crossplatform:
-This kind of displays need to be periodically refreshed, as it can actively turn on only one digit at a time, so to keep all de digits visible the user must activate each digit independently to generate a "cinematic effect". The library takes care of this, and offers two solutions to do so. The first is to attach the refreshing methods to a timer interrupt service (ISR) of the microcontroller, the second is through methods that the user can call from the main code. The first mechanism frees the user from the load of calling the refreshing methods periodically, specially considering that long looping times (when executing for, while, do included), or the use of delay() could make the display flicker or simply stop until next refresh. The second option is given in the case that the timer/interrupt library used (see de dependencies information provided as I might change it in a future) doesn't support the architecture being used by the developer. In any case the library is capable of work in any platform, using one way when possible, or the other always.
+This kind of displays need to be periodically refreshed, as it can actively turn on only one digit at a time, so to keep all de digits visible the user must activate each digit independently to generate a "cinematic effect". The library takes care of this, and offers two solutions to do so. The first is to attach the refreshing methods to a timer interrupt service (ISR) of the microcontroller, the second is through methods that the user can call from the main code. The first mechanism frees the user from the load of calling the refreshing methods periodically, specially considering that long looping times (when executing for, while, do included), or the use of delay() could make the display flicker or simply stop until next refresh. The second option is given in the case that the timer/interrupt library used (see de dependencies information provided as I might change it in a future) doesn't support the architecture being used by the developer. In any case the library is capable of work in any platform, using one way when possible, or the other always.  
 
 # **Included Methods**
 
@@ -76,3 +76,13 @@ myLedDisp.**print**("36.7*");
 myLedDisp.**print**("....");  
 
 ---
+### **print**(int value, bool rgtAlgn, zeroPad);
+### Description:
+Displays an integer value to the display as long as the length representation fits the available space of the display.
+### Parameters:  
+**value:** The integer value which, due to the 4 digits limitations  must be in the range -999 <= value <= 9999.  
+**rgtAlgn:** Boolean, optional parameter (if not specified the default value, false, will be assumed), indicates if the represented value must be displayed right aligned, with the missing heading characters being completed with spaces or zeros, depending in the zeroPad optional parameter.  
+**zeroPad:** Boolean, optional parameter (if not specified the default value, false, will be assumed), indicates if the 
+
+
+represented value must be displayed right aligned, with the missing heading characters being completed with spaces or zeros, depending in the zeroPad optional parameter. 
