@@ -73,7 +73,7 @@ public:
     TM74HC595LedTube(uint8_t sclk, uint8_t rclk, uint8_t dio);
 
     bool begin();
-    void stop();
+    bool stop();
     bool blink();
     bool noBlink();
     void clear();

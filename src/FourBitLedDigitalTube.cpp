@@ -338,27 +338,29 @@ bool TM74HC595LedTube::begin()
     return result;
 }
 
-void TM74HC595LedTube::stop() {
+bool TM74HC595LedTube::stop() {
     //This object's pointer will be deleted from the arrays of pointers. If the array has no more valid pointers the timer will be stopped to avoid loosing processing time.
+    
+    bool pointersFound(false);
     bool result {false};
 
     for(uint8_t i {0}; i < MAX_PTR_ARRAY; i++)
         if (instancesList[i] == _dispInstance){
             instancesList[i] = nullptr;
+            result = true;
         }
         else if (instancesList[i] != nullptr){
             // There are still objects pointers in the vector, so the refresh display services must continue active
-            result = true;
-            break;
+            pointersFound = true;
         }
 
-    if (!result){
+    if (!pointersFound){
         //There are no more display instances active, there's no point in keeping the ISR active, the timer is stopped and the interrupt service detached
         Timer1.stop();
         Timer1.detachInterrupt();
     }   
 
-    return;
+    return result;
 }
 
 bool TM74HC595LedTube::blink(){

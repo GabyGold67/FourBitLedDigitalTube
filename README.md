@@ -138,7 +138,8 @@ Detaches the display from the timer interrupt service which takes care of refres
 ### Parameters:  
 None
 ### Return value:  
-None.  
+true: The instance of the display was found and detached from the ISR.
+false: The instance of the display wasn't found attached to the ISR, no detach was carried as it wasn't needed.  
 ### Use example:  
 myLedDisp.**stop**();
 
@@ -147,6 +148,15 @@ myLedDisp.**stop**();
 ### Description:
 Makes the display blink the contents it shows until a noBlink() method is invoked. The blinking is symmetrical, meaning that the time the display shows the contents and the time the display is blank are equal. The blinking starts at a preset time time the first time the method is invoked. The blinking rate can be changed by using the .setBlinkRate() method. After changing the blinking rate, the new blinking rate will be kept after a .noBlink() or new .blink() calls until it's modified with a new .setBlinkRate() call.
 ### Return value:  
-None.  
+true: Always (for compatibility reasons)  
 ### Use example:  
 myLedDisp.**blink**();
+
+---
+### **noBlink**();
+### Description:
+Stops the display blinking, leaving the display turned on.
+### Return value:  
+true: Always (for compatibility reasons)  
+### Use example:  
+myLedDisp.**noBlink**();
