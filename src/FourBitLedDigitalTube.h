@@ -9,17 +9,18 @@ private:
     const unsigned long _minBlinkRate{100};
     const unsigned long _maxBlinkRate{2000};
     TM74HC595LedTube *_dispInstance;
-    int _sclk;
-    int _rclk;
-    int _dio;
+    uint8_t _sclk;
+    uint8_t _rclk;
+    uint8_t _dio;
     uint8_t _dispInstNbr{0};
-    int _digit[4];
+    uint8_t _digit[4];
+    uint8_t firstRefreshed{0};
     bool _blink{false};
     unsigned long _blinkTimer{0};
     bool _blinkShowOn{false};
     unsigned long _blinkRate{500};
     String _charSet{"0123456789AabCcdEeFGHhIiJLlnOoPqrStUuY-_=~* ."}; // for using indexOf() method
-    unsigned short int _charLeds[45] = {
+    uint8_t _charLeds[45] = {
         0xC0, // 0
         0xF9, // 1
         0xA4, // 2
@@ -88,6 +89,7 @@ public:
     bool gauge(const double &level, char label = ' ');
     bool setBlinkRate(const unsigned long &newRate);
     bool isBlinking();
+    uint8_t getInstanceNbr();
 
 };
 

@@ -394,7 +394,7 @@ bool TM74HC595LedTube::setBlinkRate(const unsigned long &newRate) {
 }
 
 void TM74HC595LedTube::fastRefresh(){
-    static int firstRefreshed{0};
+    //static int firstRefreshed{0};
 
     if (_blink == true) {
         if (_blinkShowOn == false) {
@@ -430,4 +430,8 @@ void TM74HC595LedTube::fastRefresh(){
             firstRefreshed = 0;
     }
     return;
+}
+
+uint8_t TM74HC595LedTube::getInstanceNbr(){
+    return _dispInstNbr;
 }

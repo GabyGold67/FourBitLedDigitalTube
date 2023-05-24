@@ -31,6 +31,7 @@ The first mechanism frees the user from the load of calling the refreshing metho
 |**fastSend()**|uint8_t **segments**, uint8_t **port**|
 |**gauge()**|int **level** (, char **label**)|
 ||double **level** (, char **label**)|
+|**getInstanceNbr()**|None|
 |**isBlinking()**|None|
 |**noBlink()**|None|
 |**print()**|String **text**|
@@ -157,6 +158,16 @@ myLedDisp.**blink**();
 ### Description:
 Stops the display blinking, leaving the display turned on.
 ### Return value:  
-true: Always (for compatibility reasons)  
+true: Always   
 ### Use example:  
 myLedDisp.**noBlink**();
+
+---
+### **isBlinking**();
+### Description:
+Returns a value indicating if the display is set to blink or not.
+### Return value:  
+true: If the display is set to blink.
+false: If the display is set not to blink.   
+### Use example:  
+myLedDisp.**isBlinking**();

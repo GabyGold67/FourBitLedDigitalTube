@@ -15,8 +15,9 @@ TM74HC595LedTube	KEYWORD1
 begin       KEYWORD2
 blink       KEYWORD2
 clear	    KEYWORD2
-gauge       KEYWORD2
 fastRefresh  KEYWORD2
+gauge       KEYWORD2
+getInstanceNbr  KEYWORD2
 isBlinking  KEYWORD2
 fastSend    KEYWORD2
 noBlink     KEYWORD2
