@@ -77,6 +77,7 @@ public:
     bool stop();
     bool blink();
     bool noBlink();
+    bool isBlinking();
     void clear();
     void send(const uint8_t &segments, const uint8_t &port);
     void fastSend(const uint8_t &segments, const uint8_t &port);
@@ -88,8 +89,9 @@ public:
     bool gauge(const int &level, char label = ' ');
     bool gauge(const double &level, char label = ' ');
     bool setBlinkRate(const unsigned long &newRate);
-    bool isBlinking();
     uint8_t getInstanceNbr();
+    unsigned long getMinBlinkRate();
+    unsigned long getMaxBlinkRate();
 
 };
 

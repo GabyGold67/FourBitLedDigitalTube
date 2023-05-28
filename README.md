@@ -96,8 +96,8 @@ myLedDisp.**clear**();
 ---
 ### **fastRefresh**();
 ### Description:
-Refreshes the display, only one digit per call, the method takes care of registering which digit was redrawn last and move to the next until the last is reached and then restart from the first, and uses direct pin handling instead of using pre-built shiftOut() kind of methods. This working criteria has two consecuences:
-* The method works faster than redrawing all the digits each time and using the call to shiftOut() methods, so is less time consuming and so is the one used within the ISR.
+Refreshes the display, only one digit per call, the method takes care of registering which digit was redrawn last and move to the next until the last is reached and then restart from the first, and uses direct pin handling instead of using pre-built `shiftOut()` kind of methods. This working criteria has two consecuences:
+* The method works faster than redrawing all the digits each time and using the call to shiftOut() methods, so it is less time consuming and so is the most appropiate to be used within an ISR.
 * When used by the developer to refresh the display from the code it must be called more frequently to keep the display without flickering.  
 ### Parameters:  
 None
@@ -109,14 +109,51 @@ myLedDisp.**fastRefresh**();
 ---
 ### **fastSend**(uint8_t segments, uint8_t port);
 ### Description:
-Sends one character to the display, using direct pin handling instead of using pre-built shiftOut() kind of methods. The parameters indicate which character and to which digit will be sent. This is the method used by fastRefresh() to send the digit when it has to be refreshed.
+Sends one character to the display, using direct pin handling instead of using pre-built `shiftOut()` kind of methods. The parameters indicate which character and to which digit will be sent. This is the method used by fastRefresh() to send the digit when it has to be refreshed.
 ### Parameters:  
 **segments:** An unsigned short integer value representing which segments to turn on and which off to get the graphic representation of a character in the seven segment display, the corresponding value can be looked up in the **_charLeds[]** array definition in the header file of the library.  
 **port:** An unsigned short integer value representing the digit where the character will be sent, being the range of valid values 0 <= port <= 3, the 0 value is the rightmost digit, the 1 value the second from the right and so on.
 ### Return value:  
 None   
 ### Use example:  
-myLedDisp.**fastSend**(0x88, 1);
+myLedDisp.**fastSend**(0x88, 1); // Sends a capital A to the second digit from right to left.
+
+---
+### **gauge**(int level, char label);
+### Description:
+Displays a basic graphical representation of the level of fulfillment or completeness of a segmented value or task, gives a general fast notion on the matter, as a battery charge level, liquids deposit level, time remaining, tasks completeness and so on. The levels are represented by the horizontal segments (0, 1, 2 or 3 from bottom to top, and from left to right), and a character might be added before the graphical representation to give an indication of what the display is showing, passed through the **label** parameter. 
+### Parameters:  
+**level:** The integer value to display must be in the range 0 <= level <= 3.  
+**label:** A character, optional parameter (if not specified the default value, a Space, will be assumed), that will be displayed in the leftmost digit of the display. The character must be one of the "displayable" characters, as listed in the **.print()** method description.
+### Return value:  
+true: If the value could be represented.  
+false: Otherwise, being that the **level** parameter was out of range and/or the **label** parameter was not in the list of displayable characters, and the display will be blanked.
+
+### Use example:  
+myLedDisp.**gauge**(3);  
+myLedDisp.**gauge**(2, 'b');  
+myLedDisp.**gauge**(1, 'F');
+myLedDisp.**gauge**(4, 'd'); //Error  
+myLedDisp.**gauge**(3, 'X'); //Error  
+
+---
+### **gauge**(double level, char label);
+### Description:
+Displays a basic graphical representation of the level of fulfillment or completeness of a segmented value or task, gives a general fast notion on the matter, as a battery charge level, liquids deposit level, time remaining, tasks completeness and so on. The levels are represented by the horizontal segments (0, 1, 2 or 3 from bottom to top, and from left to right), and a character might be added before the graphical representation to give an indication of what the display is showing, passed through the **label** parameter. 
+### Parameters:  
+**level:** The double value to display must be in the range 0.0 <= level <= 1.0, being the range the representation of the percentage of the 'full' level, so that the ranges are 0.0 <= level < 0.25 for the first level, 0.25 <= level < 0.50 for the second level, 0.50 <= level < 0.75 for the third level, and 0.75 <= level <= 1.00 for the fourth and upper level.
+**label:** A character, optional parameter (if not specified the default value, a Space, will be assumed), that will be displayed in the leftmost digit of the display. The character must be one of the "displayable" characters, as listed in the **.print()** method description.
+### Return value:  
+true: If the value could be represented.  
+false: Otherwise, being that the **level** parameter was out of range and/or the **label** parameter was not in the list of displayable characters, and the display will be blanked.
+
+### Use example:  
+myLedDisp.**gauge**(0.0); 
+myLedDisp.**gauge**(0.4); 
+myLedDisp.**gauge**(0.55, 'b');
+myLedDisp.**gauge**(1.0, 'F');
+myLedDisp.**gauge**(1.5, 'd'); //Error
+myLedDisp.**gauge**(3.0, 'X'); //Error
 
 ---
 ### **print**(String text);
@@ -186,7 +223,7 @@ Detaches the display from the timer interrupt service which takes care of refres
 ### Parameters:  
 None
 ### Return value:  
-true: The instance of the display was found and detached from the ISR.
+true: The instance of the display was found and detached from the ISR.  
 false: The instance of the display wasn't found attached to the ISR, no detach was carried as it wasn't needed.  
 ### Use example:  
 myLedDisp.**stop**();

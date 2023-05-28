@@ -435,3 +435,10 @@ void TM74HC595LedTube::fastRefresh(){
 uint8_t TM74HC595LedTube::getInstanceNbr(){
     return _dispInstNbr;
 }
+
+unsigned long  TM74HC595LedTube::getMinBlinkRate(){
+    return _minBlinkRate;
+}
+    unsigned long TM74HC595LedTube::getMaxBlinkRate(){
+        return _maxBlinkRate;
+    }
