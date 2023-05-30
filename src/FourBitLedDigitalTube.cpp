@@ -28,36 +28,48 @@ TM74HC595LedTube::TM74HC595LedTube(uint8_t sclk, uint8_t rclk, uint8_t dio)
     clear();
 }
 
+bool TM74HC595LedTube::begin()
+{
+    //Verify if the timer interrupt service was started by checking if there are displays added to the pointers vector
+    bool serviceStarted {false};
+    for(uint8_t i {0}; i < MAX_PTR_ARRAY; i++)
+        if (instancesList[i] != nullptr){
+            serviceStarted = true;
+            break;
+        }
+    if (!serviceStarted){
+        //Initialize the Interrupt timer
+        Timer1.attachInterrupt(intRefresh);
+        Timer1.initialize(2000);
+    }
+    
+    // Include the object's pointer to the array of pointers to be serviced by the ISR of a timer, 
+    // if there's available space to hook the object will return true
+    bool result {false};
+    for(uint8_t i {0}; i < MAX_PTR_ARRAY; i++)
+        if (instancesList[i] == nullptr){
+            instancesList[i] = _dispInstance;
+            result = true;
+            break;
+        }
+        else if (instancesList[i] == _dispInstance){
+            // The object pointer was already in the vector, the method will return true because the purpose of including it in te array 
+            // was achieved, although some mistake must have been done in the logic to try to include twice the same display
+            result = true;
+            break;
+        }
+
+    if (!serviceStarted){
+        Timer1.start();
+    }   
+
+    return result;
+}
+
 void TM74HC595LedTube::refresh(){
     static int firstRefreshed {0};
 
-    if (_blink == true){
-        if (_blinkShowOn == false) {
-            if (_blinkTimer == 0){
-                //turn off all digits without affecting the _digit[] buffer
-                send(0xFF, 0b0001);
-                send(0xFF, 0b0010);
-                send(0xFF, 0b0100);
-                send(0xFF, 0b1000);
-
-                _blinkTimer = millis();
-            }
-            else if((millis() - _blinkTimer)> _blinkRate){
-                _blinkTimer = 0;
-                _blinkShowOn = true;
-            }
-        }
-        else{
-            if (_blinkTimer == 0){
-                _blinkTimer = millis();
-            }
-            else if((millis() - _blinkTimer)> _blinkRate){
-                _blinkTimer = 0;
-                _blinkShowOn = false;
-            }
-        }
-    }
-
+    updBlinkState();
     if((_blink == false)||(_blinkShowOn == true)){
         send(_digit[(0 + firstRefreshed)%4], 1<<(0 + firstRefreshed)%4);
         send(_digit[(1 + firstRefreshed)%4], 1<<(1 + firstRefreshed)%4);
@@ -300,44 +312,6 @@ bool TM74HC595LedTube::gauge(const double &level, char label) {
     return displayable;
 }
 
-bool TM74HC595LedTube::begin()
-{
-    //Verify if the timer interrupt service was started by checking if there are displays added to the pointers vector
-    bool serviceStarted {false};
-    for(uint8_t i {0}; i < MAX_PTR_ARRAY; i++)
-        if (instancesList[i] != nullptr){
-            serviceStarted = true;
-            break;
-        }
-    if (!serviceStarted){
-        //Initialize the Interrupt timer
-        Timer1.attachInterrupt(intRefresh);
-        Timer1.initialize(2000);
-    }
-    
-    // Include the object's pointer to the array of pointers to be serviced by the ISR of a timer, 
-    // if there's available space to hook the object will return true
-    bool result {false};
-    for(uint8_t i {0}; i < MAX_PTR_ARRAY; i++)
-        if (instancesList[i] == nullptr){
-            instancesList[i] = _dispInstance;
-            result = true;
-            break;
-        }
-        else if (instancesList[i] == _dispInstance){
-            // The object pointer was already in the vector, the method will return true because the purpose of including it in te array 
-            // was achieved, although some mistake must have been done in the logic to try to include twice the same display
-            result = true;
-            break;
-        }
-
-    if (!serviceStarted){
-        Timer1.start();
-    }   
-
-    return result;
-}
-
 bool TM74HC595LedTube::stop() {
     //This object's pointer will be deleted from the arrays of pointers. If the array has no more valid pointers the timer will be stopped to avoid loosing processing time.
     
@@ -371,6 +345,20 @@ bool TM74HC595LedTube::blink(){
     return true;
 }
 
+bool TM74HC595LedTube::blink(const unsigned long &rate){
+    bool result {setBlinkRate(rate)};
+    if (result)
+        result = blink();
+    return result;
+}
+
+bool TM74HC595LedTube::blink(const unsigned long &onRate, const unsigned long &offRate){
+    bool result {setBlinkRate(onRate, offRate)};
+    if (result)
+        result = blink();
+    return result;
+}
+
 bool TM74HC595LedTube::noBlink(){
     _blink = false;
     _blinkTimer = 0;
@@ -384,44 +372,36 @@ bool TM74HC595LedTube::isBlinking(){
 }
 
 bool TM74HC595LedTube::setBlinkRate(const unsigned long &newRate) {
+    bool result {false};
     if ((newRate >= _minBlinkRate) && newRate <= _maxBlinkRate) {
         //if the new blinkRate is in the accepted range, change the blinkRate
-        _blinkRate = newRate;
-        return true;
+        _blinkOnRate = newRate;
+        _blinkOffRate = newRate;
+        result = true;
     }
     //The value was outside valid range, keep the existing rate and report the error by returning false
-    return false;
+    return result;
+}
+
+bool TM74HC595LedTube::setBlinkRate(const unsigned long &newOnRate, const unsigned long &newOffRate){
+    bool result {false};
+    if ((newOnRate >= _minBlinkRate) && newOnRate <= _maxBlinkRate) {
+        if ((newOffRate >= _minBlinkRate) && newOffRate <= _maxBlinkRate) {
+            //if the new blinkRate is in the accepted range, set the blinkRate for symmetric rate
+            _blinkOnRate = newOnRate;
+            _blinkOffRate = newOffRate;
+            result =  true;
+        }
+    }
+    //The value was outside valid range, keep the existing rate and report the error by returning false
+    
+    return result;
+  
 }
 
 void TM74HC595LedTube::fastRefresh(){
-    //static int firstRefreshed{0};
 
-    if (_blink == true) {
-        if (_blinkShowOn == false) {
-            if (_blinkTimer == 0) {
-                // turn off all digits
-                fastSend(0xFF, 0b0001);
-                fastSend(0xFF, 0b0010);
-                fastSend(0xFF, 0b0100);
-                fastSend(0xFF, 0b1000);
-
-                _blinkTimer = millis();
-            }
-            else if ((millis() - _blinkTimer) > _blinkRate) {
-                _blinkTimer = 0;
-                _blinkShowOn = true;
-            }
-        }
-        else {
-            if (_blinkTimer == 0) {
-                _blinkTimer = millis();
-            }
-            else if ((millis() - _blinkTimer) > _blinkRate) {
-                _blinkTimer = 0;
-                _blinkShowOn = false;
-            }
-        }
-    }
+    updBlinkState();
 
     if ((_blink == false) || (_blinkShowOn == true)) {
         fastSend(_digit[firstRefreshed], 1 << firstRefreshed);
@@ -439,6 +419,38 @@ uint8_t TM74HC595LedTube::getInstanceNbr(){
 unsigned long  TM74HC595LedTube::getMinBlinkRate(){
     return _minBlinkRate;
 }
-    unsigned long TM74HC595LedTube::getMaxBlinkRate(){
+
+unsigned long TM74HC595LedTube::getMaxBlinkRate(){
         return _maxBlinkRate;
     }
+
+void TM74HC595LedTube::updBlinkState(){
+    if (_blink == true){
+        if (_blinkShowOn == false) {
+            if (_blinkTimer == 0){
+                //turn off all digits without affecting the _digit[] buffer
+                send(0xFF, 0b0001);
+                send(0xFF, 0b0010);
+                send(0xFF, 0b0100);
+                send(0xFF, 0b1000);
+
+                _blinkTimer = millis();
+            }
+            else if((millis() - _blinkTimer)> _blinkOffRate){
+                _blinkTimer = 0;
+                _blinkShowOn = true;
+            }
+        }
+        else{
+            if (_blinkTimer == 0){
+                _blinkTimer = millis();
+            }
+            else if((millis() - _blinkTimer)> _blinkOnRate){
+                _blinkTimer = 0;
+                _blinkShowOn = false;
+            }
+        }
+    }
+
+    return;
+}
