@@ -338,58 +338,59 @@ bool TM74HC595LedTube::stop() {
 }
 
 bool TM74HC595LedTube::blink(){
+    bool result {false};
+    if (!_blink){
     _blink = true;
     _blinkTimer = 0;
     _blinkShowOn = false;
+    result = true;
+    }
 
-    return true;
-}
-
-bool TM74HC595LedTube::blink(const unsigned long &rate){
-    bool result {setBlinkRate(rate)};
-    if (result)
-        result = blink();
     return result;
 }
 
 bool TM74HC595LedTube::blink(const unsigned long &onRate, const unsigned long &offRate){
-    bool result {setBlinkRate(onRate, offRate)};
-    if (result)
-        result = blink();
+    bool result {false};
+    if (!_blink){
+        if (offRate == 0)
+            result = setBlinkRate(onRate, onRate);
+        else
+            result = setBlinkRate(onRate, offRate);
+        
+        if (result)
+            result = blink();
+    }
+
     return result;
 }
 
 bool TM74HC595LedTube::noBlink(){
-    _blink = false;
-    _blinkTimer = 0;
-    _blinkShowOn = true;
+    bool result {false};
+    if(_blink){
+        _blink = false;
+        _blinkTimer = 0;
+        _blinkShowOn = true;
+        result = true;
+    }
 
-    return true;
+    return result;
 }
 
 bool TM74HC595LedTube::isBlinking(){
     return _blink;
 }
 
-bool TM74HC595LedTube::setBlinkRate(const unsigned long &newRate) {
-    bool result {false};
-    if ((newRate >= _minBlinkRate) && newRate <= _maxBlinkRate) {
-        //if the new blinkRate is in the accepted range, change the blinkRate
-        _blinkOnRate = newRate;
-        _blinkOffRate = newRate;
-        result = true;
-    }
-    //The value was outside valid range, keep the existing rate and report the error by returning false
-    return result;
-}
-
 bool TM74HC595LedTube::setBlinkRate(const unsigned long &newOnRate, const unsigned long &newOffRate){
     bool result {false};
+    
     if ((newOnRate >= _minBlinkRate) && newOnRate <= _maxBlinkRate) {
-        if ((newOffRate >= _minBlinkRate) && newOffRate <= _maxBlinkRate) {
+        if ((newOffRate == 0) || ((newOffRate >= _minBlinkRate) && (newOffRate <= _maxBlinkRate))) {
             //if the new blinkRate is in the accepted range, set the blinkRate for symmetric rate
             _blinkOnRate = newOnRate;
-            _blinkOffRate = newOffRate;
+            if (newOffRate == 0)
+                _blinkOffRate = newOnRate;
+            else
+                _blinkOffRate = newOffRate;
             result =  true;
         }
     }

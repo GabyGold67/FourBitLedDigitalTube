@@ -79,8 +79,7 @@ public:
     bool begin();
     bool stop();
     bool blink();
-    bool blink(const unsigned long &rate);
-    bool blink(const unsigned long &onRate, const unsigned long &offRate);
+    bool blink(const unsigned long &onRate, const unsigned long &offRate = 0);
     bool noBlink();
     bool isBlinking();
     void clear();
@@ -93,8 +92,7 @@ public:
     void fastRefresh();
     bool gauge(const int &level, char label = ' ');
     bool gauge(const double &level, char label = ' ');
-    bool setBlinkRate(const unsigned long &newRate);
-    bool setBlinkRate(const unsigned long &newOnRate, const unsigned long &newOffRate);
+    bool setBlinkRate(const unsigned long &newOnRate, const unsigned long &newOffRate = 0);
     uint8_t getInstanceNbr();
     unsigned long getMinBlinkRate();
     unsigned long getMaxBlinkRate();
