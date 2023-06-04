@@ -455,3 +455,30 @@ void TM74HC595LedTube::updBlinkState(){
 
     return;
 }
+
+bool TM74HC595LedTube::write(const uint8_t &segments, const uint8_t &port){
+    bool result {false};
+    
+    if (port <= 3){
+        _digit[port] = segments;
+        result = true;
+    }
+    
+    return result;
+}
+
+bool TM74HC595LedTube::write(const String &character, const uint8_t &port){
+    bool result {false};
+    int position {-1};
+    
+    if (port <= 3){
+            position = _charSet.indexOf(character);
+            if (position > -1) {
+                // Character found for translation
+                _digit[port] = _charLeds[position];
+                result = true;
+            }
+    }
+
+    return result;
+}

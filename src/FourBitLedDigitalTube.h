@@ -77,25 +77,27 @@ public:
     TM74HC595LedTube(uint8_t sclk, uint8_t rclk, uint8_t dio);
 
     bool begin();
-    bool stop();
     bool blink();
     bool blink(const unsigned long &onRate, const unsigned long &offRate = 0);
-    bool noBlink();
-    bool isBlinking();
     void clear();
-    void send(const uint8_t &segments, const uint8_t &port);
+    void fastRefresh();
     void fastSend(const uint8_t &segments, const uint8_t &port);
+    bool gauge(const int &level, char label = ' ');
+    bool gauge(const double &level, char label = ' ');
+    uint8_t getInstanceNbr();
+    unsigned long getMaxBlinkRate();
+    unsigned long getMinBlinkRate();
+    bool isBlinking();
+    bool noBlink();
     bool print(String text);
     bool print(const int &value, bool rgtAlgn = false, bool zeroPad = false);
     bool print(const double &value, const unsigned int &decPlaces, bool rgtAlgn = false, bool zeroPad = false);
     void refresh();
-    void fastRefresh();
-    bool gauge(const int &level, char label = ' ');
-    bool gauge(const double &level, char label = ' ');
+    void send(const uint8_t &segments, const uint8_t &port);
     bool setBlinkRate(const unsigned long &newOnRate, const unsigned long &newOffRate = 0);
-    uint8_t getInstanceNbr();
-    unsigned long getMinBlinkRate();
-    unsigned long getMaxBlinkRate();
+    bool stop();
+    bool write(const uint8_t &segments, const uint8_t &port);
+    bool write(const String &character, const uint8_t &port);
 
 };
 

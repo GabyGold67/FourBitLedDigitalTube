@@ -44,6 +44,8 @@ The first mechanism frees the user from the load of calling the refreshing metho
 |**send()**|uint8_t **segments**, uint8_t **port**|
 |**setBlinkRate()**|unsigned long **newOnRate**, (unsigned long **newOffRate**)|
 |**stop()**|None|
+|**write()**|uint8_t **segments**, uint8_t **port**|
+||String **character**, uint8_t **port**|
 
 
 ## **Methods definition and use description**
@@ -305,7 +307,7 @@ None
 ### Description:
 Sends one character to the display, using pre-built `shiftOut()` kind of methods, which takes unknown time to complete depending on the  implementation of the framework used to develop. The parameters indicate which character and to which digit will be sent. This is the method used by refresh() to send the digit when it has to be refreshed. **_Keep in mind_** that sending a character directly to the display has no connection to keep it displayed as it must be resent periodically to keep the cinematic effect. Also the refresh() and fastRefresh() methods will overwrite the character sent, explicitly called or by the ISR service if started by the **`begin()`** method.
 ### Parameters:  
-**segments:** An unsigned short integer value representing which segments to turn on and which off to get the graphic representation of a character in the seven segment display, the corresponding value can be looked up in the **_charLeds[]** array definition in the header file of the library.  
+**segments:** An unsigned short integer value representing which segments to turn on and which off to get the graphic representation of a character in the seven segment display, the corresponding value can be looked up in the **_charLeds[]** array definition in the header file of the library. Any other uint8_t (char or unsigned short int are equivalent terms here) value is admisible, but the displayed result might not be easily recognized as a known ASCII character.  
 **port:** An unsigned short integer value representing the digit where the character will be sent, being the range of valid values 0 <= port <= 3, the 0 value is the rightmost digit, the 1 value the second from the right and so on.
 ### Return value:  
 None   
@@ -339,3 +341,30 @@ true: The instance of the display was found and detached from the ISR.
 false: The instance of the display wasn't found attached to the ISR, no detach was carried as it wasn't needed.  
 ### Use example:  
 **`myLedDisp.stop();`**  
+
+---
+### **write**(uint8_t **segments**, uint8_t **port**);
+### Description:
+Prints one character to the display, at a desired position, without affecting the rest of the characters displayed.
+### Parameters:  
+**segments:** An unsigned short integer value representing which segments to turn on and which off to get the graphic representation of a character in the seven segment display, the corresponding value can be looked up in the **_charLeds[]** array definition in the header file of the library. Any other uint8_t (char or unsigned short int is the same here) value is admisible, but the displayed result might not be easily recognized as a known ASCII character.  
+**port:** An unsigned short integer value representing the digit where the character will be sent, being the range of valid values 0 <= port <= 3, the 0 value is the rightmost digit, the 1 value the second from the right and so on.
+### Return value:  
+true: If the parameters are within the acceptable range, in this case 0 <= port <= 3.  
+false: The port value was outside the acceptable range.  
+### Use example:  
+**`myLedDisp.write(0xA4, 1);`** // Modifies the displayed data, placing a '2' in the second digit from right to left.
+
+---
+### **write**(String **character**, uint8_t **port**);
+### Description:
+Prints one character to the display, at a desired position, without affecting the rest of the characters displayed.
+### Parameters:  
+**character:** A single character string that must be displayable, as defined in the **`.print()`** method.  
+**port:** An unsigned short integer value representing the digit where the character will be sent, being the range of valid values 0 <= port <= 3, the 0 value is the rightmost digit, the 1 value the second from the right and so on.
+### Return value:  
+true: If **character** is a displayable one char string, and **port** value is in the range 0 <= value <= 3.  
+false: The **character** was not "displayable" or the **port** value was out of range.  
+### Use example:  
+**`myLedDisp.write("J", 1);`** // Modifies the displayed data, placing a 'J' in the second digit from right to left.
+
