@@ -1,10 +1,10 @@
 # **A 4-bit Led Digital Tube Module display easy to use library**
-Developed for the cheap and popular 7-segment 4 digits led displays (**_and for all the custom made displays as GIANTS COUNTERS, TIMERS, PRICING DISPLAYS, etc._**)  based on two TM74HC595 (or similar) shift registers, the main focus was set on: ease of use, flexibility and basic prevention of 'misrepresentation' errors.
+Developed for the cheap and popular 7-segment 4 digits led displays (**_and for all the custom made displays as: GIANTS COUNTERS, TIMERS, PRICING DISPLAYS, etc._**)  based on two TM74HC595 (or similar) shift registers, the main focus was set on: ease of use, flexibility and basic prevention of 'misrepresentation' errors.
 
 ![4-Bits LED Digital Tube Module](./extras/4-BitsLedDigitalTubeModule01.jpg "4-Bits LED Digital Tube Module")
 
 ## Ease of use:
-Instance the class passing just 3 parameters (the 3 pins connected to the display module), notify the object you're ready to go, and start ``.print()``ing the data to the display. 
+Instance the class passing just 3 parameters (the 3 pins connected to the display module), notify the object and it's ready to go: start ``.print()``ing the data to the display. There's no need of even setting the pin modes.  
 
 ## Flexibility:
 Integers, floating point or strings they'll show as long as the display is capable of doing so in a trustworthy way. If you need to represent a percentage or level of completeness a ``.gauge()`` method is included to represent them in a "Old Motorola brick cell phones style".
@@ -51,7 +51,7 @@ The first mechanism frees the user from the load of calling the refreshing metho
 ---
 ### **TM74HC595LedTube**(uint8_t **sclk**, uint8_t **rclk**, uint8_t **dio**)
 ### Description:  
-Class constructor, create an instance of the class for each display to use. There's no need to configure the pin before calling the method, as the constructor takes care of the task.  
+Class constructor, create an instance of the class for each display to use. There's no need to configure the pins before calling the method, as the constructor takes care of the task.  
 ### Parameters:  
 **sclk:** uint8_t (unsigned char), passes the pin number that is connected to the sclk pin of the display (the **SH_CP** pin of the shift register if working in a custom display). The pin must be free to be used as a digital output.  
 **rclk:** uint8_t (unsigned char), passes the pin number that is connected to the rclk pin of the display (the **ST_CP** pin of the shift register if working in a custom display). The pin must be free to be used as a digital output.  
@@ -77,7 +77,7 @@ false: If the display couldn't be attached to the ISR, due to lack of free slots
 ---
 ### **blink**();
 ### Description:
-Makes the display blink the contents it is showing until a **`noBlink()`** method is invoked. The blinking is symmetrical, meaning that the time the display shows the contents and the time the display is blank are equal. The blinking starts at a preset rate the first time the method is invoked. The blinking rate can be changed by using the **`.setBlinkRate()`** method. After changing the blinking rate, the new blinking rate will be kept after a **`.noBlink()`** or new **`.blink()`** without parameters call is done, until it is modified with a new **`.setBlinkRate()`** call, or it is restarted by a **`.blink()`** with parameters. Note that to restart the blinking with a **`.blink()`** the service must first be stopped, as the method makes no changes if the blinking service was already running.  
+Makes the display blink the contents it is showing until a **`noBlink()`** method is invoked. The display will continue blinking even if the contents are changed. When invoking the method with no parameters the blinking is symmetrical, meaning that the time the display shows the contents and the time the display is blank are equal. The blinking starts at a preset rate the first time the method is invoked. The blinking rate can be changed by using the **`.setBlinkRate()`** method. After changing the blinking rate, the new blinking rate will be kept after a **`.noBlink()`** or new **`.blink()`** without parameters call is done, until it is modified with a new **`.setBlinkRate()`** call, or it is restarted by a **`.blink()`** with parameters. Note that to restart the blinking with a **`.blink()`** the service must first be stopped, as the method call makes no changes if the blinking service was already running.  
 ### Parameters:  
 None
 ### Return value:  
@@ -92,10 +92,10 @@ false: The display was already set to blink.
 Makes the display blink the contents it shows until a **`noBlink()`** method is invoked. The blinking is **symmetrical** if only one parameter is passed, **asymmetrical** if two different parameters are passed, meaning that the time the display shows the contents and the time the display is blank will be equal (symmetrical) or not (assymetrical), depending of those two parameters. The blinking starts at a passed rate when the method is invoked. The blinking rate can be changed by using the **`.setBlinkRate()`** method. The blink rate set will be kept after a **`.noBlink()`** or new **`.blink()`** without parameters call is done, until it is modified with a new **`.setBlinkRate()`** call, or it is restarted by a **`.blink()`** with parameters. Note that to restart the blinking with a **`.blink()`** the service must first be stopped, as the method makes no changes if the blinking service was already running.  
 ### Parameters:  
 **onRate**: unsigned long integer containing the time (in milliseconds) the display must stay on, the value must be in the range _minBlinkRate <= onRate <= _maxBlinkRate. Those values might be known by the use of the **`getMinBlinkRate()`** and the **`getMaxBlinkRate()`** methods.  
-**offRate**: optional unsigned long integer containing the time (in milliseconds) the display must stay off, the value must be in the range _minBlinkRate <= onRate <= _maxBlinkRate. Those values might be known by the use of the **`getMinBlinkRate()`** and the **`getMaxBlinkRate()`** methods. If no offRate value is provided the method will assume it's a symmetric blink call an use a value of offRate equal to the value passed by onRate 
+**offRate**: optional unsigned long integer containing the time (in milliseconds) the display must stay off, the value must be in the range _minBlinkRate <= offRate <= _maxBlinkRate. Those values might be known by the use of the **`getMinBlinkRate()`** and the **`getMaxBlinkRate()`** methods. If no offRate value is provided the method will assume it's a symmetric blink call an use a value of offRate equal to the value passed by onRate 
 ### Return value:  
 true: If the display was not already set to blink (so now the blinking was started).  
-false: The display was already set to blink, and/or one or more of the parameters passed was out of range.  
+false: The display was already set to blink, and/or one or more of the parameters passed were out of range.  
 ### Use example:  
 **`myLedDisp.blink(400);`** //Returns true and sets the blinking rate to 400 millisecs on, 400 millisecs off (symmetrical blink).  
 **`myLedDisp.blink(800, 200);`** //Returns true and sets the blinking rate to 800 millisecs on, 200 millisecs off (assymetrical blink)  
@@ -117,7 +117,7 @@ None
 ### Description:
 Refreshes the display, **only one digit per call**, the method takes care of registering which digit was redrawn last and move to the next until the last is reached and then restart from the first, and uses direct pin handling instead of using pre-built `shiftOut()` kind of methods. This working criteria has two consecuences:
 * The method works faster than redrawing all the digits each time and using the call to `shiftOut()` methods, so it is less time consuming and so is the most appropiate to be used within an ISR.
-* When used by the developer to refresh the display from the code it must be called more frequently (starting with the four times needed to refresh all the digits of the display, and then doing those four calls periodically) to keep the display's cinematic effect. Failing to do so will be seen as display flickering, or some of the digits more brighter than others.  
+* When used by the developer to refresh the display from the code it must be called more frequently (starting with the four times needed to refresh all the digits of the display, and then doing those four calls periodically) to keep the display's cinematic effect. Failing to do so will be seen as display flickering, or some of the digits displayed more brighter than others.  
 ### Parameters:  
 None
 ### Return value:  
@@ -177,6 +177,53 @@ false: Otherwise, being that the **level** parameter was out of range and/or the
 **`myLedDisp.gauge(1.0, 'F');`**  
 **`myLedDisp.gauge(1.5, 'd');`** //Error  
 **`myLedDisp.gauge(3.0, 'X');`** //Error  
+
+---
+### **getInstanceNbr**();
+### Description:
+Returns an unsigned short integer value indicating the instantition number it was given to the object. Each time the class is instantiated the created object receives a serial instantiation number that can be used in order to identify each object in case of need.
+### Return value:  
+The unsigned short number indicating the identificacion Instance Number.  
+### Use example:  
+**`myLedDisp.getInstanceNbr();`**
+
+---
+### **getMaxBlinkRate**();
+### Description:
+Returns the maximum time the display can be configured to blink, helps keeping the BlinkRate setters inside the accepted range.
+### Return value:  
+unsigned long integer: The maximum time, in milliseconds, the display can be set to blink. This value is the maximum to set as the turned-on or the turned-off stage of the blinking process started by a **`.blink()`** method.  
+### Use example:  
+**`myLedDisp.getMaxBlinkRate();`**
+
+---
+### **getMinBlinkRate**();
+### Description:
+Returns the minimum time the display can be configured to blink, helps keeping the BlinkRate setters inside the accepted range.
+### Return value:  
+unsigned long integer: The minimum time, in milliseconds, the display can be set to blink. This value is the minimum to set as the turned-on or the turned-off stage of the blinking process started by a **`.blink()`** method.  
+### Use example:  
+**`myLedDisp.getMinBlinkRate();`**
+
+---
+### **isBlinking**();
+### Description:
+Returns a boolean value indicating if the display is set to blink or not.
+### Return value:  
+true: If the display is set to blink.  
+false: If the display is set not to blink.   
+### Use example:  
+**`myLedDisp.isBlinking();`**
+
+---
+### **noBlink**();
+### Description:
+Stops the display blinking, if it was doing so, leaving the display turned on.
+### Return value:  
+true: If the display was set to blink, and the blinking is stopped.   
+false: If the display was not set to blink, no changes will be done.
+### Use example:  
+**`myLedDisp.noBlink();`**
 
 ---
 ### **print**(String **text**);
@@ -266,6 +313,22 @@ None
 **`myLedDisp.send(0x91, 2);`** // Sends a Y to the third digit from right to left.
 
 ---
+### **setBlinkRate**(unsigned long **onRate**,unsigned long **offRate**);
+### Description:
+Changes the time parameters to use for the display blinking the contents it shows. The parameters change will take immedite effect, either if the display is already blinking or not, in the latter case the parameters will be the ones used when a **`blink()`** method is called without parameters. The blinking will be **symmetrical** if only one parameter is passed, **asymmetrical** if two different parameters are passed, meaning that the time the display shows the contents and the time the display is blank will be equal (symmetrical) or not (assymetrical), depending of those two parameters. The blink rate set will be kept after a **`.noBlink()`** or new **`.blink()`** without parameters call is done, until it is modified with a new **`.setBlinkRate()`** call, or it is restarted by a **`.blink()`** with parameters. Note that to restart the blinking with a **`.blink()`** the service must first be stopped, as the method makes no changes if the blinking service was already running.  
+### Parameters:  
+**onRate**: unsigned long integer containing the time (in milliseconds) the display must stay on, the value must be in the range _minBlinkRate <= onRate <= _maxBlinkRate. Those values might be known by the use of the **`getMinBlinkRate()`** and the **`getMaxBlinkRate()`** methods.  
+**offRate**: optional unsigned long integer containing the time (in milliseconds) the display must stay off, the value must be in the range _minBlinkRate <= offRate <= _maxBlinkRate. Those values might be known by the use of the **`getMinBlinkRate()`** and the **`getMaxBlinkRate()`** methods. If no offRate value is provided the method will assume it's a symmetric blink call an use a value of offRate equal to the value passed by onRate 
+### Return value:  
+true: If the parameter or parameters passed are whiting the valid range, and the change takes effect.
+false: One or more of the parameters passed were out of range. The rate change would not be made for none of the parameters.  
+### Use example:  
+**`myLedDisp.setBlinkRate(400);`** //Returns true and sets the blinking rate to 400 millisecs on, 400 millisecs off (symmetrical blink).  
+**`myLedDisp.setBlinkRate(800, 200);`** //Returns true and sets the blinking rate to 800 millisecs on, 200 millisecs off (assymetrical blink)  
+**`myLedDisp.setBlinkRate(3000);`** //Returns false and the display blinking rate stays without change.  
+**`myLedDisp.setBlinkRate(600, 3500);`** //Returns false and the display blinking rate stays without change.  
+
+---
 ### **stop**();
 ### Description:
 Detaches the display from the timer interrupt service which takes care of refreshing the display regularly (if it was attached to it). If the display wasn't attached to the ISR no modification is made. The method then checks the array (list) of active serviced displays, if none is left in that array, the timer service is stopped, and the interrupt used by it is released, to leave the resource available for other uses. This last action is reversed when a new begin() method is executed in any display.  
@@ -275,52 +338,4 @@ None
 true: The instance of the display was found and detached from the ISR.  
 false: The instance of the display wasn't found attached to the ISR, no detach was carried as it wasn't needed.  
 ### Use example:  
-**`myLedDisp.stop();`**
-
----
-### **noBlink**();
-### Description:
-Stops the display blinking, if it was doing so, leaving the display turned on.
-### Return value:  
-true: If the display was set to blink, and the blinking is stopped.   
-false: If the display was not set to blink, no changes will be done.
-### Use example:  
-**`myLedDisp.noBlink();`**
-
----
-### **isBlinking**();
-### Description:
-Returns a boolean value indicating if the display is set to blink or not.
-### Return value:  
-true: If the display is set to blink.  
-false: If the display is set not to blink.   
-### Use example:  
-**`myLedDisp.isBlinking();`**
-
----
-### **getInstanceNbr**();
-### Description:
-Returns an unsigned short integer value indicating the instantition number it was given to the object. Each time the class is instantiated the created object receives a serial instantiation number that can be used in order to identify each object in case of need.
-### Return value:  
-The unsigned short number indicating the identificacion Instance Number.  
-### Use example:  
-**`myLedDisp.getInstanceNbr();`**
-
----
-### **getMaxBlinkRate**();
-### Description:
-Returns the maximum time the display can be configured to blink, helps keeping the BlinkRate setters inside the accepted range.
-### Return value:  
-unsigned long integer: The maximum time, in milliseconds, the display can be set to blink. This value is the maximum to set as the turned-on or the turned-off stage of the blinking process started by a **`.blink()`** method.  
-### Use example:  
-**`myLedDisp.getMaxBlinkRate();`**
-
----
-### **getMinBlinkRate**();
-### Description:
-Returns the minimum time the display can be configured to blink, helps keeping the BlinkRate setters inside the accepted range.
-### Return value:  
-unsigned long integer: The minimum time, in milliseconds, the display can be set to blink. This value is the minimum to set as the turned-on or the turned-off stage of the blinking process started by a **`.blink()`** method.  
-### Use example:  
-**`myLedDisp.getMinBlinkRate();`**
-
+**`myLedDisp.stop();`**  
