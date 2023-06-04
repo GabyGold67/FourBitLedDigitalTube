@@ -429,7 +429,7 @@ void TM74HC595LedTube::updBlinkState(){
     if (_blink == true){
         if (_blinkShowOn == false) {
             if (_blinkTimer == 0){
-                //turn off all digits without affecting the _digit[] buffer
+                //turn off all digits by sending directly a blank to each port, without affecting the _digit[] buffer
                 send(0xFF, 0b0001);
                 send(0xFF, 0b0010);
                 send(0xFF, 0b0100);
@@ -446,7 +446,7 @@ void TM74HC595LedTube::updBlinkState(){
             if (_blinkTimer == 0){
                 _blinkTimer = millis();
             }
-            else if((millis() - _blinkTimer)> _blinkOnRate){
+            else if((millis() - _blinkTimer) > _blinkOnRate){
                 _blinkTimer = 0;
                 _blinkShowOn = false;
             }
