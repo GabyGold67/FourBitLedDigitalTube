@@ -129,7 +129,7 @@ void loop()
   
   //Setting the blink rate to the symmetric original value
   testResultOne = myLedDispOne.setBlinkRate(500);
-  delay(000);
+  delay(3000);
 
 
 }
