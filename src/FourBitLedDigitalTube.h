@@ -15,11 +15,18 @@ private:
     uint8_t _dispInstNbr{0};
     uint8_t _digit[4];
     uint8_t firstRefreshed{0};
-    bool _blink{false};
+    bool _blinking{false};
     unsigned long _blinkTimer{0};
     bool _blinkShowOn{false};
     unsigned long _blinkOnRate{500};
     unsigned long _blinkOffRate{500};
+
+    uint8_t _waitChar  {0xBF};
+    bool _waiting{false};
+    unsigned long _waitTimer{0};
+    uint8_t _waitCount {0};
+    unsigned long _waitRate{250};
+
     String _charSet{"0123456789AabCcdEeFGHhIiJLlnOoPqrStUuY-_=~* ."}; // for using indexOf() method
     uint8_t _charLeds[45] = {
         0xC0, // 0
@@ -69,9 +76,12 @@ private:
         0x7F  //.
     };
     
+    uint8_t _space {0xFF};
+
     void send(const uint8_t &content);
     void fastSend(uint8_t content);
     void updBlinkState();
+    void updWaitState();
 
 public:
     TM74HC595LedTube(uint8_t sclk, uint8_t rclk, uint8_t dio);
@@ -88,14 +98,18 @@ public:
     unsigned long getMaxBlinkRate();
     unsigned long getMinBlinkRate();
     bool isBlinking();
+    bool isWaiting();
     bool noBlink();
+    bool noWait();
     bool print(String text);
     bool print(const int &value, bool rgtAlgn = false, bool zeroPad = false);
     bool print(const double &value, const unsigned int &decPlaces, bool rgtAlgn = false, bool zeroPad = false);
     void refresh();
     void send(const uint8_t &segments, const uint8_t &port);
     bool setBlinkRate(const unsigned long &newOnRate, const unsigned long &newOffRate = 0);
+    bool setWaitRate(const unsigned long &newWaitRate);
     bool stop();
+    bool wait(const unsigned long &newWaitRate = 0);
     bool write(const uint8_t &segments, const uint8_t &port);
     bool write(const String &character, const uint8_t &port);
 

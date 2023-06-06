@@ -1,6 +1,6 @@
 {
     "name": "FourBitLedDigitalTube",
-    "version": "1.4.0",
+    "version": "1.5.0",
     
     "description": "A 4-bit Led Digital Tube Module display simple to use library, Developed for the cheap and popular 7-segment 4 digits led displays (**_and for all the custom made displays as: GIANTS COUNTERS, TIMERS, PRICING DISPLAYS, etc._**)  based on two TM74HC595 (or similar) shift registers, the main focus was set on: ease of use, flexibility and basic prevention of 'misrepresentation' errors.",
     "keywords": "7-Segment, LED, display, print, blink, gauge, floating-point, negative, shift register",

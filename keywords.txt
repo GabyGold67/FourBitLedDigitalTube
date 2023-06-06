@@ -22,12 +22,16 @@ getInstanceNbr  KEYWORD2
 getMaxBlinkRate KEYWORD2
 getMinBlinkRate KEYWORD2
 isBlinking  KEYWORD2
+isWaiting   KEYWORD2
 noBlink     KEYWORD2
+noWait  KEYWORD2
 print	    KEYWORD2
 refresh     KEYWORD2
 send	    KEYWORD2
 setBlinkRate    KEYWORD2
+setWaitRate KEYWORD2
 stop        KEYWORD2
+wait    KEYWORD2
 write   KEYWORD2
 
 ###############################################

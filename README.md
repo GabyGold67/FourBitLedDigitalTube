@@ -36,14 +36,19 @@ The first mechanism frees the user from the load of calling the refreshing metho
 |**getMaxBlinkRate()**|None|
 |**getMinBlinkRate()**|None|
 |**isBlinking()**|None|
+|**isWaiting()**|None|
 |**noBlink()**|None|
+|**noWait()**|None|
 |**print()**|String **text**|
 ||int **value** (, bool **rgtAlgn** (, bool **zeroPad**))|
 ||double **value** (, unsigned int **decPlaces** (, bool **rgtAlgn** (, bool **zeroPad**)))|
 |**refresh()**|None|
 |**send()**|uint8_t **segments**, uint8_t **port**|
 |**setBlinkRate()**|unsigned long **newOnRate**, (unsigned long **newOffRate**)|
+|**setWaitRate()**|unsigned long **newWaitRate**|
 |**stop()**|None|
+|**stop()**|None|
+|**wait()**|(unsigned long **waitRate**)|
 |**write()**|uint8_t **segments**, uint8_t **port**|
 ||String **character**, uint8_t **port**|
 
@@ -91,7 +96,7 @@ false: The display was already set to blink.
 ---
 ### **blink**(unsigned long **onRate**,unsigned long **offRate**);
 ### Description:
-Makes the display blink the contents it shows until a **`noBlink()`** method is invoked. The blinking is **symmetrical** if only one parameter is passed, **asymmetrical** if two different parameters are passed, meaning that the time the display shows the contents and the time the display is blank will be equal (symmetrical) or not (assymetrical), depending of those two parameters. The blinking starts at a passed rate when the method is invoked. The blinking rate can be changed by using the **`.setBlinkRate()`** method. The blink rate set will be kept after a **`.noBlink()`** or new **`.blink()`** without parameters call is done, until it is modified with a new **`.setBlinkRate()`** call, or it is restarted by a **`.blink()`** with parameters. Note that to restart the blinking with a **`.blink()`** the service must first be stopped, as the method makes no changes if the blinking service was already running.  
+Makes the display blink the contents it shows until a **`noBlink()`** method is invoked. The blinking is **symmetrical** if only one parameter is passed, **asymmetrical** if two different parameters are passed, meaning that the time the display shows the contents and the time the display is blank will be equal (symmetrical) or not (asymmetrical), depending of those two parameters. The blinking starts at a passed rate when the method is invoked. The blinking rate can be changed by using the **`.setBlinkRate()`** method. The blink rate set will be kept after a **`.noBlink()`** or new **`.blink()`** without parameters call is done, until it is modified with a new **`.setBlinkRate()`** call, or it is restarted by a **`.blink()`** with parameters. Note that to restart the blinking with a **`.blink()`** the service must first be stopped, as the method makes no changes if the blinking service was already running.  
 ### Parameters:  
 **onRate**: unsigned long integer containing the time (in milliseconds) the display must stay on, the value must be in the range _minBlinkRate <= onRate <= _maxBlinkRate. Those values might be known by the use of the **`getMinBlinkRate()`** and the **`getMaxBlinkRate()`** methods.  
 **offRate**: optional unsigned long integer containing the time (in milliseconds) the display must stay off, the value must be in the range _minBlinkRate <= offRate <= _maxBlinkRate. Those values might be known by the use of the **`getMinBlinkRate()`** and the **`getMaxBlinkRate()`** methods. If no offRate value is provided the method will assume it's a symmetric blink call an use a value of offRate equal to the value passed by onRate 
@@ -100,7 +105,7 @@ true: If the display was not already set to blink (so now the blinking was start
 false: The display was already set to blink, and/or one or more of the parameters passed were out of range.  
 ### Use example:  
 **`myLedDisp.blink(400);`** //Returns true and sets the blinking rate to 400 millisecs on, 400 millisecs off (symmetrical blink).  
-**`myLedDisp.blink(800, 200);`** //Returns true and sets the blinking rate to 800 millisecs on, 200 millisecs off (assymetrical blink)  
+**`myLedDisp.blink(800, 200);`** //Returns true and sets the blinking rate to 800 millisecs on, 200 millisecs off (asymmetrical blink)  
 **`myLedDisp.blink(3000);`** //Returns false and the display stays without change.  
 
 ---
@@ -117,8 +122,8 @@ None
 ---
 ### **fastRefresh**();
 ### Description:
-Refreshes the display, **only one digit per call**, the method takes care of registering which digit was redrawn last and move to the next until the last is reached and then restart from the first, and uses direct pin handling instead of using pre-built `shiftOut()` kind of methods. This working criteria has two consecuences:
-* The method works faster than redrawing all the digits each time and using the call to `shiftOut()` methods, so it is less time consuming and so is the most appropiate to be used within an ISR.
+Refreshes the display, **only one digit per call**, the method takes care of registering which digit was redrawn last and move to the next until the last is reached and then restart from the first, and uses direct pin handling instead of using pre-built `shiftOut()` kind of methods. This working criteria has two consequences:
+* The method works faster than redrawing all the digits each time and using the call to `shiftOut()` methods, so it is less time consuming and so is the most appropriate to be used within an ISR.
 * When used by the developer to refresh the display from the code it must be called more frequently (starting with the four times needed to refresh all the digits of the display, and then doing those four calls periodically) to keep the display's cinematic effect. Failing to do so will be seen as display flickering, or some of the digits displayed more brighter than others.  
 ### Parameters:  
 None
@@ -183,9 +188,11 @@ false: Otherwise, being that the **level** parameter was out of range and/or the
 ---
 ### **getInstanceNbr**();
 ### Description:
-Returns an unsigned short integer value indicating the instantition number it was given to the object. Each time the class is instantiated the created object receives a serial instantiation number that can be used in order to identify each object in case of need.
+Returns an unsigned short integer value indicating the instantiation number it was given to the object. Each time the class is instantiated the created object receives a serial instantiation number that can be used in order to identify each object in case of need.
+### Parameters:  
+**None**  
 ### Return value:  
-The unsigned short number indicating the identificacion Instance Number.  
+The unsigned short number indicating the identification Instance Number.  
 ### Use example:  
 **`myLedDisp.getInstanceNbr();`**
 
@@ -193,6 +200,8 @@ The unsigned short number indicating the identificacion Instance Number.
 ### **getMaxBlinkRate**();
 ### Description:
 Returns the maximum time the display can be configured to blink, helps keeping the BlinkRate setters inside the accepted range.
+### Parameters:  
+**None**  
 ### Return value:  
 unsigned long integer: The maximum time, in milliseconds, the display can be set to blink. This value is the maximum to set as the turned-on or the turned-off stage of the blinking process started by a **`.blink()`** method.  
 ### Use example:  
@@ -202,6 +211,8 @@ unsigned long integer: The maximum time, in milliseconds, the display can be set
 ### **getMinBlinkRate**();
 ### Description:
 Returns the minimum time the display can be configured to blink, helps keeping the BlinkRate setters inside the accepted range.
+### Parameters:  
+**None**  
 ### Return value:  
 unsigned long integer: The minimum time, in milliseconds, the display can be set to blink. This value is the minimum to set as the turned-on or the turned-off stage of the blinking process started by a **`.blink()`** method.  
 ### Use example:  
@@ -211,6 +222,8 @@ unsigned long integer: The minimum time, in milliseconds, the display can be set
 ### **isBlinking**();
 ### Description:
 Returns a boolean value indicating if the display is set to blink or not.
+### Parameters:  
+**None**  
 ### Return value:  
 true: If the display is set to blink.  
 false: If the display is set not to blink.   
@@ -218,14 +231,40 @@ false: If the display is set not to blink.
 **`myLedDisp.isBlinking();`**
 
 ---
+### **isWaiting**();
+### Description:
+Returns a boolean value indicating if the display is set to wait or not. This might be useful as the display is unavailable to other **`.print()`**, **`write()`**, **`gauge()`**, etc. methods while its on "waiting" mode.
+### Parameters:  
+**None**  
+### Return value:  
+true: If the display is set to wait.  
+false: If the display is set not to wait.   
+### Use example:  
+**`myLedDisp.isWaiting();`**
+
+---
 ### **noBlink**();
 ### Description:
 Stops the display blinking, if it was doing so, leaving the display turned on.
+### Parameters:  
+**None**  
 ### Return value:  
 true: If the display was set to blink, and the blinking is stopped.   
 false: If the display was not set to blink, no changes will be done.
 ### Use example:  
 **`myLedDisp.noBlink();`**
+
+---
+### **noWait**();
+### Description:
+Stops the waiting in process display, if it was doing so, leaving the display turned on, blanked.
+### Parameters:  
+**None**  
+### Return value:  
+true: If the display was set to wait, and the waiting is stopped.   
+false: If the display was not set to wait, no changes will be done.
+### Use example:  
+**`myLedDisp.noWait();`**
 
 ---
 ### **print**(String **text**);
@@ -292,13 +331,13 @@ false: Otherwise, and the display will be blanked.
 ---
 ### **refresh**();
 ### Description:
-Refreshes the display, **all four digits per call**, the method takes care of registering which digit was redrawn first and each call starts from the next until the last is reached and then restart from the first, to minimize ghosting and keep all the digits brightness even, and uses pre-built **`shiftOut()`** kind of methods. This working criteria has two consecuences:
+Refreshes the display, **all four digits per call**, the method takes care of registering which digit was redrawn first and each call starts from the next until the last is reached and then restart from the first, to minimize ghosting and keep all the digits brightness even, and uses pre-built **`shiftOut()`** kind of methods. This working criteria has two consequences:
 * The method works slower than the **`fastRefresh()`**, so it will take more time to execute.  
 * When used by the developer to refresh the display from the code it will avoid ghosting or blinking effects being called less frequently to keep the display's cinematic effect.  
 ### Parameters:  
-None
+**None**  
 ### Return value:  
-None   
+**None**   
 ### Use example:  
 **`myLedDisp.refresh();`**  
 
@@ -307,7 +346,7 @@ None
 ### Description:
 Sends one character to the display, using pre-built `shiftOut()` kind of methods, which takes unknown time to complete depending on the  implementation of the framework used to develop. The parameters indicate which character and to which digit will be sent. This is the method used by refresh() to send the digit when it has to be refreshed. **_Keep in mind_** that sending a character directly to the display has no connection to keep it displayed as it must be resent periodically to keep the cinematic effect. Also the refresh() and fastRefresh() methods will overwrite the character sent, explicitly called or by the ISR service if started by the **`begin()`** method.
 ### Parameters:  
-**segments:** An unsigned short integer value representing which segments to turn on and which off to get the graphic representation of a character in the seven segment display, the corresponding value can be looked up in the **_charLeds[]** array definition in the header file of the library. Any other uint8_t (char or unsigned short int are equivalent terms here) value is admisible, but the displayed result might not be easily recognized as a known ASCII character.  
+**segments:** An unsigned short integer value representing which segments to turn on and which off to get the graphic representation of a character in the seven segment display, the corresponding value can be looked up in the **_charLeds[]** array definition in the header file of the library. Any other uint8_t (char or unsigned short int are equivalent terms here) value is admissible, but the displayed result might not be easily recognized as a known ASCII character.  
 **port:** An unsigned short integer value representing the digit where the character will be sent, being the range of valid values 0 <= port <= 3, the 0 value is the rightmost digit, the 1 value the second from the right and so on.
 ### Return value:  
 None   
@@ -317,7 +356,7 @@ None
 ---
 ### **setBlinkRate**(unsigned long **onRate**,unsigned long **offRate**);
 ### Description:
-Changes the time parameters to use for the display blinking the contents it shows. The parameters change will take immedite effect, either if the display is already blinking or not, in the latter case the parameters will be the ones used when a **`blink()`** method is called without parameters. The blinking will be **symmetrical** if only one parameter is passed, **asymmetrical** if two different parameters are passed, meaning that the time the display shows the contents and the time the display is blank will be equal (symmetrical) or not (assymetrical), depending of those two parameters. The blink rate set will be kept after a **`.noBlink()`** or new **`.blink()`** without parameters call is done, until it is modified with a new **`.setBlinkRate()`** call, or it is restarted by a **`.blink()`** with parameters. Note that to restart the blinking with a **`.blink()`** the service must first be stopped, as the method makes no changes if the blinking service was already running.  
+Changes the time parameters to use for the display blinking the contents it shows. The parameters change will take immediate effect, either if the display is already blinking or not, in the latter case the parameters will be the ones used when a **`blink()`** method is called without parameters. The blinking will be **symmetrical** if only one parameter is passed, **asymmetrical** if two different parameters are passed, meaning that the time the display shows the contents and the time the display is blank will be equal (symmetrical) or not (asymmetrical), depending of those two parameters. The blink rate set will be kept after a **`.noBlink()`** or new **`.blink()`** without parameters call is done, until it is modified with a new **`.setBlinkRate()`** call, or it is restarted by a **`.blink()`** with parameters. Note that to restart the blinking with a **`.blink()`** the service must first be stopped, as the method makes no changes if the blinking service was already running.  
 ### Parameters:  
 **onRate**: unsigned long integer containing the time (in milliseconds) the display must stay on, the value must be in the range _minBlinkRate <= onRate <= _maxBlinkRate. Those values might be known by the use of the **`getMinBlinkRate()`** and the **`getMaxBlinkRate()`** methods.  
 **offRate**: optional unsigned long integer containing the time (in milliseconds) the display must stay off, the value must be in the range _minBlinkRate <= offRate <= _maxBlinkRate. Those values might be known by the use of the **`getMinBlinkRate()`** and the **`getMaxBlinkRate()`** methods. If no offRate value is provided the method will assume it's a symmetric blink call an use a value of offRate equal to the value passed by onRate 
@@ -326,16 +365,29 @@ true: If the parameter or parameters passed are whiting the valid range, and the
 false: One or more of the parameters passed were out of range. The rate change would not be made for none of the parameters.  
 ### Use example:  
 **`myLedDisp.setBlinkRate(400);`** //Returns true and sets the blinking rate to 400 millisecs on, 400 millisecs off (symmetrical blink).  
-**`myLedDisp.setBlinkRate(800, 200);`** //Returns true and sets the blinking rate to 800 millisecs on, 200 millisecs off (assymetrical blink)  
+**`myLedDisp.setBlinkRate(800, 200);`** //Returns true and sets the blinking rate to 800 millisecs on, 200 millisecs off (asymmetrical blink)  
 **`myLedDisp.setBlinkRate(3000);`** //Returns false and the display blinking rate stays without change.  
 **`myLedDisp.setBlinkRate(600, 3500);`** //Returns false and the display blinking rate stays without change.  
+
+---
+### **setWaitRate**(unsigned long **newWaitRate**);
+### Description:
+Changes the time parameter to use for the display to show the "progress bar advancement". The parameters change will take immediate effect, either if the display is already in wait mode or not, in the latter case the parameter will be the one used when a **`wait()`** method is called without parameters. The wait rate set will be kept after a **`.noWait()`** or new **`.wait()`** without parameters call is done, until it is modified with a new **`.setWaitRate()`** call, or it is restarted by a **`.wait()`** with parameters. Note that to restart the waiting with a **`.wait()`** the service must first be stopped, as the method makes no changes if the waiting service was already running.  
+### Parameters:  
+**newWaitRate**: unsigned long integer containing the time (in milliseconds) the display must take to advance the next character symbolizing the progress, the value must be in the range _minBlinkRate <= newWaitRate <= _maxBlinkRate. Those values might be known by the use of the **`getMinBlinkRate()`** and the **`getMaxBlinkRate()`** methods.  
+### Return value:  
+true: If the parameter passed is whiting the valid range, and the change takes effect.
+false: The parameter passed was out of range. In this case the rate change would not be made.  
+### Use example:  
+**`myLedDisp.setWaitRate(400);`** //Returns true and sets the advancement rate to 400 millisecs.  
+**`myLedDisp.setWaitRate(3000);`** //Returns false and the display wait rate stays without change.  
 
 ---
 ### **stop**();
 ### Description:
 Detaches the display from the timer interrupt service which takes care of refreshing the display regularly (if it was attached to it). If the display wasn't attached to the ISR no modification is made. The method then checks the array (list) of active serviced displays, if none is left in that array, the timer service is stopped, and the interrupt used by it is released, to leave the resource available for other uses. This last action is reversed when a new begin() method is executed in any display.  
 ### Parameters:  
-None
+**None**  
 ### Return value:  
 true: The instance of the display was found and detached from the ISR.  
 false: The instance of the display wasn't found attached to the ISR, no detach was carried as it wasn't needed.  
@@ -347,13 +399,26 @@ false: The instance of the display wasn't found attached to the ISR, no detach w
 ### Description:
 Prints one character to the display, at a desired position, without affecting the rest of the characters displayed.
 ### Parameters:  
-**segments:** An unsigned short integer value representing which segments to turn on and which off to get the graphic representation of a character in the seven segment display, the corresponding value can be looked up in the **_charLeds[]** array definition in the header file of the library. Any other uint8_t (char or unsigned short int is the same here) value is admisible, but the displayed result might not be easily recognized as a known ASCII character.  
+**segments:** An unsigned short integer value representing which segments to turn on and which off to get the graphic representation of a character in the seven segment display, the corresponding value can be looked up in the **_charLeds[]** array definition in the header file of the library. Any other uint8_t (char or unsigned short int is the same here) value is admissible, but the displayed result might not be easily recognized as a known ASCII character.  
 **port:** An unsigned short integer value representing the digit where the character will be sent, being the range of valid values 0 <= port <= 3, the 0 value is the rightmost digit, the 1 value the second from the right and so on.
 ### Return value:  
 true: If the parameters are within the acceptable range, in this case 0 <= port <= 3.  
 false: The port value was outside the acceptable range.  
 ### Use example:  
 **`myLedDisp.write(0xA4, 1);`** // Modifies the displayed data, placing a '2' in the second digit from right to left.
+
+### **wait**(unsigned long **newWaitRate**);
+### Description:
+Makes the display show an "simple animated progress bar" until a **`noWait()`** method is invoked. The speed rate for the progress animation starts at a passed rate when the method is invoked, or the last speed set will be used, having a preset value for the first time it's invoked if no parameter is passed. The animation rate can be changed by using the **`.setWaitRate()`** method. The speed rate set will be kept after a **`.noWait()`** or new **`.wait()`** without parameters call is done, until it is modified with a new **`.setWaitRate()`** call, or it is restarted by a **`.wait()`** with a parameter. Note that to restart the waiting with a **`.wait()`** the service must first be stopped, as the method makes no changes if the waiting service was already running.  
+### Parameters:  
+**newWaitRate**: Optional unsigned long integer containing the time (in milliseconds) the display must stay in the same advancement representation before moving on to the next, the value must be in the range _minBlinkRate <= newWaitRate <= _maxBlinkRate. Those values might be known by the use of the **`getMinBlinkRate()`** and the **`getMaxBlinkRate()`** methods.  
+### Return value:  
+true: If the display was not already set to wait (so now the waiting was started).  
+false: The display was already set to wait, and/or the parameter passed was out of range.  
+### Use example:  
+**`myLedDisp.wait();`** //Returns true and shows advancement animation to the already set value.  
+**`myLedDisp.wait(800);`** //Returns true and sets the advancement animation rate to 800 millisecs.  
+**`myLedDisp.wait(3000);`** //Returns false and the display stays without change.  
 
 ---
 ### **write**(String **character**, uint8_t **port**);
