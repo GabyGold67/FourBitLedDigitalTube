@@ -40,7 +40,7 @@ void loop()
   //Print a message telling a "configuration" will take place
   testResultOne = myLedDispOne.print("JuSt");
   delay(2000);
-  testResultOne = myLedDispOne.print(5, true);
+  testResultOne = myLedDispOne.print(6, false);
   delay(2000);
   testResultOne = myLedDispOne.print("SeCS");
   delay(2000);
@@ -51,7 +51,7 @@ void loop()
 
   //Setting the wait() method to keep the display alive while configuring
   testResultOne = myLedDispOne.wait();
-  delay(5000);
+  delay(6000);
 
   //Stop de waiting displayed
   testResultOne = myLedDispOne.noWait();

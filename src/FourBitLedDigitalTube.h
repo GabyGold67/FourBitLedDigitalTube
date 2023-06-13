@@ -3,9 +3,13 @@
 #include <Arduino.h>
 
 #define MAX_PTR_ARRAY 4
+#define DISPLAY_DIGITS 4
+#define MIN_DISP_VALUE -999
+#define MAX_DISP_VALUE 9999
+
 class TM74HC595LedTube {
     static uint8_t displaysCount;
-private:
+protected:
     const unsigned long _minBlinkRate{100};
     const unsigned long _maxBlinkRate{2000};
     TM74HC595LedTube *_dispInstance;
@@ -112,6 +116,23 @@ public:
     bool wait(const unsigned long &newWaitRate = 0);
     bool write(const uint8_t &segments, const uint8_t &port);
     bool write(const String &character, const uint8_t &port);
+
+};
+
+class ClickCounter: public TM74HC595LedTube{
+private:
+    int _count{0};
+    bool _countRgthAlgn{true};
+    bool _countZeroPad{false};
+
+public:
+    ClickCounter(uint8_t ccSclk, uint8_t ccRclk, uint8_t ccDio, bool rgthAlgn = true, bool zeroPad = false);
+    bool begin(int startVal = 0);
+    bool countRestart(int restartValue = 0);
+    bool countStop();
+    bool countUp(int qty = 1);
+    bool countDown(int qty = 1);
+    bool updDisplay();
 
 };
 

@@ -569,3 +569,68 @@ void TM74HC595LedTube::updWaitState(){
 
    return;
 }
+
+ClickCounter::ClickCounter(uint8_t ccSclk, uint8_t ccRclk, uint8_t ccDio, bool rgthAlgn, bool zeroPad)
+:TM74HC595LedTube(ccSclk, ccRclk, ccDio), _countRgthAlgn {rgthAlgn}, _countZeroPad {zeroPad}
+{
+    //Class constructor
+}
+
+bool ClickCounter::begin(int startVal){
+   bool result{false};
+
+    if (TM74HC595LedTube::begin() == true){
+        result = countRestart(startVal);
+    }
+
+   return result;
+}
+
+bool ClickCounter::countRestart(int restartValue){
+   bool result{false};
+
+   if ((restartValue >= MIN_DISP_VALUE) && (restartValue <= MAX_DISP_VALUE)){
+      _count = restartValue;
+      result = updDisplay();
+   }
+
+   return result;
+}
+
+bool ClickCounter::countStop(){
+    
+    return TM74HC595LedTube::stop();
+}
+
+bool ClickCounter::countUp(int qty){
+    bool result {false};
+    qty = abs(qty);
+
+    if((_count + qty) <= MAX_DISP_VALUE){
+        _count += qty;
+        result = updDisplay();
+    }
+
+    return result;
+}
+
+bool ClickCounter::countDown(int qty){
+    bool result {false};
+    qty = abs(qty);
+
+    if((_count - qty) >= MIN_DISP_VALUE){
+        _count -= qty;
+        result = updDisplay();
+    }
+
+    return result;
+}
+
+bool ClickCounter::updDisplay(){
+    bool result {false};
+
+      if (print(_count, _countRgthAlgn, _countZeroPad))
+         result = true;
+         
+    return result;
+   }
