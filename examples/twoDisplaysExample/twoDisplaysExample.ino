@@ -1,5 +1,5 @@
 /*
-  twoDisplaysExample.ino - Example file to demonstrate FourBitLedDigitalTube.h use with two displays simultaneously
+  twoDisplaysExample.ino - Example file to demonstrate TM74HC595LedTube class use with two displays simultaneously
   Created by Gabriel D. Goldman, May 2, 2023.
   Updated by Gabriel D. Goldman, May 24, 2023.
   Released into the public domain in accordance with "GPL-3.0-or-later" license terms.

@@ -7,6 +7,7 @@
 ###############################################
 
 TM74HC595LedTube	KEYWORD1
+ClickCounter    KEYWORD1
 
 ###############################################
 # Methods and Functions (KEYWORD2)
@@ -33,6 +34,14 @@ setWaitRate KEYWORD2
 stop        KEYWORD2
 wait    KEYWORD2
 write   KEYWORD2
+
+countBegin
+countDown
+countRestart
+countStop
+countUp
+getCount
+updDisplay
 
 ###############################################
 # Constants (LITERAL1)

@@ -23,7 +23,7 @@ This kind of displays need to be periodically refreshed, as it can actively turn
 
 The first mechanism frees the user from the load of calling the refreshing methods periodically, specially considering that long looping times (when executing **`for`**, **`while`** and **`do`** loops included), or the use of **`delay()`** could make the display flicker or simply stop until next refresh. The second option is given in the case that the timer/interrupt library used (see de dependencies information provided as I might change it in a future) doesn't support the architecture being used by the developer, or too many displays are already attached to the ISR that makes the system unstable. In any case the library is capable of working in any platform, using one way when possible, or the other always.  
 
-# **Included Methods**
+# **Included Methods for TM74HC595LedTube class**
 
 |Method | Parameters|
 |---|---|
@@ -435,5 +435,11 @@ Prints one character to the display, at a desired position, without affecting th
 true: If **character** is a displayable one char string, and **port** value is in the range 0 <= value <= 3.  
 false: The **character** was not "displayable" or the **port** value was out of range.  
 ### Use example:  
-**`myLedDisp.write("J", 1);`** // Modifies the displayed data, placing a 'J' in the second digit from right to left.
+**`myLedDisp.write("J", 1);`** // Modifies the displayed data, placing a 'J' in the second digit from right to left.  
 
+# **Included Methods for ClickCounter class**
+
+|Method | Parameters|
+|---|---|
+|**_ClickCounter_** |uint8_t **sclk**, uint8_t **rclk**, uint8_t **dio**, bool **rgthAlgn**, bool **zeroPad** |
+|**countBegin()**|int **startVal**|

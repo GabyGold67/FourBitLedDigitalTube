@@ -9,6 +9,13 @@
 
 class TM74HC595LedTube {
     static uint8_t displaysCount;
+private:
+    uint8_t _waitChar  {0xBF};
+    bool _waiting{false};
+    unsigned long _waitTimer{0};
+    uint8_t _waitCount {0};
+    unsigned long _waitRate{250};
+
 protected:
     const unsigned long _minBlinkRate{100};
     const unsigned long _maxBlinkRate{2000};
@@ -24,12 +31,6 @@ protected:
     bool _blinkShowOn{false};
     unsigned long _blinkOnRate{500};
     unsigned long _blinkOffRate{500};
-
-    uint8_t _waitChar  {0xBF};
-    bool _waiting{false};
-    unsigned long _waitTimer{0};
-    uint8_t _waitCount {0};
-    unsigned long _waitRate{250};
 
     String _charSet{"0123456789AabCcdEeFGHhIiJLlnOoPqrStUuY-_=~* ."}; // for using indexOf() method
     uint8_t _charLeds[45] = {
@@ -119,7 +120,7 @@ public:
 
 };
 
-class ClickCounter: public TM74HC595LedTube{
+class ClickCounter: protected TM74HC595LedTube{
 private:
     int _count{0};
     bool _countRgthAlgn{true};
@@ -127,11 +128,15 @@ private:
 
 public:
     ClickCounter(uint8_t ccSclk, uint8_t ccRclk, uint8_t ccDio, bool rgthAlgn = true, bool zeroPad = false);
-    bool begin(int startVal = 0);
+    bool countBegin(int startVal = 0);
+    bool blink();
+    bool blink(const unsigned long &onRate, const unsigned long &offRate = 0);
+    bool noBlink();
     bool countRestart(int restartValue = 0);
     bool countStop();
     bool countUp(int qty = 1);
     bool countDown(int qty = 1);
+    int getCount();
     bool updDisplay();
 
 };

@@ -1,5 +1,5 @@
 /*
-  waitExample.ino - Example file to demonstrate FourBitLedDigitalTube.h wait() methods
+  waitExample.ino - Example file to demonstrate TM74HC595LedTube class wait() methods
   Created by Gabriel D. Goldman, May 02, 2023.
   Updated by Gabriel D. Goldman, June 04, 2023.
   Released into the public domain in accordance with "GPL-3.0-or-later" license terms.

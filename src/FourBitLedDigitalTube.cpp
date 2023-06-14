@@ -576,7 +576,7 @@ ClickCounter::ClickCounter(uint8_t ccSclk, uint8_t ccRclk, uint8_t ccDio, bool r
     //Class constructor
 }
 
-bool ClickCounter::begin(int startVal){
+bool ClickCounter::countBegin(int startVal){
    bool result{false};
 
     if (TM74HC595LedTube::begin() == true){
@@ -634,3 +634,19 @@ bool ClickCounter::updDisplay(){
          
     return result;
    }
+
+int ClickCounter::getCount(){
+    return _count;
+}
+
+bool ClickCounter::blink(){
+    return TM74HC595LedTube::blink();
+}
+
+bool ClickCounter::blink(const unsigned long &onRate, const unsigned long &offRate){
+    return TM74HC595LedTube::blink(onRate, offRate);
+}
+
+bool ClickCounter::noBlink(){
+    return TM74HC595LedTube::noBlink();
+}
