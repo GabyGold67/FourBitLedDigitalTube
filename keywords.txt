@@ -35,13 +35,13 @@ stop        KEYWORD2
 wait    KEYWORD2
 write   KEYWORD2
 
-countBegin
-countDown
-countRestart
-countStop
-countUp
-getCount
-updDisplay
+countBegin  KEYWORD2
+countDown   KEYWORD2
+countRestart    KEYWORD2
+countStop   KEYWORD2
+countUp KEYWORD2
+getCount    KEYWORD2
+updDisplay  KEYWORD2
 
 ###############################################
 # Constants (LITERAL1)
