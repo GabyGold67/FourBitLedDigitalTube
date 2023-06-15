@@ -123,6 +123,7 @@ public:
 class ClickCounter: protected TM74HC595LedTube{
 private:
     int _count{0};
+    int _beginStartVal{0};
     bool _countRgthAlgn{true};
     bool _countZeroPad{false};
 
@@ -132,11 +133,13 @@ public:
     bool blink();
     bool blink(const unsigned long &onRate, const unsigned long &offRate = 0);
     bool noBlink();
+    bool countReset();
     bool countRestart(int restartValue = 0);
     bool countStop();
     bool countUp(int qty = 1);
     bool countDown(int qty = 1);
     int getCount();
+    int getStartVal();
     bool updDisplay();
 
 };

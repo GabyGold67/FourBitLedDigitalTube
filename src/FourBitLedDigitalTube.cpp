@@ -190,7 +190,7 @@ bool TM74HC595LedTube::print(const int &value, bool rgtAlgn, bool zeroPad){
     bool displayable{true};
     String readOut{""};
 
-    if ((value < -999) || (value > 9999)) {
+    if ((value < MIN_DISP_VALUE) || (value > MAX_DISP_VALUE)) {
         clear();
         displayable = false;
     }
@@ -223,7 +223,7 @@ bool TM74HC595LedTube::print(const double &value, const unsigned int &decPlaces,
 
     if (decPlaces == 0)
         displayable = print(int(value), rgtAlgn, zeroPad);
-    else if ((value < -999) || (value > 9999) || (decPlaces > 4)) {
+    else if ((value < MIN_DISP_VALUE) || (value > MAX_DISP_VALUE) || (decPlaces > 4)) {
         displayable = false;
         clear();
     }
@@ -581,11 +581,19 @@ bool ClickCounter::countBegin(int startVal){
 
     if (TM74HC595LedTube::begin() == true){
         result = countRestart(startVal);
+        if (result)
+            _beginStartVal = startVal;
     }
 
    return result;
 }
 
+bool ClickCounter::countReset(){
+    bool result{false}; 
+    result = countRestart(_beginStartVal);
+    return result;
+}
+    
 bool ClickCounter::countRestart(int restartValue){
    bool result{false};
 
@@ -637,6 +645,10 @@ bool ClickCounter::updDisplay(){
 
 int ClickCounter::getCount(){
     return _count;
+}
+
+int ClickCounter::getStartVal(){
+    return _beginStartVal;
 }
 
 bool ClickCounter::blink(){

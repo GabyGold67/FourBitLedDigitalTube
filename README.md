@@ -76,7 +76,7 @@ The object created.
 ---
 ### **begin**();
 ### Description:
-Attaches the display to a timer interrupt service, which takes care of refreshing the display regularly. Up to four displays can be attached to the ISR, at least theoretically, as the refreshing work takes time, and the time taken is proportional to the quantity of displays attached. And as ISRs literally interrupts other tasks done by the microcontroller, the time taken by the ISRs must be kept to minimal or the stability of the whole system will be compromised. As the time available to execute the ISRs without risking the stability of the system depends on various factors, the number of supported displays has to be tested in each development done. If the stability of the system is compromised then the displays exceeding the number of tolerated units will have to be refreshed by periodically using the **`refresh()`** method.
+Attaches the display to a timer interrupt service, which takes care of refreshing the display regularly. Up to four displays (including all classes defined in this library) can be attached to the ISR, at least theoretically, as the refreshing work takes time, and the time taken is proportional to the quantity of displays attached. And as ISRs literally interrupts other tasks done by the microcontroller, the time taken by the ISRs must be kept to minimal or the stability of the whole system will be compromised. As the time available to execute the ISRs without risking the stability of the system depends on various factors, the number of supported displays has to be tested in each development done. If the stability of the system is compromised then the displays exceeding the number of tolerated units will have to be refreshed by periodically using the **`refresh()`** method.
 ### Parameters:  
 None
 ### Return value:  
@@ -437,9 +437,80 @@ false: The **character** was not "displayable" or the **port** value was out of 
 ### Use example:  
 **`myLedDisp.write("J", 1);`** // Modifies the displayed data, placing a 'J' in the second digit from right to left.  
 
-# **Included Methods for ClickCounter class**
+# **Included Methods for ClickCounter class**  
 
 |Method | Parameters|
 |---|---|
-|**_ClickCounter_** |uint8_t **sclk**, uint8_t **rclk**, uint8_t **dio**, bool **rgthAlgn**, bool **zeroPad** |
-|**countBegin()**|int **startVal**|
+|**_ClickCounter_** |uint8_t **sclk**, uint8_t **rclk**, uint8_t **dio**(, bool **rgthAlgn**, bool **zeroPad**)|
+|**blink()**|None|
+||unsigned long **onRate** (,unsigned long **offRate**)|
+|**countBegin()**|(int **startVal**)|
+|**countDown()**|(int **qty**)|
+|**countReset()**||
+|**countRestart()**|(int **restartValue**)|
+|**countStop()**||
+|**countUp()**|(int **qty**)|
+|**getCount()**|None|
+|**getStartVal()**|None|
+|**noBlink()**|None|
+|**updDisplay()**|None|
+
+## **Methods definition and use description**
+
+---
+### **ClickCounter**(uint8_t **sclk**, uint8_t **rclk**, uint8_t **dio**, bool **rgthAlgn**, bool **zeroPad**)
+### Description:  
+Class constructor, create an instance of the class for each display to use. There's no need to configure the pins before calling the method, as the constructor takes care of the task.  
+### Parameters:  
+**sclk:** uint8_t (unsigned char), passes the pin number that is connected to the sclk pin of the display (the **SH_CP** pin of the shift register if working in a custom display). The pin must be free to be used as a digital output.  
+**rclk:** uint8_t (unsigned char), passes the pin number that is connected to the rclk pin of the display (the **ST_CP** pin of the shift register if working in a custom display). The pin must be free to be used as a digital output.  
+**dio:** uint8_t (unsigned char), passes the pin number that is connected to the dio pin of the display (the **DS** pin of the shift register if working in a custom display). The pin must be free to be used as a digital output.  
+**rgtAlgn:** Boolean, optional parameter (if not specified the default value, true, will be assumed), indicates if the represented value must be displayed right aligned, with the missing heading characters being completed with spaces or zeros, depending in the zeroPad optional parameter. When a negative value is displayed and it's less than 3 digits long, a right aligned display will keep the '-' sign in the leftmost position, and the free space to the leftmost digit will be filled with spaces or zeros, depending in the zeroPad optional parameter.  
+**zeroPad:** Boolean, optional parameter (if not specified the default value, false, will be assumed), indicates if the heading free spaces of the integer right aligned displayed must be filled with zeros (true) or spaces (false). In the case of a negative integer the spaces or zeros will fill the gap between the '-' sign kept in the leftmost position, and the first digit.  
+
+### Return value:  
+The object created.
+
+### Use example:  
+**`ClickCounter myClickCounter(6, 7, 10, true, true);`**  
+
+---
+### **countBegin**();
+### Description:
+Refer to **TM74HC595LedTube::begin()** method.
+### Parameters:  
+None
+### Return value:  
+Refer to **TM74HC595LedTube::begin()** method.
+
+### Use example:  
+**`myClickCounter.countBegin();`**  
+
+---
+### **blink**();
+### Description:
+Makes the display blink the contents it is showing until a **`noBlink()`** method is invoked. The display will continue blinking even if the contents are changed. When invoking the method with no parameters the blinking is symmetrical, meaning that the time the display shows the contents and the time the display is blank are equal. The blinking starts at a preset rate the first time the method is invoked. Note that to restart the blinking with a **`.blink()`** the service must first be stopped, as the method call makes no changes if the blinking service was already running.  
+### Parameters:  
+None
+### Return value:  
+true: If the display was not already set to blink (so now the blinking was started).  
+false: The display was already set to blink.  
+### Use example:  
+**`myClickCounter.blink();`**
+
+---
+### **blink**(unsigned long **onRate**,unsigned long **offRate**);
+### Description:
+Makes the display blink the contents it shows until a **`noBlink()`** method is invoked. The blinking is **symmetrical** if only one parameter is passed, **asymmetrical** if two different parameters are passed, meaning that the time the display shows the contents and the time the display is blank will be equal (symmetrical) or not (asymmetrical), depending of those two parameters. The blinking starts at a passed rate when the method is invoked. Note that to restart the blinking with a **`.blink()`** the service must first be stopped, as the method makes no changes if the blinking service was already running.  
+### Parameters:  
+**onRate**: unsigned long integer containing the time (in milliseconds) the display must stay on, the value must be in the range _minBlinkRate <= onRate <= _maxBlinkRate.   
+**offRate**: optional unsigned long integer containing the time (in milliseconds) the display must stay off, the value must be in the range _minBlinkRate <= offRate <= _maxBlinkRate. If no offRate value is provided the method will assume it's a symmetric blink call an use a value of offRate equal to the value passed by onRate 
+### Return value:  
+true: If the display was not already set to blink (so now the blinking was started).  
+false: The display was already set to blink, and/or one or more of the parameters passed were out of range.  
+### Use example:  
+**`myClickCounter.blink(400);`** //Returns true and sets the blinking rate to 400 millisecs on, 400 millisecs off (symmetrical blink).  
+**`myClickCounter.blink(800, 200);`** //Returns true and sets the blinking rate to 800 millisecs on, 200 millisecs off (asymmetrical blink)  
+**`myClickCounter.blink(3000);`** //Returns false and the display stays without change.  
+
+---
