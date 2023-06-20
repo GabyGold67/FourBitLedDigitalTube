@@ -140,6 +140,7 @@ public:
     bool countDown(int qty = 1);
     int getCount();
     int getStartVal();
+    bool setBlinkRate(const unsigned long &newOnRate, const unsigned long &newOffRate = 0);
     bool updDisplay();
 
 };

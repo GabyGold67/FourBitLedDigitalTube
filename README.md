@@ -453,6 +453,7 @@ false: The **character** was not "displayable" or the **port** value was out of 
 |**getCount()**|None|
 |**getStartVal()**|None|
 |**noBlink()**|None|
+|**setBlinkRate()**|unsigned long **newOnRate**, (unsigned long **newOffRate**)|
 |**updDisplay()**|None|
 
 ## **Methods definition and use description**
@@ -460,7 +461,7 @@ false: The **character** was not "displayable" or the **port** value was out of 
 ---
 ### **ClickCounter**(uint8_t **sclk**, uint8_t **rclk**, uint8_t **dio**, bool **rgthAlgn**, bool **zeroPad**)
 ### Description:  
-Class constructor, create an instance of the class for each display to use. There's no need to configure the pins before calling the method, as the constructor takes care of the task.  
+Class constructor, creates an instance of the class for each display to use. There's no need to configure the pins before calling the method, as the constructor takes care of the task.  
 ### Parameters:  
 **sclk:** uint8_t (unsigned char), passes the pin number that is connected to the sclk pin of the display (the **SH_CP** pin of the shift register if working in a custom display). The pin must be free to be used as a digital output.  
 **rclk:** uint8_t (unsigned char), passes the pin number that is connected to the rclk pin of the display (the **ST_CP** pin of the shift register if working in a custom display). The pin must be free to be used as a digital output.  
@@ -489,7 +490,7 @@ Refer to **TM74HC595LedTube::begin()** method.
 ---
 ### **blink**();
 ### Description:
-Makes the display blink the contents it is showing until a **`noBlink()`** method is invoked. The display will continue blinking even if the contents are changed. When invoking the method with no parameters the blinking is symmetrical, meaning that the time the display shows the contents and the time the display is blank are equal. The blinking starts at a preset rate the first time the method is invoked. Note that to restart the blinking with a **`.blink()`** the service must first be stopped, as the method call makes no changes if the blinking service was already running.  
+Refer to **TM74HC595LedTube::blink()** method.  
 ### Parameters:  
 None
 ### Return value:  
@@ -501,10 +502,9 @@ false: The display was already set to blink.
 ---
 ### **blink**(unsigned long **onRate**,unsigned long **offRate**);
 ### Description:
-Makes the display blink the contents it shows until a **`noBlink()`** method is invoked. The blinking is **symmetrical** if only one parameter is passed, **asymmetrical** if two different parameters are passed, meaning that the time the display shows the contents and the time the display is blank will be equal (symmetrical) or not (asymmetrical), depending of those two parameters. The blinking starts at a passed rate when the method is invoked. Note that to restart the blinking with a **`.blink()`** the service must first be stopped, as the method makes no changes if the blinking service was already running.  
+Refer to **TM74HC595LedTube::blink()** method.  
 ### Parameters:  
-**onRate**: unsigned long integer containing the time (in milliseconds) the display must stay on, the value must be in the range _minBlinkRate <= onRate <= _maxBlinkRate.   
-**offRate**: optional unsigned long integer containing the time (in milliseconds) the display must stay off, the value must be in the range _minBlinkRate <= offRate <= _maxBlinkRate. If no offRate value is provided the method will assume it's a symmetric blink call an use a value of offRate equal to the value passed by onRate 
+Refer to **TM74HC595LedTube::blink()** method.  
 ### Return value:  
 true: If the display was not already set to blink (so now the blinking was started).  
 false: The display was already set to blink, and/or one or more of the parameters passed were out of range.  

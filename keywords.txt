@@ -37,10 +37,12 @@ write   KEYWORD2
 
 countBegin  KEYWORD2
 countDown   KEYWORD2
+countReset    KEYWORD2
 countRestart    KEYWORD2
 countStop   KEYWORD2
 countUp KEYWORD2
 getCount    KEYWORD2
+getStartVal KEYWORD2
 updDisplay  KEYWORD2
 
 ###############################################

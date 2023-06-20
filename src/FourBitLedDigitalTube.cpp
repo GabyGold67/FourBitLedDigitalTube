@@ -589,9 +589,7 @@ bool ClickCounter::countBegin(int startVal){
 }
 
 bool ClickCounter::countReset(){
-    bool result{false}; 
-    result = countRestart(_beginStartVal);
-    return result;
+    return countRestart(_beginStartVal);
 }
     
 bool ClickCounter::countRestart(int restartValue){
@@ -635,30 +633,36 @@ bool ClickCounter::countDown(int qty){
 }
 
 bool ClickCounter::updDisplay(){
-    bool result {false};
 
-      if (print(_count, _countRgthAlgn, _countZeroPad))
-         result = true;
-         
-    return result;
+    return print(_count, _countRgthAlgn, _countZeroPad);
    }
 
 int ClickCounter::getCount(){
+
     return _count;
 }
 
 int ClickCounter::getStartVal(){
+
     return _beginStartVal;
 }
 
+bool ClickCounter::setBlinkRate(const unsigned long &newOnRate, const unsigned long &newOffRate){
+
+    return TM74HC595LedTube::setBlinkRate(newOnRate, newOffRate);
+}
+
 bool ClickCounter::blink(){
+
     return TM74HC595LedTube::blink();
 }
 
 bool ClickCounter::blink(const unsigned long &onRate, const unsigned long &offRate){
+
     return TM74HC595LedTube::blink(onRate, offRate);
 }
 
 bool ClickCounter::noBlink(){
+
     return TM74HC595LedTube::noBlink();
 }
