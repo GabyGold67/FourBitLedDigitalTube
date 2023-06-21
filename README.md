@@ -446,9 +446,9 @@ false: The **character** was not "displayable" or the **port** value was out of 
 ||unsigned long **onRate** (,unsigned long **offRate**)|
 |**countBegin()**|(int **startVal**)|
 |**countDown()**|(int **qty**)|
-|**countReset()**||
+|**countReset()**|None|
 |**countRestart()**|(int **restartValue**)|
-|**countStop()**||
+|**countStop()**|None|
 |**countUp()**|(int **qty**)|
 |**getCount()**|None|
 |**getStartVal()**|None|
@@ -514,3 +514,141 @@ false: The display was already set to blink, and/or one or more of the parameter
 **`myClickCounter.blink(3000);`** //Returns false and the display stays without change.  
 
 ---
+### **countBegin**(int **startVal**);
+### Description:
+Attaches the display to a timer interrupt service, as described in the **TM74HC595LedTube::begin()** method. The display then is started with the current count value represented according to the selected options of alignement and padding.
+### Parameters:  
+startVal: Optional integer value at wich the counter starts which, due to the 4 digits limitations, must be in the range -999 <= startValue <= 9999.  
+### Return value:  
+true: If the display could be attached to the ISR, or if the display was already attached to it, and the startValue was within the valid limits.  
+false: If the display couldn't be attached to the ISR, due to lack of free slots, or the startValue was out of range.  
+### Use example:  
+**`myClickCounter.countBegin();`**  
+
+---
+## **countDown()**(int **qty**);  
+### Description:
+Decrements the value of the current count and refreshes the display to keep it updated. The counter is decremented independently of the sign of the current count, as long as the new value resulting is in the displayable range.
+### Parameters:  
+qty: Optional integer value, its **absolute** value will be decremented from the current count value. If no parameter is passed a value of one will be used.  
+### Return value:  
+true: If the count could be decremented by the corresponding value without setting count out of range.  The counter value is decremented.  
+false: If the count couldn't be decremented by the parameter value without getting out of range.The counter will keep its current value. 
+### Use example:  
+**`myClickCounter.countDown();`**  //Decrements the current count by 1  
+**`myClickCounter.countDown(2);`**  //Decrements the current count by 2  
+**`myClickCounter.countDown(-2);`**  //Decrements the current count by 2  
+
+---
+### **countReset()**;  
+### Description:
+Restarts the count to the original value provided when the counter was started with the **countBegin**(int **startVal**) method. The display is updated to reflect this change in its new value.  
+### Parameters:  
+None
+### Return value:  
+true: After resetting the value and updating the display.  
+
+### Use example:  
+**`myClickCounter.countReset();`**  
+
+---
+
+## **countRestart()**(int **restartValue**)  
+### Description:
+Restarts the count to the value provided as parameter. The display is updated to reflect this change in its new value.  
+### Parameters:  
+restartValue: Optional integer value, a value of 0 is set if no parameter is provided. The parameter due to the 4 digits limitations, must be in the range -999 <= restartValue <= 9999  
+### Return value:  
+true: If the parameter value was within valid range. 
+false: If the parameter value was outside valid range. 
+
+### Use example:  
+**`myClickCounter.countRestart();`**  //sets the counter to 0  
+**`myClickCounter.countRestart(-100);`**  //sets the counter to -100  
+**`myClickCounter.countRestart(10000);`**  //Returns false, the counter is not changed  
+
+---
+### **countStop**();
+### Description:
+Refer to **TM74HC595LedTube::begin()** method.    
+### Parameters:  
+**None**  
+### Return value:  
+Refer to **TM74HC595LedTube::begin()** method.
+ 
+### Use example:  
+**`myClickCounter.countStop();`**  
+
+---
+## **countUp()**(int **qty**);  
+### Description:
+Increments the value of the current count and refreshes the display to keep it updated. The counter is incremented independently of the sign of the current count, as long as the new value resulting is in the displayable range.
+### Parameters:  
+qty: Optional integer value, its **absolute** value will be incremented in the current count value. If no parameter is passed a value of one will be used.  
+### Return value:  
+true: If the count could be incremented by the corresponding value without setting count out of range.  The counter value will be updated
+false: If the count couldn't be incremented by the parameter value without getting out of range. The counter will keep its current value.  
+### Use example:  
+**`myClickCounter.countDown();`**  //Decrements the current count by 1  
+**`myClickCounter.countDown(2);`**  //Decrements the current count by 2  
+**`myClickCounter.countDown(-2);`**  //Decrements the current count by 2  
+
+---
+## **getCount()**;  
+### Description:
+Gets the current value of the counter.  
+### Parameters:  
+None.  
+### Return value:  
+The current value held by the counter, due to the 4 digits limitations, it will be in the range -999 <= counter <= 9999  
+### Use example:  
+int finalCount = **`myClickCounter.getCount();`**  
+
+---
+## **getStartVal()**  
+### Description:
+Gets the value passed as parameter when the `**.countBegin()**` method was invoked, starting the counter. This is the value that will be used for the `**.countReset()**` method.  
+### Parameters:  
+None.  
+### Return value:  
+The value to wich the counter was originally started, due to the 4 digits limitations, it will be in the range -999 <= counter <= 9999  
+### Use example:  
+int countStarted = **`myClickCounter.getStartVal();`**  
+
+---
+### **noBlink**();
+### Description:
+Refer to **TM74HC595LedTube::noBlink()** method.  
+### Parameters:  
+None
+### Return value:  
+true: If the display was set to blink, and the blinking is stopped.   
+false: If the display was not set to blink, no changes will be done.
+### Use example:  
+**`myClickCounter.noBlink();`**
+
+---
+### **setBlinkRate**();
+### Description:
+Refer to **TM74HC595LedTube::setBlinkRate()** method.  
+### Parameters:  
+None
+### Return value:  
+Refer to **TM74HC595LedTube::setBlinkRate()** method.  
+### Use example:  
+**`myClickCounter.setBlinkRate(400);`** //Returns true and sets the blinking rate to 400 millisecs on, 400 millisecs off (symmetrical blink).  
+**`myClickCounter.setBlinkRate(800, 200);`** //Returns true and sets the blinking rate to 800 millisecs on, 200 millisecs off (asymmetrical blink)  
+**`myClickCounter.setBlinkRate(3000);`** //Returns false and the display blinking rate stays without change.  
+**`myClickCounter.setBlinkRate(600, 3500);`** //Returns false and the display blinking rate stays without change.  
+
+---
+## **updDisplay()**  
+### Description:
+Updates the display with the current value of the counter. This method is not usually needed as each method that affect the counter value takes care of refreshing the display, but is provided in case of need if some external manipulation of the display is needed to execute, so that the current count value can be displayed again.  
+### Parameters:  
+None
+### Return value:  
+true: The value could be restored.  
+false: Te value couldn't be restored, the count value was out of range.  
+### Use example:  
+**`myClickCounter.updDisplay();`** //Returns true and displays the current counter value.  
