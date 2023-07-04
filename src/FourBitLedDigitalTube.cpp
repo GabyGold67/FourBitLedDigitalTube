@@ -632,6 +632,18 @@ bool ClickCounter::countDown(int qty){
     return result;
 }
 
+bool ClickCounter::countToZero(int qty = 1){
+    bool result {false};
+
+    if (_count > 0)
+        result = countDown(qty);
+    else if (_count < 0)
+        result = countUp(qty);
+    
+    return result;
+}
+
+
 bool ClickCounter::updDisplay(){
 
     return print(_count, _countRgthAlgn, _countZeroPad);

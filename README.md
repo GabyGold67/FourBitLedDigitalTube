@@ -5,7 +5,7 @@
 
 Developed for the cheap and popular 7-segment 4 digits led displays (**_and for all the custom made displays as: GIANTS COUNTERS, TIMERS, PRICING DISPLAYS, etc._**)  based on two TM74HC595 (or similar) shift registers, the main focus was set on: ease of use, flexibility and basic prevention of 'misrepresentation' errors.
 
-![4-Bits LED Digital Tube Module](./extras/4-BitsLedDigitalTubeModule01.jpg "4-Bits LED Digital Tube Module")
+![4-Bits LED Digital Tube Module](https://github.com/GabyGold67/FourBitLedDigitalTube/blob/master/extras/4-BitsLedDigitalTubeModule01.jpg "4-Bits LED Digital Tube Module")
 
 ## Ease of use:
 Instance the class passing just 3 parameters (the 3 pins connected to the display module), notify the object and it's ready to go: start ``.print()``ing the data to the display. There's no need of even setting the pin modes.  
@@ -542,7 +542,7 @@ false: If the count couldn't be decremented by the parameter value without getti
 ---
 ### **countReset()**;  
 ### Description:
-Restarts the count to the original value provided when the counter was started with the **countBegin**(int **startVal**) method. The display is updated to reflect this change in its new value.  
+Restarts the count to the original value provided when the counter was started with the **countBegin**(int **startVal**) method (not necesarily 0!!). The display is updated to reflect this change in its new value.  
 ### Parameters:  
 None
 ### Return value:  
@@ -555,7 +555,7 @@ true: After resetting the value and updating the display.
 
 ## **countRestart()**(int **restartValue**)  
 ### Description:
-Restarts the count to the value provided as parameter. The display is updated to reflect this change in its new value.  
+Restarts the count from the value provided as parameter. The display is updated to reflect this change in its new value.  
 ### Parameters:  
 restartValue: Optional integer value, a value of 0 is set if no parameter is provided. The parameter due to the 4 digits limitations, must be in the range -999 <= restartValue <= 9999  
 ### Return value:  
