@@ -5,7 +5,7 @@
 
 Developed for the cheap and popular 7-segment 4 digits led displays (**_and for all the custom made displays as: GIANTS COUNTERS, TIMERS, PRICING DISPLAYS, etc._**)  based on two TM74HC595 (or similar) shift registers, the main focus was set on: ease of use, flexibility and basic prevention of 'misrepresentation' errors.
 
-![4-Bits LED Digital Tube Module](./extras/4-BitsLedDigitalTubeModule01.jpg "4-Bits LED Digital Tube Module")
+![4-Bits LED Digital Tube Module](https://github.com/GabyGold67/FourBitLedDigitalTube/blob/master/extras/4-BitsLedDigitalTubeModule01.jpg "4-Bits LED Digital Tube Module")
 
 ## Ease of use:
 Instance the class passing just 3 parameters (the 3 pins connected to the display module), notify the object and it's ready to go: start ``.print()``ing the data to the display. There's no need of even setting the pin modes.  
@@ -449,6 +449,7 @@ false: The **character** was not "displayable" or the **port** value was out of 
 |**countReset()**|None|
 |**countRestart()**|(int **restartValue**)|
 |**countStop()**|None|
+|**countToZero()**|(int **qty**)|
 |**countUp()**|(int **qty**)|
 |**getCount()**|None|
 |**getStartVal()**|None|
@@ -542,7 +543,7 @@ false: If the count couldn't be decremented by the parameter value without getti
 ---
 ### **countReset()**;  
 ### Description:
-Restarts the count to the original value provided when the counter was started with the **countBegin**(int **startVal**) method. The display is updated to reflect this change in its new value.  
+Restarts the count to the original value provided when the counter was started with the **countBegin**(int **startVal**) method (not necesarily 0!!). The display is updated to reflect this change in its new value.  
 ### Parameters:  
 None
 ### Return value:  
@@ -555,7 +556,7 @@ true: After resetting the value and updating the display.
 
 ## **countRestart()**(int **restartValue**)  
 ### Description:
-Restarts the count to the value provided as parameter. The display is updated to reflect this change in its new value.  
+Restarts the count from the value provided as parameter. The display is updated to reflect this change in its new value.  
 ### Parameters:  
 restartValue: Optional integer value, a value of 0 is set if no parameter is provided. The parameter due to the 4 digits limitations, must be in the range -999 <= restartValue <= 9999  
 ### Return value:  
@@ -578,6 +579,20 @@ Refer to **TM74HC595LedTube::begin()** method.
  
 ### Use example:  
 **`myClickCounter.countStop();`**  
+
+---
+## **countToZero()**(int **qty**);  
+### Description:
+Modifies the value of the current count and refreshes the display to keep it updated. The counter absolute value will be decremented, independently of the sign of the current count, as long as the new value resulting is in the displayable range. If the current count was negative, the value will be incremented, if it was positive, will be incremented, with the concrete porpouse of approaching the count value to 0.
+### Parameters:  
+qty: Optional integer value, its **absolute** value will be decremente from the current absolute count value, the sign of the resulting count will be preserved. If no parameter is passed a value of one will be used.  
+### Return value:  
+true: If the absolut count could be decremented by the corresponding value, i.e. the count was not zero already, and the value pased by parameter absolut value does not exceed the count absolute value.  The counter value will be updated.  
+false: If the count was already in a 0 value, or the the value pased by parameter absolut value does not exceed the count absolute value. The counter will keep its current value.  
+### Use example:  
+**`myClickCounter.countToZero();`**  // If the count was positive decrements the current count by 1, if it was negative increments the count by 1.  
+**`myClickCounter.countToZero(2);`**  //If the count was positive and greater than 2 decrements the current count by 2, if it was negative increments the count by 2.  
+**`myClickCounter.countToZero(-2);`**  //If the count was positive and greater than 2 decrements the current count by 2, if it was negative increments the count by 2.  
 
 ---
 ## **countUp()**(int **qty**);  
