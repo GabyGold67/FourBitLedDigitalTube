@@ -1,5 +1,5 @@
 /*
-  countToZero.ino - Example file to demonstrate ClickCounter class countToZero() method
+  countToZeroExample.ino - Example file to demonstrate ClickCounter class countToZero() method
   Created by Gabriel D. Goldman, May 02, 2023.
   Updated by Gabriel D. Goldman, June 04, 2023.
   Released into the public domain in accordance with "GPL-3.0-or-later" license terms.
