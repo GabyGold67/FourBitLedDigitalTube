@@ -40,6 +40,7 @@ countDown   KEYWORD2
 countReset    KEYWORD2
 countRestart    KEYWORD2
 countStop   KEYWORD2
+countToZero KEYWORD2
 countUp KEYWORD2
 getCount    KEYWORD2
 getStartVal KEYWORD2

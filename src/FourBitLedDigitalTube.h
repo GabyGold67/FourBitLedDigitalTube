@@ -138,6 +138,7 @@ public:
     bool countStop();
     bool countUp(int qty = 1);
     bool countDown(int qty = 1);
+    bool countToZero(int qty = 1);
     int getCount();
     int getStartVal();
     bool setBlinkRate(const unsigned long &newOnRate, const unsigned long &newOffRate = 0);

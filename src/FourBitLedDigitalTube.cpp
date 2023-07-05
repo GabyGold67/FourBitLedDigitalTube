@@ -632,7 +632,7 @@ bool ClickCounter::countDown(int qty){
     return result;
 }
 
-bool ClickCounter::countToZero(int qty = 1){
+bool ClickCounter::countToZero(int qty){
     bool result {false};
 
     if (_count > 0)
@@ -642,7 +642,6 @@ bool ClickCounter::countToZero(int qty = 1){
     
     return result;
 }
-
 
 bool ClickCounter::updDisplay(){
 
