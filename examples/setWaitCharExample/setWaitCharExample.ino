@@ -1,5 +1,5 @@
 /*
-  waitExample.ino - Example file to demonstrate TM74HC595LedTube class wait() methods
+  setWaitCharExample.ino - Example file to demonstrate TM74HC595LedTube class wait() methods
   Created by Gabriel D. Goldman, May 02, 2023.
   Updated by Gabriel D. Goldman, June 04, 2023.
   Released into the public domain in accordance with "GPL-3.0-or-later" license terms.
@@ -27,93 +27,84 @@ bool testResult{};
 // DIO
 TM74HC595LedTube myLedDispOne(dsp1Sclk, dsp1Rclk, dsp1Dio);
 
-void setup()
-{
+void setup(){
 
 }
 
-void loop()
-{  
+void loop(){  
   myLedDispOne.begin();
 
 //====================================>> First example
   //Print a message telling a "configuration" will take place
   testResult = myLedDispOne.print("JuSt");
-  delay(2000);
-  testResult = myLedDispOne.print(6, false);
-  delay(2000);
+  delay(1000);
+  testResult = myLedDispOne.print(3, false);
+  delay(1000);
   testResult = myLedDispOne.print("SeCS");
-  delay(2000);
+  delay(1000);
   testResult = myLedDispOne.print("to");
-  delay(2000);
+  delay(1000);
   testResult = myLedDispOne.print("CnFG");
-  delay(2000);
+  delay(1000);
 
   //Setting the wait() method to keep the display alive while configuring
-  testResult = myLedDispOne.wait();
-  delay(6000);
+  testResult = myLedDispOne.wait(250);
+  delay(3000);
 
   //Stop de waiting displayed
   testResult = myLedDispOne.noWait();
 
 //====================================>> Second example
-  testResult = myLedDispOne.print("note");
-  delay(2000);
-  testResult = myLedDispOne.print("tHIS");
-  delay(2000);
-  testResult = myLedDispOne.print("CASE");
-  delay(2000);
 
+  //Change de wait character to _
+  testResult = myLedDispOne.print("chnG");
+  delay(1000);
+  testResult = myLedDispOne.print("char");
+  delay(1000);
+  testResult = myLedDispOne.print("to _");
+  delay(1000);
+  testResult = myLedDispOne.setWaitChar('_');
   
-  //Trying to print while the display is in wait condition makes the message
-  //printed to be immediately overwritten. The .wait() method must be stopped
-  //to resume the usual display by a .noWait(method)
-  testResult = myLedDispOne.wait(600);
-  testResult = myLedDispOne.print("cant");
-  delay(1000);
-  testResult = myLedDispOne.print("Prnt");
-  delay(1000);
-  testResult = myLedDispOne.print("till");
-  delay(1000);
-  testResult = myLedDispOne.print("StOP");
-  delay(1000);
-
-  //Stop de waiting displayed
-  testResult = myLedDispOne.noWait();
-  
-  //Repeat the .print() executed while waiting...
-  testResult = myLedDispOne.print("cant");
-  delay(2000);
-  testResult = myLedDispOne.print("Prnt");
-  delay(2000);
-  testResult = myLedDispOne.print("till");
-  delay(2000);
-  testResult = myLedDispOne.print("StOP");
+  testResult = myLedDispOne.wait();
   delay(3000);
+  testResult = myLedDispOne.noWait();
 
 //====================================>> Third example
-  //Now normal display by other methods can be resumed
-  //Show message by print() to the display
-  testResult = myLedDispOne.print("LetS");
-  delay(2000);
-  testResult = myLedDispOne.print("do");
-  delay(2000);
-  testResult = myLedDispOne.print("thiS");
-  delay(2000);
-  testResult = myLedDispOne.print("FStr");
-  delay(2000);
-
-  //Setting the wait() method to keep the display alive with a new rate
-  testResult = myLedDispOne.wait(100);
-  delay(5000);
+  //Change de wait character to o
+  testResult = myLedDispOne.print("chnG");
+  delay(1000);
+  testResult = myLedDispOne.print("char");
+  delay(1000);
+  testResult = myLedDispOne.print("to o");
+  delay(1000);
+  testResult = myLedDispOne.setWaitChar('o');
+  
+  testResult = myLedDispOne.wait();
+  delay(3000);
 
   //Stop de waiting displayed
   testResult = myLedDispOne.noWait();
+  
+//====================================>> Fourth example
+  //Change de wait character to 8
+  testResult = myLedDispOne.print("chnG");
+  delay(1000);
+  testResult = myLedDispOne.print("char");
+  delay(1000);
+  testResult = myLedDispOne.print("to 8");
+  delay(1000);
+  testResult = myLedDispOne.setWaitChar('8');
+  
+  testResult = myLedDispOne.wait();
+  delay(3000);
 
+  //Stop de waiting displayed
+  testResult = myLedDispOne.noWait();  
 
 //====================================>> Ending examples, make general cleanup and resetting values
   //Set back the waiting rate to the original value
   testResult = myLedDispOne.setWaitRate(250);
+  testResult = myLedDispOne.setWaitChar('-');
   
   testResult = myLedDispOne.print("the");
   delay(2000);

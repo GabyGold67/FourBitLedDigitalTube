@@ -112,6 +112,7 @@ public:
     void refresh();
     void send(const uint8_t &segments, const uint8_t &port);
     bool setBlinkRate(const unsigned long &newOnRate, const unsigned long &newOffRate = 0);
+    bool setWaitChar (const char &newChar);
     bool setWaitRate(const unsigned long &newWaitRate);
     bool stop();
     bool wait(const unsigned long &newWaitRate = 0);

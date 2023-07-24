@@ -501,6 +501,19 @@ bool TM74HC595LedTube::noWait(){
     return result;
 }
 
+bool TM74HC595LedTube::setWaitChar (const char &newChar){
+    bool result {false};
+    int position {-1};
+
+    position = _charSet.indexOf(newChar);
+    if (position > -1) {
+        _waitChar = _charLeds[position];
+        result = true;
+    }
+
+    return result;
+}
+
 bool TM74HC595LedTube::setWaitRate(const unsigned long &newWaitRate)
 {
     bool result {false};
