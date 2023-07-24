@@ -49,6 +49,7 @@ The first mechanism frees the user from the load of calling the refreshing metho
 |**refresh()**|None|
 |**send()**|uint8_t **segments**, uint8_t **port**|
 |**setBlinkRate()**|unsigned long **newOnRate**, (unsigned long **newOffRate**)|
+|**setWaitChar()**|char **newWaitChar**|
 |**setWaitRate()**|unsigned long **newWaitRate**|
 |**stop()**|None|
 |**stop()**|None|
@@ -374,13 +375,26 @@ false: One or more of the parameters passed were out of range. The rate change w
 **`myLedDisp.setBlinkRate(600, 3500);`** //Returns false and the display blinking rate stays without change.  
 
 ---
+### **setWaitChar**(char **newWaitChar**);
+### Description:
+Changes the the character to use for the display to show the "progress bar advancement". The parameters change will take immediate effect, either if the display is already in wait mode or not. The new character will be changed for further calls of the method until a new setWaitChar is invoked with a valid argument.  
+### Parameters:  
+**newWaitChar**: a character the display must use symbolizing the progress, the value must be in the displayable characters group as explained in the print() method.  
+### Return value:  
+true: If the character passed is whitin the displayable characters range, and the change takes effect.
+false: The parameter passed was out of range. In this case the character change would not be made.  
+### Use example:  
+**`myLedDisp.setWaitRate('_');`** //Returns true and sets the wait character to '_'.  
+**`myLedDisp.setWaitRate('#');`** //Returns false and the display wait character stays without change.  
+
+---
 ### **setWaitRate**(unsigned long **newWaitRate**);
 ### Description:
 Changes the time parameter to use for the display to show the "progress bar advancement". The parameters change will take immediate effect, either if the display is already in wait mode or not, in the latter case the parameter will be the one used when a **`wait()`** method is called without parameters. The wait rate set will be kept after a **`.noWait()`** or new **`.wait()`** without parameters call is done, until it is modified with a new **`.setWaitRate()`** call, or it is restarted by a **`.wait()`** with parameters. Note that to restart the waiting with a **`.wait()`** the service must first be stopped, as the method makes no changes if the waiting service was already running.  
 ### Parameters:  
 **newWaitRate**: unsigned long integer containing the time (in milliseconds) the display must take to advance the next character symbolizing the progress, the value must be in the range _minBlinkRate <= newWaitRate <= _maxBlinkRate. Those values might be known by the use of the **`getMinBlinkRate()`** and the **`getMaxBlinkRate()`** methods.  
 ### Return value:  
-true: If the parameter passed is whiting the valid range, and the change takes effect.
+true: If the parameter passed is whitin the valid range, and the change takes effect.
 false: The parameter passed was out of range. In this case the rate change would not be made.  
 ### Use example:  
 **`myLedDisp.setWaitRate(400);`** //Returns true and sets the advancement rate to 400 millisecs.  
