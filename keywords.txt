@@ -12,7 +12,8 @@ ClickCounter    KEYWORD1
 ###############################################
 # Methods and Functions (KEYWORD2)
 ###############################################
-
+#TM74HC595LedTube class
+#######################
 begin       KEYWORD2
 blink       KEYWORD2
 clear	    KEYWORD2
@@ -35,7 +36,9 @@ setWaitRate KEYWORD2
 stop        KEYWORD2
 wait    KEYWORD2
 write   KEYWORD2
-
+###################
+#ClickCounter class
+###################
 countBegin  KEYWORD2
 countDown   KEYWORD2
 countReset    KEYWORD2
