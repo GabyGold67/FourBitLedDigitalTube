@@ -32,6 +32,7 @@ The first mechanism frees the user from the load of calling the refreshing metho
 |**blink()**|None|
 ||unsigned long **onRate** (,unsigned long **offRate**)|
 |**clear()**|None|
+|**doubleGauge()**|int **levelLeft**, int **levelRight** (, char **labeLeft**(, char **labelRight**))|
 |**fastRefresh()**|None|
 |**fastSend()**|uint8_t **segments**, uint8_t **port**|
 |**gauge()**|int **level** (, char **label**)|
@@ -123,6 +124,26 @@ None
 None   
 ### Use example:  
 **`myLedDisp.clear();`**
+
+---
+### **doubleGauge**(int **levelLeft**,int **levelRight**, char **labelLeft**, char **labelRight**);
+### Description:
+Displays a basic graphical representation of the level of fulfillment or completeness of a two segmented values or tasks, gives a general fast notion on the matter, as a battery charge level, liquids deposit level, time remaining, tasks completeness and so on. The levels are represented by the horizontal segments (0, 1, 2 or 3 from bottom to top), and a character might be added before each of the graphical representations to give an indication of what the display is showing, passed through the **labelLeft** and **labelRight** parameters. As four 7 segments digit ports are available, the display is splitted in two sectors, the left side and the right side, and each one of them must have a valid value (0 <= value <= 3) to enable to be displayed, and might have (or not) a single character to give a visual hint to what the value is showing. For more information check the **gauge()** method.
+### Parameters:  
+**levelLeft:** The integer value to display must be in the range 0 <= level <= 3 for the two leftside 7 segments displays.  
+**levelRight:** The integer value to display must be in the range 0 <= level <= 3 for the two rightside 7 segments displays.  
+**labelLeft:** A char, optional parameter (if not specified the default value, a Space, will be assumed), that will be displayed in the leftmost digit of the display. The character must be one of the "displayable" characters, as listed in the **`.print()`** method description.
+**labelRight:** A char, optional parameter (if not specified the default value, a Space, will be assumed), that will be displayed in the third position, from left to right, of the display just before the levelRight value. The character must be one of the "displayable" characters, as listed in the **`.print()`** method description.
+### Return value:  
+true: If the values could be represented.  
+false: Otherwise, being that the **levelLeft** and/or **levelRight** parameter was out of range and/or the **labelLeft** and/or **labelRight** parameter was not in the list of displayable characters, and the display will be blanked.
+
+### Use example:  
+**`myLedDisp.gauge(3, 2);`**  
+**`myLedDisp.**gauge(2, 1, 'b', 't');`**  
+**`myLedDisp.**gauge(1, 3, 'F');`**
+**`myLedDisp.**gauge(4, 2,'d', 'b');`** //Error  
+**`myLedDisp.**gauge(3, 0, 'X');`** //Error  
 
 ---
 ### **fastRefresh**();

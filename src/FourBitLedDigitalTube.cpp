@@ -260,6 +260,55 @@ bool TM74HC595LedTube::print(const double &value, const unsigned int &decPlaces,
     return displayable;
 }
 
+bool TM74HC595LedTube::doubleGauge(const int &levelLeft, const int &levelRight, char labelLeft, char labelRight){
+    bool displayable{true};
+    String readOut{""};
+
+    if ((levelLeft < 0) || (levelRight < 0) || (levelLeft > 3 || (levelRight > 3))) {
+        clear();
+        displayable = false;
+    }
+    else {
+        readOut += labelLeft;
+        if (readOut == "")
+            readOut = " ";
+        switch (levelLeft) {
+            case 0:
+                readOut += " ";
+                break;
+            case 1:
+                readOut += "_";
+                break;
+            case 2:
+                readOut += "=";
+                break;
+            case 3:
+                readOut += "~";
+                break;
+        };
+        readOut += labelRight;
+        if (readOut.length() == 2)
+            readOut += " ";
+        switch (levelRight) {
+            case 0:
+                readOut += " ";
+                break;
+            case 1:
+                readOut += "_";
+                break;
+            case 2:
+                readOut += "=";
+                break;
+            case 3:
+                readOut += "~";
+                break;
+        };
+        displayable = print(readOut);
+    }
+
+    return displayable;
+}
+
 bool TM74HC595LedTube::gauge(const int &level, char label){
     bool displayable{true};
     String readOut{""};
