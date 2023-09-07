@@ -48,7 +48,9 @@ The first mechanism frees the user from the load of calling the refreshing metho
 ||int **value** (, bool **rgtAlgn** (, bool **zeroPad**))|
 ||double **value** (, unsigned int **decPlaces** (, bool **rgtAlgn** (, bool **zeroPad**)))|
 |**refresh()**|None|
+|**resetBlinkMask()**|None|
 |**send()**|uint8_t **segments**, uint8_t **port**|
+|**setBlinkMask()**|bool **blnkPort3**, bool **blnkPort2**, bool **blnkPort1**, bool **blnkPort0**|
 |**setBlinkRate()**|unsigned long **newOnRate**, (unsigned long **newOffRate**)|
 |**setWaitChar()**|char **newWaitChar**|
 |**setWaitRate()**|unsigned long **newWaitRate**|
@@ -90,7 +92,7 @@ false: If the display couldn't be attached to the ISR, due to lack of free slots
 ---
 ### **blink**();
 ### Description:
-Makes the display blink the contents it is showing until a **`noBlink()`** method is invoked. The display will continue blinking even if the contents are changed. When invoking the method with no parameters the blinking is symmetrical, meaning that the time the display shows the contents and the time the display is blank are equal. The blinking starts at a preset rate the first time the method is invoked. The blinking rate can be changed by using the **`.setBlinkRate()`** method. After changing the blinking rate, the new blinking rate will be kept after a **`.noBlink()`** or new **`.blink()`** without parameters call is done, until it is modified with a new **`.setBlinkRate()`** call, or it is restarted by a **`.blink()`** with parameters. Note that to restart the blinking with a **`.blink()`** the service must first be stopped, as the method call makes no changes if the blinking service was already running.  
+Makes the display blink the contents it is showing until a **`noBlink()`** method is invoked. The display will continue blinking even if the contents are changed. By default all the digits blink, but each digit might be configured individually to blink or not by using the **`.setBlinkMask()`** method. When invoking the **`.blink()`** method with no parameters the blinking is symmetrical, meaning that the time the display shows the contents and the time the display is blank are equal. The blinking starts at a preset rate the first time the method is invoked. The blinking rate can be changed by using the **`.setBlinkRate()`** method. After changing the blinking rate, the new blinking rate will be kept after a **`.noBlink()`** or new **`.blink()`** without parameters call is done, until it is modified with a new **`.setBlinkRate()`** call, or it is restarted by a **`.blink()`** with parameters. Note that to restart the blinking with a **`.blink()`** the service must first be stopped, as the method call makes no changes if the blinking service was already running.  
 ### Parameters:  
 None
 ### Return value:  
@@ -368,6 +370,17 @@ Refreshes the display, **all four digits per call**, the method takes care of re
 **`myLedDisp.refresh();`**  
 
 ---
+### **resetBlinkMask**();
+### Description:
+Resets the blinking mask that configures which digits of the display will be affected by the **`.blink()`** method, so that all the digits will be affected when blinking is active.  
+### Parameters:  
+None
+### Return value:  
+None   
+### Use example:  
+**`myLedDisp.resetBlinkMask();`**
+
+---
 ### **send**(uint8_t **segments**, uint8_t **port**);
 ### Description:
 Sends one character to the display, using pre-built `shiftOut()` kind of methods, which takes unknown time to complete depending on the  implementation of the framework used to develop. The parameters indicate which character and to which digit will be sent. This is the method used by refresh() to send the digit when it has to be refreshed. **_Keep in mind_** that sending a character directly to the display has no connection to keep it displayed as it must be resent periodically to keep the cinematic effect. Also the refresh() and fastRefresh() methods will overwrite the character sent, explicitly called or by the ISR service if started by the **`begin()`** method.
@@ -380,12 +393,30 @@ None
 **`myLedDisp.send(0x91, 2);`** // Sends a Y to the third digit from right to left.
 
 ---
+### **setBlinkMask**(bool **blnkPort3**, bool **blnkPort2**, bool **blnkPort1**, bool **blnkPort0**);
+### Description:
+Changes the blinking mask that indicates which digits will be involved after a **`blink()`** method is invoked. Indicating true for a digit makes it blink when the method is called, indicating false makes it display steady independently of the others. The parameter are positional referenced to the display, and for ease of use the numbers in the name indicate their position relative to the rightmost digit (blnkPort0). The mask might be reset to its original value (all digits set to blink) by using this method with all parameters set to **true** or by using the **`.resetBlinkMask()`** method.  
+
+### Parameters:  
+**blnkPort3**: boolean indicating if the 4th digit from the right must blink after a **`blink()`** method is invoked (true) or stay steady (false).  
+**blnkPort2**: boolean indicating if the 3rd digit from the right must blink after a **`blink()`** method is invoked (true) or stay steady (false).  
+**blnkPort1**: boolean indicating if the 2nd digit from the right must blink after a **`blink()`** method is invoked (true) or stay steady (false).  
+**blnkPort0**: boolean indicating if the 1st digit from the right must blink after a **`blink()`** method is invoked (true) or stay steady (false).  
+ 
+### Return value:  
+None.  
+### Use example:  
+**`myLedDisp.setBlinkMask(true, false, false, false);`** //Sets only the leftmost digit to blink.  
+**`myLedDisp.setBlinkMask(false, true, true, false);`** //Sets the two central digits to blink.  
+
+---
+
 ### **setBlinkRate**(unsigned long **onRate**,unsigned long **offRate**);
 ### Description:
 Changes the time parameters to use for the display blinking the contents it shows. The parameters change will take immediate effect, either if the display is already blinking or not, in the latter case the parameters will be the ones used when a **`blink()`** method is called without parameters. The blinking will be **symmetrical** if only one parameter is passed, **asymmetrical** if two different parameters are passed, meaning that the time the display shows the contents and the time the display is blank will be equal (symmetrical) or not (asymmetrical), depending of those two parameters. The blink rate set will be kept after a **`.noBlink()`** or new **`.blink()`** without parameters call is done, until it is modified with a new **`.setBlinkRate()`** call, or it is restarted by a **`.blink()`** with parameters. Note that to restart the blinking with a **`.blink()`** the service must first be stopped, as the method makes no changes if the blinking service was already running.  
 ### Parameters:  
 **onRate**: unsigned long integer containing the time (in milliseconds) the display must stay on, the value must be in the range _minBlinkRate <= onRate <= _maxBlinkRate. Those values might be known by the use of the **`getMinBlinkRate()`** and the **`getMaxBlinkRate()`** methods.  
-**offRate**: optional unsigned long integer containing the time (in milliseconds) the display must stay off, the value must be in the range _minBlinkRate <= offRate <= _maxBlinkRate. Those values might be known by the use of the **`getMinBlinkRate()`** and the **`getMaxBlinkRate()`** methods. If no offRate value is provided the method will assume it's a symmetric blink call an use a value of offRate equal to the value passed by onRate 
+**offRate**: optional unsigned long integer containing the time (in milliseconds) the display must stay off, the value must be in the range _minBlinkRate <= offRate <= _maxBlinkRate. Those values might be known by the use of the **`getMinBlinkRate()`** and the **`getMaxBlinkRate()`** methods. If no offRate value is provided the method will assume it's a symmetric blink call an use a value of offRate equal to the value passed by onRate.  
 ### Return value:  
 true: If the parameter or parameters passed are whiting the valid range, and the change takes effect.
 false: One or more of the parameters passed were out of range. The rate change would not be made for none of the parameters.  

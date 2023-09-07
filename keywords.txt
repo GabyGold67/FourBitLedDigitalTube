@@ -30,7 +30,9 @@ noBlink     KEYWORD2
 noWait  KEYWORD2
 print	    KEYWORD2
 refresh     KEYWORD2
+resetBlinkMask KEYWORD2
 send	    KEYWORD2
+setBlinkMask   KEYWORD2
 setBlinkRate    KEYWORD2
 setWaitChar KEYWORD2
 setWaitRate KEYWORD2
