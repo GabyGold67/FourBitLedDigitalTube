@@ -73,14 +73,20 @@ void TM74HC595LedTube::refresh(){
     updWaitState();
 
     if((_blinking == false)||(_blinkShowOn == true)){
-        send(_digit[(0 + firstRefreshed)%4], 1<<(0 + firstRefreshed)%4);
-        send(_digit[(1 + firstRefreshed)%4], 1<<(1 + firstRefreshed)%4);
-        send(_digit[(2 + firstRefreshed)%4], 1<<(2 + firstRefreshed)%4);
-        send(_digit[(3 + firstRefreshed)%4], 1<<(3 + firstRefreshed)%4);
-        firstRefreshed++;
-        if (firstRefreshed == 4)
-            firstRefreshed = 0;
+        for (int i {0}; i < 4; i++)
+            send(_digit[(i + firstRefreshed)%4], 1<<(i + firstRefreshed)%4);
     }
+    if(_blinking && !_blinkShowOn){
+        if (!(_blinkMask[0] && _blinkMask[1] && _blinkMask[2] && _blinkMask[3])){   //At least one digit is set NOT TO BLINK
+            for (int i {0}; i < 4; i++)
+                if(!_blinkMask[(i + firstRefreshed)%4])
+                    send(_digit[(i + firstRefreshed)%4], 1<<(i + firstRefreshed)%4);
+
+        }
+    }
+    firstRefreshed++;
+    if (firstRefreshed == 4)
+        firstRefreshed = 0;
 
     return;
 }
@@ -183,6 +189,7 @@ bool TM74HC595LedTube::print(String text){
         for (int i{0}; i < 4; ++i)
             _digit[i] = temp7SegData[i] & tempDpData[i];
     }
+
     return displayable;
 }
 
@@ -312,6 +319,7 @@ bool TM74HC595LedTube::doubleGauge(const int &levelLeft, const int &levelRight, 
 bool TM74HC595LedTube::gauge(const int &level, char label){
     bool displayable{true};
     String readOut{""};
+
     if ((level < 0) || (level > 3)) {
         clear();
         displayable = false;
@@ -365,7 +373,6 @@ bool TM74HC595LedTube::gauge(const double &level, char label) {
 
 bool TM74HC595LedTube::stop() {
     //This object's pointer will be deleted from the arrays of pointers. If the array has no more valid pointers the timer will be stopped to avoid loosing processing time.
-    
     bool pointersFound(false);
     bool result {false};
 
@@ -390,6 +397,7 @@ bool TM74HC595LedTube::stop() {
 
 bool TM74HC595LedTube::blink(){
     bool result {false};
+
     if (!_blinking){
     _blinkTimer = 0;
     _blinkShowOn = false;
@@ -402,6 +410,7 @@ bool TM74HC595LedTube::blink(){
 
 bool TM74HC595LedTube::blink(const unsigned long &onRate, const unsigned long &offRate){
     bool result {false};
+
     if (!_blinking){
         if (offRate == 0)
             result = setBlinkRate(onRate, onRate);
@@ -417,6 +426,7 @@ bool TM74HC595LedTube::blink(const unsigned long &onRate, const unsigned long &o
 
 bool TM74HC595LedTube::noBlink(){
     bool result {false};
+
     if(_blinking){
         _blinking = false;
         _blinkTimer = 0;
@@ -428,6 +438,7 @@ bool TM74HC595LedTube::noBlink(){
 }
 
 bool TM74HC595LedTube::isBlinking(){
+
     return _blinking;
 }
 
@@ -447,47 +458,74 @@ bool TM74HC595LedTube::setBlinkRate(const unsigned long &newOnRate, const unsign
     }
     //The value was outside valid range, keep the existing rate and report the error by returning false
     
-    return result;
-  
+    return result;  
+}
+
+void TM74HC595LedTube::resetBlinkMask(){
+    _blinkMask[0] = _blinkMask[1] = _blinkMask[2] = _blinkMask[3] = true;
+
+    return;
+}
+
+void TM74HC595LedTube::setBlinkMask(bool blnkPort3, bool blnkPort2, bool blnkPort1, bool blnkPort0){
+    _blinkMask[3] = blnkPort3;
+    _blinkMask[2] = blnkPort2;
+    _blinkMask[1] = blnkPort1;
+    _blinkMask[0] = blnkPort0;
+
+    return;
 }
 
 void TM74HC595LedTube::fastRefresh(){
-
     updBlinkState();
     updWaitState();
-
     if ((_blinking == false) || (_blinkShowOn == true)) {
         fastSend(_digit[firstRefreshed], 1 << firstRefreshed);
-        firstRefreshed++;
-        if (firstRefreshed == 4)
-            firstRefreshed = 0;
+        // firstRefreshed++;
+        // if (firstRefreshed == 4)
+        //     firstRefreshed = 0;
     }
+
+    if(_blinking && !_blinkShowOn){
+        if (!(_blinkMask[0] && _blinkMask[1] && _blinkMask[2] && _blinkMask[3])){   //At least one digit is set NOT TO BLINK
+            if(!_blinkMask[firstRefreshed])
+                fastSend(_digit[firstRefreshed], 1 << firstRefreshed);
+
+        }
+    }
+    firstRefreshed++;
+    if (firstRefreshed == 4)
+        firstRefreshed = 0;
+
     return;
 }
 
 uint8_t TM74HC595LedTube::getInstanceNbr(){
+
     return _dispInstNbr;
 }
 
 unsigned long  TM74HC595LedTube::getMinBlinkRate(){
+
     return _minBlinkRate;
 }
 
 unsigned long TM74HC595LedTube::getMaxBlinkRate(){
-        return _maxBlinkRate;
-    }
+    
+    return _maxBlinkRate;
+}
 
 void TM74HC595LedTube::updBlinkState(){
     if (_blinking == true){
         if (_blinkShowOn == false) {
             if (_blinkTimer == 0){
-                //turn off all digits by sending directly a blank to each port, without affecting the _digit[] buffer
-                send(_space, 0b0001);
-                send(_space, 0b0010);
-                send(_space, 0b0100);
-                send(_space, 0b1000);
+                //turn off the digits by sending directly a blank to each port, without affecting the _digit[] buffer
+                    send(_space, 0b0001);
+                    send(_space, 0b0010);
+                    send(_space, 0b0100);
+                    send(_space, 0b1000);
 
-                _blinkTimer = millis();
+                _blinkTimer = millis(); //Starts the count for the blinkRate control
             }
             else if((millis() - _blinkTimer)> _blinkOffRate){
                 _blinkTimer = 0;
@@ -536,17 +574,20 @@ bool TM74HC595LedTube::write(const String &character, const uint8_t &port){
 }
 
 bool TM74HC595LedTube::isWaiting(){
+
     return _waiting;
 }
 
 bool TM74HC595LedTube::noWait(){
     bool result {false};
+
     if (_waiting){
         _waiting = false;
         _waitTimer = 0;
         clear();
         result = true;
     }
+
     return result;
 }
 
@@ -563,9 +604,9 @@ bool TM74HC595LedTube::setWaitChar (const char &newChar){
     return result;
 }
 
-bool TM74HC595LedTube::setWaitRate(const unsigned long &newWaitRate)
-{
+bool TM74HC595LedTube::setWaitRate(const unsigned long &newWaitRate){
     bool result {false};
+
     if ((newWaitRate >= _minBlinkRate) && newWaitRate <= _maxBlinkRate) {
         //if the new waitRate is within the accepted range, set it
         _waitRate = newWaitRate;
@@ -632,6 +673,8 @@ void TM74HC595LedTube::updWaitState(){
    return;
 }
 
+//============================================================> Class methods separator
+
 ClickCounter::ClickCounter(uint8_t ccSclk, uint8_t ccRclk, uint8_t ccDio, bool rgthAlgn, bool zeroPad)
 :TM74HC595LedTube(ccSclk, ccRclk, ccDio), _countRgthAlgn {rgthAlgn}, _countZeroPad {zeroPad}
 {
@@ -651,6 +694,7 @@ bool ClickCounter::countBegin(int startVal){
 }
 
 bool ClickCounter::countReset(){
+
     return countRestart(_beginStartVal);
 }
     
@@ -708,7 +752,7 @@ bool ClickCounter::countToZero(int qty){
 bool ClickCounter::updDisplay(){
 
     return print(_count, _countRgthAlgn, _countZeroPad);
-   }
+}
 
 int ClickCounter::getCount(){
 

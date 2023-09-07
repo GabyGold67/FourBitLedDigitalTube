@@ -25,6 +25,7 @@ protected:
     uint8_t _dio;
     uint8_t _dispInstNbr{0};
     uint8_t _digit[4];
+    bool _blinkMask[4]{true, true, true, true};
     uint8_t firstRefreshed{0};
     bool _blinking{false};
     unsigned long _blinkTimer{0};
@@ -111,7 +112,9 @@ public:
     bool print(const int &value, bool rgtAlgn = false, bool zeroPad = false);
     bool print(const double &value, const unsigned int &decPlaces, bool rgtAlgn = false, bool zeroPad = false);
     void refresh();
+    void resetBlinkMask();
     void send(const uint8_t &segments, const uint8_t &port);
+    void setBlinkMask(bool blnkPort3, bool blnkPort2, bool blnkPort1, bool blnkPort0);
     bool setBlinkRate(const unsigned long &newOnRate, const unsigned long &newOffRate = 0);
     bool setWaitChar (const char &newChar);
     bool setWaitRate(const unsigned long &newWaitRate);
