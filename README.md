@@ -27,7 +27,7 @@ The first mechanism frees the user from the load of calling the refreshing metho
 
 |Method | Parameters|
 |---|---|
-|**_TM74HC595LedTube_** |uint8_t **sclk**, uint8_t **rclk**, uint8_t **dio**|
+|**_TM74HC595LedTube_** |uint8_t **sclk**, uint8_t **rclk**, uint8_t **dio**(, bool **commAnode**)|
 |**begin()**|None|
 |**blink()**|None|
 ||unsigned long **onRate** (,unsigned long **offRate**)|
@@ -64,18 +64,20 @@ The first mechanism frees the user from the load of calling the refreshing metho
 ## **Methods definition and use description**
 
 ---
-### **TM74HC595LedTube**(uint8_t **sclk**, uint8_t **rclk**, uint8_t **dio**)
+### **TM74HC595LedTube**(uint8_t **sclk**, uint8_t **rclk**, uint8_t **dio**, bool **commAnode**)
 ### Description:  
-Class constructor, create an instance of the class for each display to use. There's no need to configure the pins before calling the method, as the constructor takes care of the task.  
+Class constructor, creates an instance of the class for each display to use. There's no need to configure the pins before calling the method, as the constructor takes care of the task.  
 ### Parameters:  
 **sclk:** uint8_t (unsigned char), passes the pin number that is connected to the sclk pin of the display (the **SH_CP** pin of the shift register if working in a custom display). The pin must be free to be used as a digital output.  
 **rclk:** uint8_t (unsigned char), passes the pin number that is connected to the rclk pin of the display (the **ST_CP** pin of the shift register if working in a custom display). The pin must be free to be used as a digital output.  
-**dio:** uint8_t (unsigned char), passes the pin number that is connected to the dio pin of the display (the **DS** pin of the shift register if working in a custom display). The pin must be free to be used as a digital output.
+**dio:** uint8_t (unsigned char), passes the pin number that is connected to the dio pin of the display (the **DS** pin of the shift register if working in a custom display). The pin must be free to be used as a digital output.  
+**commAnode** boolean, optional, indicates if the display is built with common anode 7 segment led digits (true, default value), or using common cathode 7 segment. Using one kind of digits or the other, usually means that the lit leds are activated sending low bits in their respective loctation (common anode) or set bits (common cathode), but of course that is the result of the hardware implementation. Usually the use of 74HC595 shift registers is completed using common anode digits, but this optional parameter is given to get the display working otherwise.  
 ### Return value:  
 The object created.
 
 ### Use example:  
 **`TM74HC595LedTube myLedDisp(6, 7, 10);`**
+**`TM74HC595LedTube myLedDisp(6, 7, 10, false);`**
 
 ---
 ### **begin**();

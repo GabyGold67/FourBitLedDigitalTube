@@ -23,6 +23,7 @@ protected:
     uint8_t _sclk;
     uint8_t _rclk;
     uint8_t _dio;
+    bool _commAnode {true};
     uint8_t _dispInstNbr{0};
     uint8_t _digit[4];
     bool _blinkMask[4]{true, true, true, true};
@@ -34,7 +35,7 @@ protected:
     unsigned long _blinkOffRate{500};
 
     String _charSet{"0123456789AabCcdEeFGHhIiJLlnOoPqrStUuY-_=~* ."}; // for using indexOf() method
-    uint8_t _charLeds[45] = {
+    uint8_t _charLeds[45] = {   //Values valid for a Common Anode display. For a Common Cathode display values must be logically bit negated
         0xC0, // 0
         0xF9, // 1
         0xA4, // 2
@@ -83,6 +84,7 @@ protected:
     };
     
     uint8_t _space {0xFF};
+    uint8_t _dot {0x7F};
 
     void send(const uint8_t &content);
     void fastSend(uint8_t content);
@@ -90,7 +92,7 @@ protected:
     void updWaitState();
 
 public:
-    TM74HC595LedTube(uint8_t sclk, uint8_t rclk, uint8_t dio);
+    TM74HC595LedTube(uint8_t sclk, uint8_t rclk, uint8_t dio, bool commAnode = true);
 
     bool begin();
     bool blink();
