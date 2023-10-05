@@ -15,8 +15,8 @@ void intRefresh(){
     return;
 }
 
-TM74HC595LedTube::TM74HC595LedTube(uint8_t sclk, uint8_t rclk, uint8_t dio)
-    :_sclk{sclk}, _rclk{rclk}, _dio{dio}
+TM74HC595LedTube::TM74HC595LedTube(uint8_t sclk, uint8_t rclk, uint8_t dio, bool commAnode)
+    :_sclk{sclk}, _rclk{rclk}, _dio{dio}, _commAnode{commAnode}
 {
     pinMode(_sclk, OUTPUT);
     pinMode(_rclk, OUTPUT);
@@ -25,6 +25,14 @@ TM74HC595LedTube::TM74HC595LedTube(uint8_t sclk, uint8_t rclk, uint8_t dio)
     _dispInstNbr = displaysCount++;
     _dispInstance = this;
 
+    if(!_commAnode){
+        _waitChar = ~_waitChar;
+        _space = ~_space;
+        _dot = ~_dot;
+        for(int i {0}; i < (int)_charSet.length(); i++)
+            _charLeds[i] = ~_charLeds[i];
+    }
+    
     clear();
 }
 
@@ -151,8 +159,8 @@ bool TM74HC595LedTube::print(String text){
     bool displayable{true};
     int position{-1};
     String tempText{""};
-    int temp7SegData[4]{0xFF, 0xFF, 0xFF, 0xFF};
-    int tempDpData[4]{0xFF, 0xFF, 0xFF, 0xFF};
+    int temp7SegData[4]{_space, _space, _space, _space};
+    int tempDpData[4]{_space, _space, _space, _space};
 
     // Finds out if there are '.' in the string to display, creates a mask to add them to the display
     // and takes them out of the string to process the chars/digits
@@ -163,7 +171,7 @@ bool TM74HC595LedTube::print(String text){
             if (i == 0 || text.charAt(i-1) == '.')
                 tempText += " ";
             if(tempText.length()<=4)
-                tempDpData[3-(tempText.length()-1)] = 0x7F;      
+                tempDpData[3-(tempText.length()-1)] = _dot;
         }
     }
     text = tempText;
@@ -481,9 +489,6 @@ void TM74HC595LedTube::fastRefresh(){
     updWaitState();
     if ((_blinking == false) || (_blinkShowOn == true)) {
         fastSend(_digit[firstRefreshed], 1 << firstRefreshed);
-        // firstRefreshed++;
-        // if (firstRefreshed == 4)
-        //     firstRefreshed = 0;
     }
 
     if(_blinking && !_blinkShowOn){

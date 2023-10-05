@@ -38,7 +38,7 @@ void loop(){
   //Print a message telling a "configuration" will take place
   testResult = myLedDispOne.print("JuSt");
   delay(1000);
-  testResult = myLedDispOne.print(3, false);
+  testResult = myLedDispOne.print(4, false);
   delay(1000);
   testResult = myLedDispOne.print("SeCS");
   delay(1000);
@@ -49,13 +49,26 @@ void loop(){
 
   //Setting the wait() method to keep the display alive while configuring
   testResult = myLedDispOne.wait(250);
-  delay(3000);
+  delay(4000);
 
   //Stop de waiting displayed
   testResult = myLedDispOne.noWait();
 
 //====================================>> Second example
+  //Change de wait character to _
+  testResult = myLedDispOne.print("chnG");
+  delay(1000);
+  testResult = myLedDispOne.print("char");
+  delay(1000);
+  testResult = myLedDispOne.print("to .");
+  delay(1000);
+  testResult = myLedDispOne.setWaitChar('.');
+  
+  testResult = myLedDispOne.wait();
+  delay(3000);
+  testResult = myLedDispOne.noWait();
 
+//====================================>> Third example
   //Change de wait character to _
   testResult = myLedDispOne.print("chnG");
   delay(1000);
@@ -69,7 +82,7 @@ void loop(){
   delay(3000);
   testResult = myLedDispOne.noWait();
 
-//====================================>> Third example
+//====================================>> Fourth example
   //Change de wait character to o
   testResult = myLedDispOne.print("chnG");
   delay(1000);
@@ -85,7 +98,7 @@ void loop(){
   //Stop de waiting displayed
   testResult = myLedDispOne.noWait();
   
-//====================================>> Fourth example
+//====================================>> Fifth example
   //Change de wait character to 8
   testResult = myLedDispOne.print("chnG");
   delay(1000);
