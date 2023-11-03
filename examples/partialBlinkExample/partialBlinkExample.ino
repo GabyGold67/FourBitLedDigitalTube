@@ -15,6 +15,7 @@ const uint8_t rclk {3}; // Pin A4 of Arduino Nano
 const uint8_t sclk {4}; // Pin A5 of Arduino Nano
 
 //Set of variables and constants needed just for Demo purposes
+bool tstMask[4]{true, true, true, true};
 bool testResult{};
 const long testTime{3000};
 
@@ -37,26 +38,44 @@ void loop()
   delay(testTime);
   testResult = myLedDisp.blink();
   delay(testTime);
-  myLedDisp.setBlinkMask(true, false, false, false);
+  tstMask[0] = true;
+  tstMask[1] = false;
+  tstMask[2] = false;
+  tstMask[3] = false;
+  myLedDisp.setBlinkMask(tstMask);
   delay(testTime);
-  myLedDisp.setBlinkMask(false, true,  false, false);
+  tstMask[0] = false;
+  tstMask[1] = true;
+  myLedDisp.setBlinkMask(tstMask);
   delay(testTime);
-  myLedDisp.setBlinkMask(false, false, true,  false);
+  tstMask[1] = false;
+  tstMask[2] = true;
+  myLedDisp.setBlinkMask(tstMask);
   delay(testTime);
-  myLedDisp.setBlinkMask(false, false, false, true);
+  tstMask[2] = false;
+  tstMask[3] = true;
+  myLedDisp.setBlinkMask(tstMask);
   delay(testTime);
   testResult = myLedDisp.noBlink();
   myLedDisp.resetBlinkMask();
   testResult = myLedDisp.print("abcd");
   delay(testTime);
   testResult = myLedDisp.blink();
-  myLedDisp.setBlinkMask(true, false, false, false);
+  tstMask[0] = true;
+  tstMask[1] = false;
+  tstMask[2] = false;
+  tstMask[3] = false;
+
+  myLedDisp.setBlinkMask(tstMask);
   delay(testTime);
-  myLedDisp.setBlinkMask(true, true, false, false);
+  tstMask[1] = true;
+  myLedDisp.setBlinkMask(tstMask);
   delay(testTime);
-  myLedDisp.setBlinkMask(true, true, true, false);
+  tstMask[2] = true;
+  myLedDisp.setBlinkMask(tstMask);
   delay(testTime);
-  myLedDisp.setBlinkMask(true, true, true, true);
+  tstMask[3] = true;
+  myLedDisp.setBlinkMask(tstMask);
   delay(testTime);
   testResult = myLedDisp.noBlink();
   myLedDisp.clear();

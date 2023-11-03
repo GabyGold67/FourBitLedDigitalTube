@@ -1,7 +1,7 @@
 /*
   oneDisplaysExample.ino - Example file to demonstrate TM74HC595LedTube class use with a single display
-  Created by Gabriel D. Goldman, May 2, 2023.
-  Updated by Gabriel D. Goldman, May 24, 2023.
+  Created by Gabriel D. Goldman, May, 2023.
+  Updated by Gabriel D. Goldman, October, 2023.
   Released into the public domain in accordance with "GPL-3.0-or-later" license terms.
 */
 #include <Arduino.h>
@@ -280,22 +280,25 @@ void loop()
       break;
     case 28:
       //An easy way to use the display to show that a process is ongoing or a "Waiting State"
-      testResult = myLedDisp.print("-");
+      testResult = myLedDisp.wait();
       break;
     case 29:
-      testResult = myLedDisp.print("--");
+      testResult = myLedDisp.setWaitChar('_');
       break;
     case 30:
-      testResult = myLedDisp.print("---");
+      testResult = myLedDisp.setWaitChar('=');
+      testResult = myLedDisp.setWaitRate(200);
       break;
     case 31:
-      testResult = myLedDisp.print("----");
+      testResult = myLedDisp.setWaitChar('~');
+      testResult = myLedDisp.setWaitRate(100);
       break;
     case 32:
       //Also possible using the dots, here showing the 4 dots lit with independence of other characters
-      testResult = myLedDisp.print("....");
+      testResult = myLedDisp.setWaitChar('.');
       break;
     case 33:
+      testResult = myLedDisp.noWait();
       testResult = myLedDisp.print("bYe");
       break;
     case 34:

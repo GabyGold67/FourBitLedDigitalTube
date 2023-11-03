@@ -1,7 +1,7 @@
 /*
   refreshUseExample.ino - Example file to demonstrate TM74HC595LedTube class uses
   Created by Gabriel D. Goldman, May 2, 2023.
-  Updated by Gabriel D. Goldman, September, 2023.
+  Updated by Gabriel D. Goldman, October, 2023.
   Released into the public domain in accordance with "GPL-3.0-or-later" license terms.
 */
 #include <Arduino.h>

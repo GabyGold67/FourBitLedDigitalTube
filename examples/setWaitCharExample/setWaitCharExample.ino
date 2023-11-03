@@ -1,7 +1,7 @@
 /*
   setWaitCharExample.ino - Example file to demonstrate TM74HC595LedTube class wait() methods
-  Created by Gabriel D. Goldman, May 02, 2023.
-  Updated by Gabriel D. Goldman, June 04, 2023.
+  Created by Gabriel D. Goldman, May, 2023.
+  Updated by Gabriel D. Goldman, October, 2023.
   Released into the public domain in accordance with "GPL-3.0-or-later" license terms.
 */
 #include <Arduino.h>
@@ -38,7 +38,7 @@ void loop(){
   //Print a message telling a "configuration" will take place
   testResult = myLedDispOne.print("JuSt");
   delay(1000);
-  testResult = myLedDispOne.print(4, false);
+  testResult = myLedDispOne.print(3, false);
   delay(1000);
   testResult = myLedDispOne.print("SeCS");
   delay(1000);
@@ -49,26 +49,13 @@ void loop(){
 
   //Setting the wait() method to keep the display alive while configuring
   testResult = myLedDispOne.wait(250);
-  delay(4000);
+  delay(3000);
 
   //Stop de waiting displayed
   testResult = myLedDispOne.noWait();
 
 //====================================>> Second example
-  //Change de wait character to _
-  testResult = myLedDispOne.print("chnG");
-  delay(1000);
-  testResult = myLedDispOne.print("char");
-  delay(1000);
-  testResult = myLedDispOne.print("to .");
-  delay(1000);
-  testResult = myLedDispOne.setWaitChar('.');
-  
-  testResult = myLedDispOne.wait();
-  delay(3000);
-  testResult = myLedDispOne.noWait();
 
-//====================================>> Third example
   //Change de wait character to _
   testResult = myLedDispOne.print("chnG");
   delay(1000);
@@ -82,7 +69,7 @@ void loop(){
   delay(3000);
   testResult = myLedDispOne.noWait();
 
-//====================================>> Fourth example
+//====================================>> Third example
   //Change de wait character to o
   testResult = myLedDispOne.print("chnG");
   delay(1000);
@@ -98,7 +85,7 @@ void loop(){
   //Stop de waiting displayed
   testResult = myLedDispOne.noWait();
   
-//====================================>> Fifth example
+//====================================>> Fourth example
   //Change de wait character to 8
   testResult = myLedDispOne.print("chnG");
   delay(1000);

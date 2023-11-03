@@ -1,7 +1,7 @@
 /*
   twoDisplaysExample.ino - Example file to demonstrate TM74HC595LedTube class use with two displays simultaneously
-  Created by Gabriel D. Goldman, May 2, 2023.
-  Updated by Gabriel D. Goldman, May 24, 2023.
+  Created by Gabriel D. Goldman, May, 2023.
+  Updated by Gabriel D. Goldman, October, 2023.
   Released into the public domain in accordance with "GPL-3.0-or-later" license terms.
 */
 #include <Arduino.h>
@@ -16,9 +16,9 @@ const uint8_t dsp1Rclk {3}; // Pin A4 of Arduino Nano
 const uint8_t dsp1Sclk {4}; // Pin A5 of Arduino Nano
 
 //Pin connection for Display #2
-const uint8_t dsp2Dio {A3}; // Pin A3 of Arduino Nano
-const uint8_t dsp2Rclk {A4}; // Pin A4 of Arduino Nano
-const uint8_t dsp2Sclk {A5}; // Pin A5 of Arduino Nano
+const uint8_t dsp2Dio {7}; // Pin A3 of Arduino Nano
+const uint8_t dsp2Rclk {8}; // Pin A4 of Arduino Nano
+const uint8_t dsp2Sclk {9}; // Pin A5 of Arduino Nano
 
 //Set of variables and constants needed just for Demo purposes
 int testNum{0};
@@ -255,7 +255,8 @@ void loop()
       }
       break;
     case 22:
-      testResultTwo = myLedDispTwo.print(".");
+      testResultTwo = myLedDispTwo.setWaitChar('.');
+      testResultTwo = myLedDispTwo.wait();
       //This counts show: positive integers 3 digits to positive integers 4 digits
       //Alignment: left
       //Zero Padding: No
@@ -263,11 +264,8 @@ void loop()
       {
         testResultOne = myLedDispOne.print(i);
         delay(20);
-      }
-      
-      testResultTwo = myLedDispTwo.print("..");
+      }      
       delay(1000);
-      testResultTwo = myLedDispTwo.print("...");
       
       //Alignment: right
       //Zero Padding: No
@@ -277,21 +275,20 @@ void loop()
         delay(20);
       }
 
-      testResultTwo = myLedDispTwo.print("....");
       delay(1000);
-      testResultTwo = myLedDispTwo.print("o");
+      testResultTwo = myLedDispTwo.noWait();
       
       //Alignment: left
       //Zero Padding: Yes (useless as the left alignment doesn't leave space for the extra 0's)
+      testResultTwo = myLedDispTwo.setWaitChar('o');
+      testResultTwo = myLedDispTwo.wait();
       for (int i{950}; i < 1051; i++)
       {
         testResultOne = myLedDispOne.print(i, false, true);
         delay(20);
       }
 
-      testResultTwo = myLedDispTwo.print("oo");
       delay(1000);
-      testResultTwo = myLedDispTwo.print("ooo");
       
       //Alignment: right
       //Zero Padding: Yes
@@ -300,10 +297,9 @@ void loop()
         testResultOne = myLedDispOne.print(i, true, true);
         delay(20);
       }
-      testResultTwo = myLedDispTwo.print("oooo");
       break;
     case 23:
-      testResultTwo = myLedDispTwo.print("0");
+      testResultTwo = myLedDispTwo.setWaitChar('0');
 
       //This counts show: positive integers 4 digits to positive integers 5 digits. When the count reaches 10,000 the print() returns false,
       //and an Error message stating the Error and number of test is displayed
@@ -312,10 +308,8 @@ void loop()
         testResultOne = myLedDispOne.print(i, true, true);
         delay(20);
       }
-      testResultTwo = myLedDispTwo.print("00");
       break;
     case 24:
-      testResultTwo = myLedDispTwo.print("000");
 
       //This counts show: negative integers 3 digits to negative integers 4 digits. When the count reaches -1,000 the print() returns false,
       //and an Error message stating the Error and number of test is displayed
@@ -324,11 +318,11 @@ void loop()
         testResultOne = myLedDispOne.print(i, true, true);
         delay(20);
       }
-      testResultTwo = myLedDispTwo.print("0000");
       break;
     case 25:
       //Use of the degrees symbol (°) by using the * ASCII character
       testResultOne = myLedDispOne.print("36.7*");
+      testResultTwo = myLedDispTwo.noWait();
       testResultTwo = myLedDispTwo.print("98.6*");
       break;
     case 26:
@@ -343,20 +337,21 @@ void loop()
       break;
     case 28:
       //An easy way to use the display to show that a process is ongoing or a "Waiting State"
-      testResultOne = myLedDispOne.print("-");
+      testResultOne = myLedDispOne.wait();
       break;
     case 29:
-      testResultOne = myLedDispOne.print("--");
+      testResultOne = myLedDispOne.setWaitRate(200);
       break;
     case 30:
-      testResultOne = myLedDispOne.print("---");
+      testResultOne = myLedDispOne.setWaitRate(150);
       break;
     case 31:
+      testResultOne = myLedDispOne.setWaitRate(100);
       testResultTwo = myLedDispTwo.print("I");
-      testResultOne = myLedDispOne.print("----");
       break;
     case 32:
       //Also possible using the dots, here showing the 4 dots lit with independence of other characters
+      testResultOne = myLedDispOne.noWait();
       testResultOne = myLedDispOne.print("Feel");
       testResultTwo = myLedDispTwo.print("bord");
       break;
