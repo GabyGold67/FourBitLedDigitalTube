@@ -3,7 +3,7 @@
 [![PlatformIO Registry](https://badges.registry.platformio.org/packages/gabygold/library/FourBitLedDigitalTube.svg)](https://registry.platformio.org/libraries/gabygold/FourBitLedDigitalTube) 
 ![Build with PlatformIO](https://img.shields.io/badge/build%20with-PlatformIO-orange?logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB3aWR0aD0iMjUwMCIgaGVpZ2h0PSIyNTAwIiB2aWV3Qm94PSIwIDAgMjU2IDI1NiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJ4TWlkWU1pZCI+PHBhdGggZD0iTTEyOCAwQzkzLjgxIDAgNjEuNjY2IDEzLjMxNCAzNy40OSAzNy40OSAxMy4zMTQgNjEuNjY2IDAgOTMuODEgMCAxMjhjMCAzNC4xOSAxMy4zMTQgNjYuMzM0IDM3LjQ5IDkwLjUxQzYxLjY2NiAyNDIuNjg2IDkzLjgxIDI1NiAxMjggMjU2YzM0LjE5IDAgNjYuMzM0LTEzLjMxNCA5MC41MS0zNy40OUMyNDIuNjg2IDE5NC4zMzQgMjU2IDE2Mi4xOSAyNTYgMTI4YzAtMzQuMTktMTMuMzE0LTY2LjMzNC0zNy40OS05MC41MUMxOTQuMzM0IDEzLjMxNCAxNjIuMTkgMCAxMjggMCIgZmlsbD0iI0ZGN0YwMCIvPjxwYXRoIGQ9Ik0yNDkuMzg2IDEyOGMwIDY3LjA0LTU0LjM0NyAxMjEuMzg2LTEyMS4zODYgMTIxLjM4NkM2MC45NiAyNDkuMzg2IDYuNjEzIDE5NS4wNCA2LjYxMyAxMjggNi42MTMgNjAuOTYgNjAuOTYgNi42MTQgMTI4IDYuNjE0YzY3LjA0IDAgMTIxLjM4NiA1NC4zNDYgMTIxLjM4NiAxMjEuMzg2IiBmaWxsPSIjRkZGIi8+PHBhdGggZD0iTTE2MC44NjkgNzQuMDYybDUuMTQ1LTE4LjUzN2M1LjI2NC0uNDcgOS4zOTItNC44ODYgOS4zOTItMTAuMjczIDAtNS43LTQuNjItMTAuMzItMTAuMzItMTAuMzJzLTEwLjMyIDQuNjItMTAuMzIgMTAuMzJjMCAzLjc1NSAyLjAxMyA3LjAzIDUuMDEgOC44MzdsLTUuMDUgMTguMTk1Yy0xNC40MzctMy42Ny0yNi42MjUtMy4zOS0yNi42MjUtMy4zOWwtMi4yNTggMS4wMXYxNDAuODcybDIuMjU4Ljc1M2MxMy42MTQgMCA3My4xNzctNDEuMTMzIDczLjMyMy04NS4yNyAwLTMxLjYyNC0yMS4wMjMtNDUuODI1LTQwLjU1NS01Mi4xOTd6TTE0Ni41MyAxNjQuOGMtMTEuNjE3LTE4LjU1Ny02LjcwNi02MS43NTEgMjMuNjQzLTY3LjkyNSA4LjMyLTEuMzMzIDE4LjUwOSA0LjEzNCAyMS41MSAxNi4yNzkgNy41ODIgMjUuNzY2LTM3LjAxNSA2MS44NDUtNDUuMTUzIDUxLjY0NnptMTguMjE2LTM5Ljc1MmE5LjM5OSA5LjM5OSAwIDAgMC05LjM5OSA5LjM5OSA5LjM5OSA5LjM5OSAwIDAgMCA5LjQgOS4zOTkgOS4zOTkgOS4zOTkgMCAwIDAgOS4zOTgtOS40IDkuMzk5IDkuMzk5IDAgMCAwLTkuMzk5LTkuMzk4em0yLjgxIDguNjcyYTIuMzc0IDIuMzc0IDAgMSAxIDAtNC43NDkgMi4zNzQgMi4zNzQgMCAwIDEgMCA0Ljc0OXoiIGZpbGw9IiNFNTcyMDAiLz48cGF0aCBkPSJNMTAxLjM3MSA3Mi43MDlsLTUuMDIzLTE4LjkwMWMyLjg3NC0xLjgzMiA0Ljc4Ni01LjA0IDQuNzg2LTguNzAxIDAtNS43LTQuNjItMTAuMzItMTAuMzItMTAuMzItNS42OTkgMC0xMC4zMTkgNC42Mi0xMC4zMTkgMTAuMzIgMCA1LjY4MiA0LjU5MiAxMC4yODkgMTAuMjY3IDEwLjMxN0w5NS44IDc0LjM3OGMtMTkuNjA5IDYuNTEtNDAuODg1IDIwLjc0Mi00MC44ODUgNTEuODguNDM2IDQ1LjAxIDU5LjU3MiA4NS4yNjcgNzMuMTg2IDg1LjI2N1Y2OC44OTJzLTEyLjI1Mi0uMDYyLTI2LjcyOSAzLjgxN3ptMTAuMzk1IDkyLjA5Yy04LjEzOCAxMC4yLTUyLjczNS0yNS44OC00NS4xNTQtNTEuNjQ1IDMuMDAyLTEyLjE0NSAxMy4xOS0xNy42MTIgMjEuNTExLTE2LjI4IDMwLjM1IDYuMTc1IDM1LjI2IDQ5LjM2OSAyMy42NDMgNjcuOTI2em0tMTguODItMzkuNDZhOS4zOTkgOS4zOTkgMCAwIDAtOS4zOTkgOS4zOTggOS4zOTkgOS4zOTkgMCAwIDAgOS40IDkuNCA5LjM5OSA5LjM5OSAwIDAgMCA5LjM5OC05LjQgOS4zOTkgOS4zOTkgMCAwIDAtOS4zOTktOS4zOTl6bS0yLjgxIDguNjcxYTIuMzc0IDIuMzc0IDAgMSAxIDAtNC43NDggMi4zNzQgMi4zNzQgMCAwIDEgMCA0Ljc0OHoiIGZpbGw9IiNGRjdGMDAiLz48L3N2Zz4=)
 
-Developed for the cheap and popular 7-segment 4 digits led displays (**_and for all the custom made displays as: GIANTS COUNTERS, TIMERS, PRICING DISPLAYS, etc._**)  based on two TM74HC595 (or similar) shift registers, the main focus was set on: ease of use, flexibility and basic prevention of 'misrepresentation' errors.
+Developed to easily display numeric and text data on the cheap and popular "4-Bits LED Digital Tube Module", a 7-segment 4 digits led display, and enhaced to work with any 1 to 8 digits 7-segments displays (**_and for all the custom made displays as: GIANTS COUNTERS, TIMERS, PRICING DISPLAYS, etc._**) based on two 74HC595 (or similar) shift registers, the main focus was set on: ease of use, flexibility and basic prevention of 'misrepresentation' errors.
 
 ![4-Bits LED Digital Tube Module](https://github.com/GabyGold67/FourBitLedDigitalTube/blob/master/extras/4-BitsLedDigitalTubeModule01.jpg "4-Bits LED Digital Tube Module")
 
@@ -11,11 +11,11 @@ Developed for the cheap and popular 7-segment 4 digits led displays (**_and for 
 Instance the class passing just 3 parameters (the 3 pins connected to the display module), notify the object and it's ready to go: start ``.print()``ing the data to the display. There's no need of even setting the pin modes.  
 
 ## Flexibility:
-Integers, floating point or strings they'll show as long as the display is capable of doing so in a trustworthy way. If you need to represent a percentage or level of completeness a ``.gauge()`` method is included to represent them in a "Old Motorola brick cell phones style".
+Integers, floating point or strings they'll show as long as the display is capable of doing so in a trustworthy way. If you need to represent a percentage or level of completeness a ``.gauge()`` and a ``.doubleGauge()`` methods are included to represent them in a "Old Motorola brick cell phones' style".
 
 ## Trustworthy representation basic checking:
 The representation of different types of data in this kind of displays is limited, and many implementations of the libraries to drive them take arbitrary or personally biased decisions on how to handle the problem.
-The danger of misrepresenting values in the display are usually ignored so when a value can't be faithfully represented by the display, the data is rounded, floored, ceiled, sliced, characters are replaced by others or whatever criteria the developer defined. When trying to display the value __"90153"__ through the module, displaying __"9015"__ is no better (nor worse) than displaying __"0153"__, those are __misrepresentations__. This library returns a boolean value indicating if it was able to display a trustworthy representation of the value, as long as it is able to. If a trustworthy representation was not possible it will blank the display.  
+The danger of misrepresenting values in the display are usually ignored so when a value can't be faithfully represented by the display, the data is rounded, floored, ceiled, sliced, characters are replaced by others or whatever criteria the developer defined. When trying to display the value __"90153"__ through a 4 digits  module, displaying __"9015"__ is no better (nor worse) than displaying __"0153"__, those are __misrepresentations__. This library returns a boolean value indicating if it was able to display a trustworthy representation of the value, as long as it is able to. If a trustworthy representation was not possible it will return a **false** value and blank the display.  
 ## Crossplatform:
 This kind of displays need to be periodically refreshed, as it can actively turn on only one digit at a time, so to keep all de digits visible the user must activate periodically each digit one by one independently to generate a "cinematic effect". The library takes care of this, and offers two solutions to do so.  
 * The first is to attach the refreshing methods to a timer interrupt service (ISR) of the microcontroller.  
@@ -27,7 +27,7 @@ The first mechanism frees the user from the load of calling the refreshing metho
 
 |Method | Parameters|
 |---|---|
-|**_TM74HC595LedTube_** |uint8_t **sclk**, uint8_t **rclk**, uint8_t **dio**(, bool **commAnode**)|
+|**_TM74HC595LedTube_** |uint8_t **sclk**, uint8_t **rclk**, uint8_t **dio**(, bool **commAnode**(, uint8_t **dspDigits**))|
 |**begin()**|None|
 |**blink()**|None|
 ||unsigned long **onRate** (,unsigned long **offRate**)|
@@ -50,34 +50,36 @@ The first mechanism frees the user from the load of calling the refreshing metho
 |**refresh()**|None|
 |**resetBlinkMask()**|None|
 |**send()**|uint8_t **segments**, uint8_t **port**|
-|**setBlinkMask()**|bool **blnkPort3**, bool **blnkPort2**, bool **blnkPort1**, bool **blnkPort0**|
+|**setBlinkMask()**|bool **blnkPort[]**|
 |**setBlinkRate()**|unsigned long **newOnRate**, (unsigned long **newOffRate**)|
 |**setWaitChar()**|char **newWaitChar**|
 |**setWaitRate()**|unsigned long **newWaitRate**|
 |**stop()**|None|
-|**stop()**|None|
 |**wait()**|(unsigned long **waitRate**)|
 |**write()**|uint8_t **segments**, uint8_t **port**|
-||String **character**, uint8_t **port**|
+||String **character**, uint8_t **port**|  
 
-
+---  
 ## **Methods definition and use description**
+---  
 
----
-### **TM74HC595LedTube**(uint8_t **sclk**, uint8_t **rclk**, uint8_t **dio**, bool **commAnode**)
+### **TM74HC595LedTube**(uint8_t **sclk**, uint8_t **rclk**, uint8_t **dio**, bool **commAnode**, uint8_t **dspDigits**)
 ### Description:  
-Class constructor, creates an instance of the class for each display to use. There's no need to configure the pins before calling the method, as the constructor takes care of the task.  
+Class constructor, create an instance of the class for each display to use. There's no need to configure the pins before calling the method, as the constructor takes care of the task.  
 ### Parameters:  
 **sclk:** uint8_t (unsigned char), passes the pin number that is connected to the sclk pin of the display (the **SH_CP** pin of the shift register if working in a custom display). The pin must be free to be used as a digital output.  
 **rclk:** uint8_t (unsigned char), passes the pin number that is connected to the rclk pin of the display (the **ST_CP** pin of the shift register if working in a custom display). The pin must be free to be used as a digital output.  
 **dio:** uint8_t (unsigned char), passes the pin number that is connected to the dio pin of the display (the **DS** pin of the shift register if working in a custom display). The pin must be free to be used as a digital output.  
-**commAnode** boolean, optional, indicates if the display is built with common anode 7 segment led digits (true, default value), or using common cathode 7 segment. Using one kind of digits or the other, usually means that the lit leds are activated sending low bits in their respective loctation (common anode) or set bits (common cathode), but of course that is the result of the hardware implementation. Usually the use of 74HC595 shift registers is completed using common anode digits, but this optional parameter is given to get the display working otherwise.  
+**commAnode:** bool, indicates if the display uses common anode seven segment LED digits (**true** value, default to keep the implementation backwards compatible), or  common cathode kind (**false** value). The use of one kind or the other makes a difference in the fact that one is complementary of the other, meaning a translation must be done on the information sent to the display. Each display instantiated by the class might be independently set up as one kind or the other.  
+**dspDigits:** uint8_t (unsigned char), passes the number of digits in the instantiated display, the default value is 4, to keep the implementation backwards compatible.  
+
 ### Return value:  
 The object created.
 
 ### Use example:  
-**`TM74HC595LedTube myLedDisp(6, 7, 10);`**
-**`TM74HC595LedTube myLedDisp(6, 7, 10, false);`**
+**`TM74HC595LedTube myLedDisp(6, 7, 10);`**  
+**`TM74HC595LedTube myLedDisp(6, 7, 10, false);`**  //Create a common cathode display  
+**`TM74HC595LedTube myLedDisp(6, 7, 10, true, 8);`**  //create a common anode, 8 digits display  
 
 ---
 ### **begin**();
@@ -108,8 +110,8 @@ false: The display was already set to blink.
 ### Description:
 Makes the display blink the contents it shows until a **`noBlink()`** method is invoked. The blinking is **symmetrical** if only one parameter is passed, **asymmetrical** if two different parameters are passed, meaning that the time the display shows the contents and the time the display is blank will be equal (symmetrical) or not (asymmetrical), depending of those two parameters. The blinking starts at a passed rate when the method is invoked. The blinking rate can be changed by using the **`.setBlinkRate()`** method. The blink rate set will be kept after a **`.noBlink()`** or new **`.blink()`** without parameters call is done, until it is modified with a new **`.setBlinkRate()`** call, or it is restarted by a **`.blink()`** with parameters. Note that to restart the blinking with a **`.blink()`** the service must first be stopped, as the method makes no changes if the blinking service was already running.  
 ### Parameters:  
-**onRate**: unsigned long integer containing the time (in milliseconds) the display must stay on, the value must be in the range _minBlinkRate <= onRate <= _maxBlinkRate. Those values might be known by the use of the **`getMinBlinkRate()`** and the **`getMaxBlinkRate()`** methods.  
-**offRate**: optional unsigned long integer containing the time (in milliseconds) the display must stay off, the value must be in the range _minBlinkRate <= offRate <= _maxBlinkRate. Those values might be known by the use of the **`getMinBlinkRate()`** and the **`getMaxBlinkRate()`** methods. If no offRate value is provided the method will assume it's a symmetric blink call an use a value of offRate equal to the value passed by onRate 
+**onRate**: unsigned long integer containing the time (in milliseconds) the display must stay on, the value must be in the range _minBlinkRate <= onRate <= _maxBlinkRate. Those preset values might be known by the use of the **`getMinBlinkRate()`** and the **`getMaxBlinkRate()`** methods.  
+**offRate**: optional unsigned long integer containing the time (in milliseconds) the display must stay off, the value must be in the range _minBlinkRate <= offRate <= _maxBlinkRate. Those preset values might be known by the use of the **`getMinBlinkRate()`** and the **`getMaxBlinkRate()`** methods. If no offRate value is provided the method will assume it's a symmetric blink call and use a value for offRate equal to the value passed by onRate 
 ### Return value:  
 true: If the display was not already set to blink (so now the blinking was started).  
 false: The display was already set to blink, and/or one or more of the parameters passed were out of range.  
@@ -132,12 +134,12 @@ None
 ---
 ### **doubleGauge**(int **levelLeft**,int **levelRight**, char **labelLeft**, char **labelRight**);
 ### Description:
-Displays a basic graphical representation of the level of fulfillment or completeness of a two segmented values or tasks, gives a general fast notion on the matter, as a battery charge level, liquids deposit level, time remaining, tasks completeness and so on. The levels are represented by the horizontal segments (0, 1, 2 or 3 from bottom to top), and a character might be added before each of the graphical representations to give an indication of what the display is showing, passed through the **labelLeft** and **labelRight** parameters. As four 7 segments digit ports are available, the display is splitted in two sectors, the left side and the right side, and each one of them must have a valid value (0 <= value <= 3) to enable to be displayed, and might have (or not) a single character to give a visual hint to what the value is showing. For more information check the **gauge()** method.
+Displays a basic graphical representation of the level of fulfillment or completeness of two segmented values or tasks, gives a general fast notion on the matter, as a battery charge level, liquids deposit level, time remaining, tasks completeness and so on. The levels are represented by the horizontal segments (0, 1, 2 or 3 from bottom to top), and a character might be added before each of the graphical representations to give an indication of what the display is showing, passed through the **labelLeft** and **labelRight** parameters. As four 7 segments digit ports wiil be used, this method only applies to displays with 4 to 8 LED digits, the display is splitted in two sectors, the left side and the right side, and each one of them must have a valid value (0 <= value <= 3) to enable to be displayed, and might have (or not) a single character to give a visual hint to what the value is showing. For more information check the **gauge()** method.
 ### Parameters:  
 **levelLeft:** The integer value to display must be in the range 0 <= level <= 3 for the two leftside 7 segments displays.  
 **levelRight:** The integer value to display must be in the range 0 <= level <= 3 for the two rightside 7 segments displays.  
 **labelLeft:** A char, optional parameter (if not specified the default value, a Space, will be assumed), that will be displayed in the leftmost digit of the display. The character must be one of the "displayable" characters, as listed in the **`.print()`** method description.
-**labelRight:** A char, optional parameter (if not specified the default value, a Space, will be assumed), that will be displayed in the third position, from left to right, of the display just before the levelRight value. The character must be one of the "displayable" characters, as listed in the **`.print()`** method description.
+**labelRight:** A char, optional parameter (if not specified the default value, a Space, will be assumed), that will be displayed in the position left to the **levelRight** display, just before the levelRight value. The character must be one of the "displayable" characters, as listed in the **`.print()`** method description.
 ### Return value:  
 true: If the values could be represented.  
 false: Otherwise, being that the **levelLeft** and/or **levelRight** parameter was out of range and/or the **labelLeft** and/or **labelRight** parameter was not in the list of displayable characters, and the display will be blanked.
@@ -322,7 +324,7 @@ false: Otherwise, and the display will be blanked.
 ### Description:
 Displays an integer value as long as the length representation fits the available space of the display.
 ### Parameters:  
-**value:** The integer value to display which, due to the 4 digits limitations, must be in the range -999 <= value <= 9999.  
+**value:** The integer value to display which must be in the range (-1)*(pow(10, (dspDigits - 1)) - 1) <= value <= (pow(10, dspDigits) - 1).  
 **rgtAlgn:** Boolean, optional parameter (if not specified the default value, false, will be assumed), indicates if the represented value must be displayed right aligned, with the missing heading characters being completed with spaces or zeros, depending in the zeroPad optional parameter. When a negative value is displayed and it's less than 3 digits long, a right aligned display will keep the '-' sign in the leftmost position, and the free space to the leftmost digit will be filled with spaces or zeros, depending in the zeroPad optional parameter.  
 **zeroPad:** Boolean, optional parameter (if not specified the default value, false, will be assumed), indicates if the heading free spaces of the integer right aligned displayed must be filled with zeros (true) or spaces (false). In the case of a negative integer the spaces or zeros will fill the gap between the '-' sign kept in the leftmost position, and the first digit.  
 ### Return value:  
@@ -342,9 +344,9 @@ false: Otherwise, and the display will be blanked.
 ### Description:
 Displays a floating point value as long as the length representation fits the available space of the display. If the integer part of value is not in the displayable range or if the sum of the spaces needed by the integer part plus the indicated decimal places to display is greater than the available digits space, the **`print()`** will fail, returning a false value and clearing the display.
 ### Parameters:  
-**value:** The floating point value which, due to the 4 digits limitations must be in the range -999 <= value <= 9999 for the integer part, and in the range -99 <= value <= 999 if the representation of **at least** one decimal digit is intended.The range is limited to -9 <= value <= 99 for two decimal places. Negative numbers with three decimal places are not displayable due to the digit used by the **-** symbol, but positive numbers with one integer digit and 3 decimal places are.  
-**decPlaces:** Decimal places to be displayed after the decimal point, ranging 0 <= decPlaces <= 3, selecting 0 value will display the number as an integer, with no '.' displayed. In any case the only modification that will be applied if value has a decimal part longer than the decPlaces number of digits is **truncation**, if any other rounding criteria is desired the developer must apply it to **value** before calling this method.
-**rgtAlgn:** Boolean, optional parameter (if not specified the default value, false, will be assumed), indicates if the represented value must be displayed right aligned, with the missing heading characters being completed with spaces or zeros, depending in the zeroPad optional parameter. When a negative value is displayed and it's less than 3 digits long, a right aligned display will keep the '-' sign in the leftmost position, and the free space to the leftmost digit will be filled with spaces or zeros, depending in the zeroPad optional parameter.  
+**value:** The floating point value which must be in the range ((-1)*(pow(10, ((dspDigits - decPlaces) - 1)) - 1)) <= value <= (pow(10, (dspDigits - decPlaces)) - 1).  
+**decPlaces:** Decimal places to be displayed after the decimal point, ranging 0 <= decPlaces <= dspDigits, selecting 0 value will display the number as an integer, with no '.' displayed. In any case the only modification that will be applied if value has a decimal part longer than the decPlaces number of digits is **truncation**, if any other rounding criteria is desired the developer must apply it to **value** before calling this method.
+**rgtAlgn:** Boolean, optional parameter (if not specified the default value, false, will be assumed), indicates if the represented value must be displayed right aligned, with the missing heading characters being completed with spaces or zeros, depending in the zeroPad optional parameter. When a negative value is displayed and it's less than (dspDigits - 1) digits long, a right aligned display will keep the '-' sign in the leftmost position, and the free space to the leftmost digit will be filled with spaces or zeros, depending in the zeroPad optional parameter.  
 **zeroPad:** Boolean, optional parameter (if not specified the default value, false, will be assumed), indicates if the heading free spaces of the value right aligned displayed must be filled with zeros (true) or spaces (false). In the case of a negative value the spaces or zeros will fill the gap between the '-' sign kept in the leftmost position, and the first digit.  
 ### Return value:  
 true: If the value could be represented.  
@@ -587,7 +589,7 @@ false: The display was already set to blink, and/or one or more of the parameter
 ### Description:
 Attaches the display to a timer interrupt service, as described in the **TM74HC595LedTube::begin()** method. The display then is started with the current count value represented according to the selected options of alignement and padding.
 ### Parameters:  
-startVal: Optional integer value at wich the counter starts which, due to the 4 digits limitations, must be in the range -999 <= startValue <= 9999.  
+startVal: Optional integer value at wich the counter starts which, due to the 4 digits limitations, must be in the range (-1)*(pow(10, (dspDigits - 1)) - 1) <= startValue <= (pow(10, dspDigits) - 1).  
 ### Return value:  
 true: If the display could be attached to the ISR, or if the display was already attached to it, and the startValue was within the valid limits.  
 false: If the display couldn't be attached to the ISR, due to lack of free slots, or the startValue was out of range.  
@@ -626,7 +628,7 @@ true: After resetting the value and updating the display.
 ### Description:
 Restarts the count from the value provided as parameter. The display is updated to reflect this change in its new value.  
 ### Parameters:  
-restartValue: Optional integer value, a value of 0 is set if no parameter is provided. The parameter due to the 4 digits limitations, must be in the range -999 <= restartValue <= 9999  
+restartValue: Optional integer value, a value of 0 is set if no parameter is provided. The parameter due to the 4 digits limitations, must be in the range (-1)*(pow(10, (dspDigits - 1)) - 1) <= restartValue <= (pow(10, dspDigits) - 1).  
 ### Return value:  
 true: If the parameter value was within valid range. 
 false: If the parameter value was outside valid range. 
@@ -683,7 +685,7 @@ Gets the current value of the counter.
 ### Parameters:  
 None.  
 ### Return value:  
-The current value held by the counter, due to the 4 digits limitations, it will be in the range -999 <= counter <= 9999  
+The current value held by the counter, due to the 4 digits limitations, it will be in the range (-1)*(pow(10, (dspDigits - 1)) - 1) <= counter <= (pow(10, dspDigits) - 1)  
 ### Use example:  
 int finalCount = **`myClickCounter.getCount();`**  
 
@@ -694,7 +696,7 @@ Gets the value passed as parameter when the `**.countBegin()**` method was invok
 ### Parameters:  
 None.  
 ### Return value:  
-The value to wich the counter was originally started, due to the 4 digits limitations, it will be in the range -999 <= counter <= 9999  
+The value to wich the counter was originally started, due to the 4 digits limitations, it will be in the range (-1)*(pow(10, (dspDigits - 1)) - 1) <= counter <= (pow(10, dspDigits) - 1)  
 ### Use example:  
 int countStarted = **`myClickCounter.getStartVal();`**  
 
