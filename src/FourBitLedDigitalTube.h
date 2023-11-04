@@ -113,6 +113,7 @@ public:
     uint8_t getInstanceNbr();
     unsigned long getMaxBlinkRate();
     unsigned long getMinBlinkRate();
+    uint8_t getDigitsQty();
     bool isBlinking();
     bool isWaiting();
     bool noBlink();

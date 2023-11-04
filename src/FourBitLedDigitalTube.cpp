@@ -305,6 +305,11 @@ bool TM74HC595LedTube::gauge(const double &level, char label) {
     return displayable;
 }
 
+uint8_t TM74HC595LedTube::getDigitsQty(){
+
+    return _dspDigits;
+}
+
 uint8_t TM74HC595LedTube::getInstanceNbr(){
 
     return _dispInstNbr;

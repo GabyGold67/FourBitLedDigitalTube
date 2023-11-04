@@ -21,6 +21,7 @@ doubleGauge KEYWORD2
 fastRefresh  KEYWORD2
 fastSend    KEYWORD2
 gauge       KEYWORD2
+getDigitsQty   KEYWORD2
 getInstanceNbr  KEYWORD2
 getMaxBlinkRate KEYWORD2
 getMinBlinkRate KEYWORD2
