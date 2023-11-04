@@ -254,7 +254,7 @@ bool TM74HC595LedTube::gauge(const int &level, char label){
     bool displayable{true};
     String readOut{""};
 
-    if ((level < 0) || (level > 3)) {
+    if (((level < 0) || (level > 3)) ||(_dspDigits < 4)) {
         clear();
         displayable = false;
     }
@@ -286,7 +286,7 @@ bool TM74HC595LedTube::gauge(const double &level, char label) {
     bool displayable{true};
     int intLevel{0};
 
-    if ((level < 0.0) || (level > 1.0)) {
+    if (((level < 0.0) || (level > 1.0)) ||(_dspDigits < 4)){
         clear();
         displayable = false;
     }
