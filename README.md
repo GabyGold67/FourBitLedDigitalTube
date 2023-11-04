@@ -352,7 +352,7 @@ false: Otherwise, and the display will be blanked.
 **`myLedDisp.print(-12, true, true);`** //Displays '**``-012``**'    
 
 ---
-### **print**(double **value**, unsigned int **decPlaces**, bool **rgtAlgn**, bool **zeroPad**);
+### **print**(double **value**, unsigned int **decPlaces**(, bool **rgtAlgn**(, bool **zeroPad**)));
 ### Description:
 Displays a floating point value as long as the length representation fits the available space of the display. If the integer part of value is not in the displayable range or if the sum of the spaces needed by the integer part plus the indicated decimal places to display is greater than the available digits space, the **`print()`** will fail, returning a false value and clearing the display.
 ### Parameters:  
@@ -363,7 +363,7 @@ Displays a floating point value as long as the length representation fits the av
 ### Return value:  
 true: If the value could be represented.  
 false: Otherwise, and the display will be blanked.
-### Use example:  
+### Use example (on a 4-bits display):  
 **`myLedDisp.print(1.2, 2);`** //Displays '**``1.20 ``**'  
 **`myLedDisp.print(1.2, 2, true);`** //Displays '**`` 1.20``**'  
 **`myLedDisp.print(12, 2, true, true);`** //Displays '**``01.20``**'    
@@ -375,7 +375,7 @@ false: Otherwise, and the display will be blanked.
 ---
 ### **refresh**();
 ### Description:
-Refreshes the display, **all four digits per call**, the method takes care of registering which digit was redrawn first and each call starts from the next until the last is reached and then restart from the first, to minimize ghosting and keep all the digits brightness even, and uses pre-built **`shiftOut()`** kind of methods. This working criteria has two consequences:
+Refreshes the display, **all available digits per call**, the method takes care of registering which digit was redrawn first and each call starts from the next until the last is reached and then restart from the first, to minimize ghosting and keep all the digits brightness even, and uses pre-built **`shiftOut()`** kind of methods. This working criteria has two consequences:
 * The method works slower than the **`fastRefresh()`**, so it will take more time to execute.  
 * When used by the developer to refresh the display from the code it will avoid ghosting or blinking effects being called less frequently to keep the display's cinematic effect.  
 ### Parameters:  
@@ -401,40 +401,46 @@ None
 ### Description:
 Sends one character to the display, using pre-built `shiftOut()` kind of methods, which takes unknown time to complete depending on the  implementation of the framework used to develop. The parameters indicate which character and to which digit will be sent. This is the method used by refresh() to send the digit when it has to be refreshed. **_Keep in mind_** that sending a character directly to the display has no connection to keep it displayed as it must be resent periodically to keep the cinematic effect. Also the refresh() and fastRefresh() methods will overwrite the character sent, explicitly called or by the ISR service if started by the **`begin()`** method.
 ### Parameters:  
-**segments:** An unsigned short integer value representing which segments to turn on and which off to get the graphic representation of a character in the seven segment display, the corresponding value can be looked up in the **_charLeds[]** array definition in the header file of the library. Any other uint8_t (char or unsigned short int are equivalent terms here) value is admissible, but the displayed result might not be easily recognized as a known ASCII character.  
-**port:** An unsigned short integer value representing the digit where the character will be sent, being the range of valid values 0 <= port <= 3, the 0 value is the rightmost digit, the 1 value the second from the right and so on.
+**segments:** An unsigned short integer value representing which segments to turn on and which off to get the graphic representation of a character in the seven segment display, the corresponding value can be looked up in the **_charLeds[]** array definition in the header file of the library. Any other uint8_t (char or unsigned short int are equivalent terms here) value is admissible, but the displayed result might not be easily recognized as a known ASCII character.  In the case of a common cathode display the values there listed must be complemented to calculate the value to send.    
+**port:** An unsigned short integer value representing the digit where the character will be sent, being the range of valid values 0 <= port <= (dspDigits-1), the 0 value is the rightmost digit, the 1 value the second from the right and so on.
 ### Return value:  
 None   
 ### Use example:  
 **`myLedDisp.send(0x91, 2);`** // Sends a Y to the third digit from right to left.
 
 ---
-### **setBlinkMask**(bool **blnkPort3**, bool **blnkPort2**, bool **blnkPort1**, bool **blnkPort0**);
+### **setBlinkMask**(bool **blnkPort[]**);
 ### Description:
-Changes the blinking mask that indicates which digits will be involved after a **`blink()`** method is invoked. Indicating true for a digit makes it blink when the method is called, indicating false makes it display steady independently of the others. The parameter are positional referenced to the display, and for ease of use the numbers in the name indicate their position relative to the rightmost digit (blnkPort0). The mask might be reset to its original value (all digits set to blink) by using this method with all parameters set to **true** or by using the **`.resetBlinkMask()`** method.  
+Changes the blinking mask that indicates which digits will be involved after a **`blink()`** method is invoked. Indicating true for a digit makes it blink when the method is called, indicating false makes it display steady independently of the others. The parameter is positional referenced to the display, and for ease of use the index numbers of the array indicate their position relative to the rightmost digit (blnkPort0). The mask might be reset to its original value (all digits set to blink) by using this method with all parameters set to **true** or by using the **`.resetBlinkMask()`** method.  
 
 ### Parameters:  
-**blnkPort3**: boolean indicating if the 4th digit from the right must blink after a **`blink()`** method is invoked (true) or stay steady (false).  
-**blnkPort2**: boolean indicating if the 3rd digit from the right must blink after a **`blink()`** method is invoked (true) or stay steady (false).  
-**blnkPort1**: boolean indicating if the 2nd digit from the right must blink after a **`blink()`** method is invoked (true) or stay steady (false).  
-**blnkPort0**: boolean indicating if the 1st digit from the right must blink after a **`blink()`** method is invoked (true) or stay steady (false).  
+**blnkPort[]**: array of booleans of length **dspDigits**, indexes are positional referenced to the display, indicating each one which digits must blink after a **`blink()`** method is invoked (true) or stay steady (false). The indexes valid range is 0 <= index <= (dspDigits-1), corresponding the [0] position withe the rightmost display port, the [1] position the second from the right and so on .  
  
 ### Return value:  
 None.  
 ### Use example:  
-**`myLedDisp.setBlinkMask(true, false, false, false);`** //Sets only the leftmost digit to blink.  
-**`myLedDisp.setBlinkMask(false, true, true, false);`** //Sets the two central digits to blink.  
+**`bool tstMask[4]{true, true, true, true};`**  
+**`testResult = myLedDisp.blink();`**  //Sets all the  digits to blink.  
+**`tstMask[0] = true;`**  
+**`tstMask[1] = false;`**  
+**`tstMask[2] = false;`**  
+**`tstMask[3] = false;`**  
+**`myLedDisp.setBlinkMask(tstMask);`**  //Sets only the rightmost digit to blink.  
+**`tstMask[0] = false;`**  
+**`tstMask[1] = true;`**  
+**`tstMask[2] = true;`**  
+**`myLedDisp.setBlinkMask(tstMask);`**    //Sets the two central digits to blink.
 
 ---
 
-### **setBlinkRate**(unsigned long **onRate**,unsigned long **offRate**);
+### **setBlinkRate**(unsigned long **onRate**(,unsigned long **offRate**));
 ### Description:
 Changes the time parameters to use for the display blinking the contents it shows. The parameters change will take immediate effect, either if the display is already blinking or not, in the latter case the parameters will be the ones used when a **`blink()`** method is called without parameters. The blinking will be **symmetrical** if only one parameter is passed, **asymmetrical** if two different parameters are passed, meaning that the time the display shows the contents and the time the display is blank will be equal (symmetrical) or not (asymmetrical), depending of those two parameters. The blink rate set will be kept after a **`.noBlink()`** or new **`.blink()`** without parameters call is done, until it is modified with a new **`.setBlinkRate()`** call, or it is restarted by a **`.blink()`** with parameters. Note that to restart the blinking with a **`.blink()`** the service must first be stopped, as the method makes no changes if the blinking service was already running.  
 ### Parameters:  
-**onRate**: unsigned long integer containing the time (in milliseconds) the display must stay on, the value must be in the range _minBlinkRate <= onRate <= _maxBlinkRate. Those values might be known by the use of the **`getMinBlinkRate()`** and the **`getMaxBlinkRate()`** methods.  
-**offRate**: optional unsigned long integer containing the time (in milliseconds) the display must stay off, the value must be in the range _minBlinkRate <= offRate <= _maxBlinkRate. Those values might be known by the use of the **`getMinBlinkRate()`** and the **`getMaxBlinkRate()`** methods. If no offRate value is provided the method will assume it's a symmetric blink call an use a value of offRate equal to the value passed by onRate.  
+**onRate**: unsigned long integer containing the time (in milliseconds) the display must stay on, the value must be in the range _minBlinkRate <= onRate <= _maxBlinkRate. Those built-in values might be known by the use of the **`getMinBlinkRate()`** and the **`getMaxBlinkRate()`** methods.  
+**offRate**: optional unsigned long integer containing the time (in milliseconds) the display must stay off, the value must be in the range _minBlinkRate <= offRate <= _maxBlinkRate. Those built-in values might be known by the use of the **`getMinBlinkRate()`** and the **`getMaxBlinkRate()`** methods. If no offRate value is provided the method will assume it's a symmetric blink call and use a value of offRate equal to the value passed by onRate.  
 ### Return value:  
-true: If the parameter or parameters passed are whiting the valid range, and the change takes effect.
+true: If the parameter or parameters passed are whiting the valid range, and the change will take effect immediately.
 false: One or more of the parameters passed were out of range. The rate change would not be made for none of the parameters.  
 ### Use example:  
 **`myLedDisp.setBlinkRate(400);`** //Returns true and sets the blinking rate to 400 millisecs on, 400 millisecs off (symmetrical blink).  
@@ -447,10 +453,10 @@ false: One or more of the parameters passed were out of range. The rate change w
 ### Description:
 Changes the the character to use for the display to show the "progress bar advancement". The parameters change will take immediate effect, either if the display is already in wait mode or not. The new character will be changed for further calls of the method until a new setWaitChar is invoked with a valid argument.  
 ### Parameters:  
-**newWaitChar**: a character the display must use symbolizing the progress, the value must be in the displayable characters group as explained in the print() method.  
+**newWaitChar**: a character the display must use for symbolizing the progress, the value must be in the displayable characters group as explained in the print() method.  
 ### Return value:  
-true: If the character passed is whitin the displayable characters range, and the change takes effect.
-false: The parameter passed was out of range. In this case the character change would not be made.  
+true: If the character passed is whitin the displayable characters range, and the change will take effect immediately.
+false: The parameter passed was invalid, i.e. it was a non displayable character. In this case the character change will not be made.  
 ### Use example:  
 **`myLedDisp.setWaitRate('_');`** //Returns true and sets the wait character to '_'.  
 **`myLedDisp.setWaitRate('#');`** //Returns false and the display wait character stays without change.  
@@ -471,7 +477,7 @@ false: The parameter passed was out of range. In this case the rate change would
 ---
 ### **stop**();
 ### Description:
-Detaches the display from the timer interrupt service which takes care of refreshing the display regularly (if it was attached to it). If the display wasn't attached to the ISR no modification is made. The method then checks the array (list) of active serviced displays, if none is left in that array, the timer service is stopped, and the interrupt used by it is released, to leave the resource available for other uses. This last action is reversed when a new begin() method is executed in any display.  
+Detaches the display from the timer interrupt service which takes care of refreshing the display regularly (if it was attached to it, if the display wasn't attached to the ISR no modification is made). The method then checks the array (list) of active serviced displays, if none is left in that array, the timer service is stopped, the interrupt used by it is released, and the array is deleted from the heap to free the allocated resources. This last actions are reversed when a new begin() method is executed in any display.  
 ### Parameters:  
 **None**  
 ### Return value:  
@@ -481,17 +487,6 @@ false: The instance of the display wasn't found attached to the ISR, no detach w
 **`myLedDisp.stop();`**  
 
 ---
-### **write**(uint8_t **segments**, uint8_t **port**);
-### Description:
-Prints one character to the display, at a desired position, without affecting the rest of the characters displayed.
-### Parameters:  
-**segments:** An unsigned short integer value representing which segments to turn on and which off to get the graphic representation of a character in the seven segment display, the corresponding value can be looked up in the **_charLeds[]** array definition in the header file of the library. Any other uint8_t (char or unsigned short int is the same here) value is admissible, but the displayed result might not be easily recognized as a known ASCII character.  
-**port:** An unsigned short integer value representing the digit where the character will be sent, being the range of valid values 0 <= port <= 3, the 0 value is the rightmost digit, the 1 value the second from the right and so on.
-### Return value:  
-true: If the parameters are within the acceptable range, in this case 0 <= port <= 3.  
-false: The port value was outside the acceptable range.  
-### Use example:  
-**`myLedDisp.write(0xA4, 1);`** // Modifies the displayed data, placing a '2' in the second digit from right to left.
 
 ### **wait**(unsigned long **newWaitRate**);
 ### Description:
@@ -507,15 +502,30 @@ false: The display was already set to wait, and/or the parameter passed was out 
 **`myLedDisp.wait(3000);`** //Returns false and the display stays without change.  
 
 ---
+### **write**(uint8_t **segments**, uint8_t **port**);
+### Description:
+Prints one character to the display, at a desired position, without affecting the rest of the characters displayed.
+### Parameters:  
+**segments:** An unsigned short integer value representing which segments to turn on and which off to get the graphic representation of a character in the seven segment display, the corresponding value can be looked up in the **_charLeds[]** array definition in the header file of the library. In the case of a common cathode display the values there listed must be complemented. Any other uint8_t (char or unsigned short int is the same here) value is admissible, but the displayed result might not be easily recognized as a known ASCII character.  
+**port:** An unsigned short integer value representing the digit where the character will be sent, being the range of valid values 0 <= port <= (dspDigits - 1), the 0 value is the rightmost digit, the 1 value the second from the right and so on.
+### Return value:  
+true: If the parameters are within the acceptable range, in this case 0 <= port <= (dspDigits - 1).  
+false: The port value was outside the acceptable range.  
+### Use example:  
+**`myLedDisp.write(0xA4, 1);`** // Modifies the displayed data, placing a '2' in the second digit from right to left in a common anode display.
+
+---
+
 ### **write**(String **character**, uint8_t **port**);
 ### Description:
 Prints one character to the display, at a desired position, without affecting the rest of the characters displayed.
 ### Parameters:  
 **character:** A single character string that must be displayable, as defined in the **`.print()`** method.  
-**port:** An unsigned short integer value representing the digit where the character will be sent, being the range of valid values 0 <= port <= 3, the 0 value is the rightmost digit, the 1 value the second from the right and so on.
+**port:** An unsigned short integer value representing the digit where the character will be sent, being the range of valid values 0 <= port <= (dspDigits - 1), the 0 value is the rightmost digit, the 1 value the second from the right and so on.
 ### Return value:  
-true: If **character** is a displayable one char string, and **port** value is in the range 0 <= value <= 3.  
+true: If **character** is a displayable one char string, and **port** value is in the range 0 <= value <= (dspDigits - 1).  
 false: The **character** was not "displayable" or the **port** value was out of range.  
+
 ### Use example:  
 **`myLedDisp.write("J", 1);`** // Modifies the displayed data, placing a 'J' in the second digit from right to left.  
 
@@ -523,7 +533,7 @@ false: The **character** was not "displayable" or the **port** value was out of 
 
 |Method | Parameters|
 |---|---|
-|**_ClickCounter_** |uint8_t **sclk**, uint8_t **rclk**, uint8_t **dio**(, bool **rgthAlgn**, bool **zeroPad**)|
+|**_ClickCounter_** |uint8_t **sclk**, uint8_t **rclk**, uint8_t **dio**(, bool **rgthAlgn**(, bool **zeroPad**(, bool **commAnode**(, uint8_t **dspDigits**))))|
 |**blink()**|None|
 ||unsigned long **onRate** (,unsigned long **offRate**)|
 |**countBegin()**|(int **startVal**)|
@@ -551,12 +561,16 @@ Class constructor, creates an instance of the class for each display to use. The
 **dio:** uint8_t (unsigned char), passes the pin number that is connected to the dio pin of the display (the **DS** pin of the shift register if working in a custom display). The pin must be free to be used as a digital output.  
 **rgtAlgn:** Boolean, optional parameter (if not specified the default value, true, will be assumed), indicates if the represented value must be displayed right aligned, with the missing heading characters being completed with spaces or zeros, depending in the zeroPad optional parameter. When a negative value is displayed and it's less than 3 digits long, a right aligned display will keep the '-' sign in the leftmost position, and the free space to the leftmost digit will be filled with spaces or zeros, depending in the zeroPad optional parameter.  
 **zeroPad:** Boolean, optional parameter (if not specified the default value, false, will be assumed), indicates if the heading free spaces of the integer right aligned displayed must be filled with zeros (true) or spaces (false). In the case of a negative integer the spaces or zeros will fill the gap between the '-' sign kept in the leftmost position, and the first digit.  
+**commAnode:** bool, indicates if the display uses common anode seven segment LED digits (**true** value, default to keep the implementation backwards compatible), or  common cathode kind (**false** value). The use of one kind or the other makes a difference in the fact that one is complementary of the other, meaning a translation must be done on the information sent to the display. Each display instantiated by the class might be independently set up as one kind or the other.  
+**dspDigits:** uint8_t (unsigned char), passes the number of digits in the instantiated display, the default value is 4, to keep the implementation backwards compatible.  
+
 
 ### Return value:  
 The object created.
 
 ### Use example:  
 **`ClickCounter myClickCounter(6, 7, 10, true, true);`**  
+**`ClickCounter myClickCounter(6, 7, 10, true, true, true, 5);`**  // 5 digits common anode counter  
 
 ---
 ### **countBegin**();
@@ -601,7 +615,7 @@ false: The display was already set to blink, and/or one or more of the parameter
 ### Description:
 Attaches the display to a timer interrupt service, as described in the **TM74HC595LedTube::begin()** method. The display then is started with the current count value represented according to the selected options of alignement and padding.
 ### Parameters:  
-startVal: Optional integer value at wich the counter starts which, due to the 4 digits limitations, must be in the range (-1)*(pow(10, (dspDigits - 1)) - 1) <= startValue <= (pow(10, dspDigits) - 1).  
+startVal: Optional integer value at wich the counter starts which must be in the range (-1)*(pow(10, (dspDigits - 1)) - 1) <= startValue <= (pow(10, dspDigits) - 1).  
 ### Return value:  
 true: If the display could be attached to the ISR, or if the display was already attached to it, and the startValue was within the valid limits.  
 false: If the display couldn't be attached to the ISR, due to lack of free slots, or the startValue was out of range.  
@@ -640,7 +654,7 @@ true: After resetting the value and updating the display.
 ### Description:
 Restarts the count from the value provided as parameter. The display is updated to reflect this change in its new value.  
 ### Parameters:  
-restartValue: Optional integer value, a value of 0 is set if no parameter is provided. The parameter due to the 4 digits limitations, must be in the range (-1)*(pow(10, (dspDigits - 1)) - 1) <= restartValue <= (pow(10, dspDigits) - 1).  
+restartValue: Optional integer value, a value of 0 is set if no parameter is provided. The parameter must be in the range (-1)*(pow(10, (dspDigits - 1)) - 1) <= restartValue <= (pow(10, dspDigits) - 1).  
 ### Return value:  
 true: If the parameter value was within valid range. 
 false: If the parameter value was outside valid range. 
@@ -653,11 +667,11 @@ false: If the parameter value was outside valid range.
 ---
 ### **countStop**();
 ### Description:
-Refer to **TM74HC595LedTube::begin()** method.    
+Refer to **TM74HC595LedTube::stop()** method.    
 ### Parameters:  
 **None**  
 ### Return value:  
-Refer to **TM74HC595LedTube::begin()** method.
+Refer to **TM74HC595LedTube::stop()** method.
  
 ### Use example:  
 **`myClickCounter.countStop();`**  
@@ -665,7 +679,7 @@ Refer to **TM74HC595LedTube::begin()** method.
 ---
 ## **countToZero()**(int **qty**);  
 ### Description:
-Modifies the value of the current count and refreshes the display to keep it updated. The counter absolute value will be decremented, independently of the sign of the current count, as long as the new value resulting is in the displayable range. If the current count was negative, the value will be incremented, if it was positive, will be incremented, with the concrete porpouse of approaching the count value to 0.
+Modifies the value of the current count and refreshes the display to keep it updated. The counter absolute value will be decremented, independently of the sign of the current count , as long as the new value resulting is in the displayable range. If the current count was negative, the value will be incremented, if it was positive, will be incremented, with the concrete porpouse of approaching the count value to 0.
 ### Parameters:  
 qty: Optional integer value, its **absolute** value will be decremente from the current absolute count value, the sign of the resulting count will be preserved. If no parameter is passed a value of one will be used.  
 ### Return value:  
@@ -708,7 +722,7 @@ Gets the value passed as parameter when the `**.countBegin()**` method was invok
 ### Parameters:  
 None.  
 ### Return value:  
-The value to wich the counter was originally started, due to the 4 digits limitations, it will be in the range (-1)*(pow(10, (dspDigits - 1)) - 1) <= counter <= (pow(10, dspDigits) - 1)  
+The value to wich the counter was originally started, it will be in the range (-1)*(pow(10, (dspDigits - 1)) - 1) <= counter <= (pow(10, dspDigits) - 1)  
 ### Use example:  
 int countStarted = **`myClickCounter.getStartVal();`**  
 
