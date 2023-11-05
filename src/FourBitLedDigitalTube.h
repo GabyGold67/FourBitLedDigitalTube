@@ -149,6 +149,7 @@ public:
     ~ClickCounter();
     bool blink();
     bool blink(const unsigned long &onRate, const unsigned long &offRate = 0);
+    void clear();
     bool countBegin(int startVal = 0);
     bool countDown(int qty = 1);
     bool countReset();

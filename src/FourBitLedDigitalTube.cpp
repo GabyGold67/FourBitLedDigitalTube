@@ -741,13 +741,18 @@ bool TM74HC595LedTube::write(const String &character, const uint8_t &port){
 //============================================================> Class methods separator
 
 ClickCounter::ClickCounter(uint8_t ccSclk, uint8_t ccRclk, uint8_t ccDio, bool rgthAlgn, bool zeroPad, bool commAnode, const uint8_t dspDigits)
-:TM74HC595LedTube(ccSclk, ccRclk, ccDio), _countRgthAlgn {rgthAlgn}, _countZeroPad {zeroPad}
+:TM74HC595LedTube(ccSclk, ccRclk, ccDio, commAnode, dspDigits), _countRgthAlgn {rgthAlgn}, _countZeroPad {zeroPad}
 {
     //Class constructor
 }
 
 ClickCounter::~ClickCounter(){
     //Class destructor
+}
+
+void ClickCounter::clear(){
+
+    return TM74HC595LedTube::clear();
 }
 
 bool ClickCounter::countBegin(int startVal){
