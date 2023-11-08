@@ -7,16 +7,6 @@ uint8_t TM74HC595LedTube::_dspPtrArrLngth = 10;
 TM74HC595LedTube** TM74HC595LedTube::_instancesLstPtr = nullptr;
 bool TM74HC595LedTube::_intRfrshSrvcStrtd = false;
 
-void TM74HC595LedTube::intRefresh(){
-    //ISR called by Timer1 to keep the display lit by calling each display's fastRefresh() method
-    for(uint8_t i {0}; i < _dspPtrArrLngth; i++){
-        if (*(_instancesLstPtr + i) != nullptr)
-            (*(_instancesLstPtr + i)) -> fastRefresh();
-    }    
-
-    return;
-}
-
 TM74HC595LedTube::TM74HC595LedTube(uint8_t sclk, uint8_t rclk, uint8_t dio, bool commAnode, const uint8_t dspDigits)
     :_sclk{sclk}, _rclk{rclk}, _dio{dio}, _commAnode{commAnode}, _dspDigits{dspDigits}, _digitPtr{new uint8_t (dspDigits)}, _blinkMaskPtr{new bool (dspDigits)}
 {
@@ -69,8 +59,7 @@ bool TM74HC595LedTube::begin()
     bool result {false};
     int frstFreeSlot{-1};
 
-    //Verify if the timer interrupt service was started by checking if there are displays added to the pointers vector
-    if (!_intRfrshSrvcStrtd){
+    if (!_intRfrshSrvcStrtd){   //Verify if the timer interrupt service was started 
         //Initialize the Interrupt timer
         Timer1.attachInterrupt(intRefresh);
         Timer1.initialize(2000);
@@ -113,10 +102,10 @@ bool TM74HC595LedTube::blink(){
     bool result {false};
 
     if (!_blinking){
-    _blinkTimer = 0;
-    _blinkShowOn = false;
-    _blinking = true;
-    result = true;
+        _blinkTimer = 0;
+        _blinkShowOn = false;
+        _blinking = true;
+        result = true;
     }
 
     return result;
@@ -254,8 +243,8 @@ bool TM74HC595LedTube::gauge(const int &level, char label){
     bool displayable{true};
     String readOut{""};
 
+    clear();    // Ensures a clean display in case it's not displayable, and also trailing spaces if _dspDigits > 4
     if (((level < 0) || (level > 3)) ||(_dspDigits < 4)) {
-        clear();
         displayable = false;
     }
     else {
@@ -325,6 +314,16 @@ unsigned long  TM74HC595LedTube::getMinBlinkRate(){
     return _minBlinkRate;
 }
 
+void TM74HC595LedTube::intRefresh(){
+    //ISR called by Timer1 to keep the display lit by calling each display's fastRefresh() method
+    for(uint8_t i {0}; i < _dspPtrArrLngth; i++){
+        if (*(_instancesLstPtr + i) != nullptr)
+            (*(_instancesLstPtr + i)) -> fastRefresh();
+    }    
+
+    return;
+}
+
 bool TM74HC595LedTube::isBlinking(){
 
     return _blinking;
@@ -379,10 +378,10 @@ bool TM74HC595LedTube::print(String text){
         if (text.charAt(i) != '.')
             tempText += text.charAt(i);
         else{
-            if (i == 0 || text.charAt(i-1) == '.')
+            if (i == 0 || text.charAt(i - 1) == '.')
                 tempText += " ";
-            if(tempText.length()<=4)
-                tempDpData[3-(tempText.length()-1)] = 0x7F;      
+            if(tempText.length() <= _dspDigits)
+                tempDpData[(_dspDigits - 1) - (tempText.length() - 1)] = 0x7F;      
         }
     }
     text = tempText;
@@ -750,6 +749,16 @@ ClickCounter::~ClickCounter(){
     //Class destructor
 }
 
+bool ClickCounter::blink(){
+
+    return TM74HC595LedTube::blink();
+}
+
+bool ClickCounter::blink(const unsigned long &onRate, const unsigned long &offRate){
+
+    return TM74HC595LedTube::blink(onRate, offRate);
+}
+
 void ClickCounter::clear(){
 
     return TM74HC595LedTube::clear();
@@ -765,6 +774,18 @@ bool ClickCounter::countBegin(int startVal){
     }
 
    return result;
+}
+
+bool ClickCounter::countDown(int qty){
+    bool result {false};
+    qty = abs(qty);
+
+    if((_count - qty) >= _dspValMin){
+        _count -= qty;
+        result = updDisplay();
+    }
+
+    return result;
 }
 
 bool ClickCounter::countReset(){
@@ -788,6 +809,17 @@ bool ClickCounter::countStop(){
     return TM74HC595LedTube::stop();
 }
 
+bool ClickCounter::countToZero(int qty){
+    bool result {false};
+
+    if (_count > 0)
+        result = countDown(qty);
+    else if (_count < 0)
+        result = countUp(qty);
+    
+    return result;
+}
+
 bool ClickCounter::countUp(int qty){
     bool result {false};
     qty = abs(qty);
@@ -800,34 +832,6 @@ bool ClickCounter::countUp(int qty){
     return result;
 }
 
-bool ClickCounter::countDown(int qty){
-    bool result {false};
-    qty = abs(qty);
-
-    if((_count - qty) >= _dspValMin){
-        _count -= qty;
-        result = updDisplay();
-    }
-
-    return result;
-}
-
-bool ClickCounter::countToZero(int qty){
-    bool result {false};
-
-    if (_count > 0)
-        result = countDown(qty);
-    else if (_count < 0)
-        result = countUp(qty);
-    
-    return result;
-}
-
-bool ClickCounter::updDisplay(){
-
-    return print(_count, _countRgthAlgn, _countZeroPad);
-}
-
 int ClickCounter::getCount(){
 
     return _count;
@@ -838,22 +842,17 @@ int ClickCounter::getStartVal(){
     return _beginStartVal;
 }
 
+bool ClickCounter::noBlink(){
+
+    return TM74HC595LedTube::noBlink();
+}
+
 bool ClickCounter::setBlinkRate(const unsigned long &newOnRate, const unsigned long &newOffRate){
 
     return TM74HC595LedTube::setBlinkRate(newOnRate, newOffRate);
 }
 
-bool ClickCounter::blink(){
+bool ClickCounter::updDisplay(){
 
-    return TM74HC595LedTube::blink();
-}
-
-bool ClickCounter::blink(const unsigned long &onRate, const unsigned long &offRate){
-
-    return TM74HC595LedTube::blink(onRate, offRate);
-}
-
-bool ClickCounter::noBlink(){
-
-    return TM74HC595LedTube::noBlink();
+    return print(_count, _countRgthAlgn, _countZeroPad);
 }
