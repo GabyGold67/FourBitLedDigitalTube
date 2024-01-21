@@ -21,19 +21,20 @@ protected:
     uint8_t _rclk;
     uint8_t _dio;
     bool _commAnode{true};
-    
-    const uint8_t _dspDigits{};
-    int _dspValMax{};
-    int _dspValMin{};
+    uint8_t _dspDigits{};
+    uint8_t* _digitPosPtr{nullptr};
+    uint8_t* _digitPtr{nullptr};
+    bool* _blinkMaskPtr{nullptr};
+
+    long _dspValMax{};
+    long _dspValMin{};
     
     const unsigned long _minBlinkRate{100};
     const unsigned long _maxBlinkRate{2000};
-    TM74HC595LedTube *_dispInstance;
+    TM74HC595LedTube* _dispInstance;
     uint8_t _dispInstNbr{0};
     uint8_t _firstRefreshed{0};
-    uint8_t* _digitPtr{nullptr};
     bool _blinking{false};
-    bool* _blinkMaskPtr{nullptr};
     bool _blinkShowOn{false};
     unsigned long _blinkOnRate{500};
     unsigned long _blinkOffRate{500};
@@ -90,8 +91,8 @@ protected:
     
     uint8_t _space {0xFF};
     uint8_t _dot{0x7F};
-    String _zeroPadding{};
-    String _spacePadding{};
+    String _zeroPadding{""};
+    String _spacePadding{""};
 
     void fastSend(uint8_t content);
     void send(const uint8_t &content);
@@ -99,7 +100,7 @@ protected:
     void updWaitState();
 
 public:
-    TM74HC595LedTube(uint8_t sclk, uint8_t rclk, uint8_t dio, bool commAnode = true, const uint8_t dspDigits = 4);
+    TM74HC595LedTube(uint8_t sclk, uint8_t rclk, uint8_t dio, bool commAnode = true, uint8_t dspDigits = 4);
     ~TM74HC595LedTube();
     bool begin();
     bool blink();
@@ -119,13 +120,14 @@ public:
     bool noBlink();
     bool noWait();
     bool print(String text);
-    bool print(const int &value, bool rgtAlgn = false, bool zeroPad = false);
+    bool print(const long &value, bool rgtAlgn = false, bool zeroPad = false);
     bool print(const double &value, const unsigned int &decPlaces, bool rgtAlgn = false, bool zeroPad = false);
     void refresh();
     void resetBlinkMask();
     void send(const uint8_t &segments, const uint8_t &port);
     void setBlinkMask(const bool blnkPort[]);
     bool setBlinkRate(const unsigned long &newOnRate, const unsigned long &newOffRate = 0);
+    bool setDigitsOrder(uint8_t* newOrderPtr);
     bool setWaitChar (const char &newWaitChar);
     bool setWaitRate(const unsigned long &newWaitRate);
     bool stop();
@@ -139,8 +141,8 @@ public:
 
 class ClickCounter: protected TM74HC595LedTube{
 private:
-    int _count{0};
-    int _beginStartVal{0};
+    long _count{0};
+    long _beginStartVal{0};
     bool _countRgthAlgn{true};
     bool _countZeroPad{false};
 
@@ -150,15 +152,15 @@ public:
     bool blink();
     bool blink(const unsigned long &onRate, const unsigned long &offRate = 0);
     void clear();
-    bool countBegin(int startVal = 0);
-    bool countDown(int qty = 1);
+    bool countBegin(long startVal = 0);
+    bool countDown(long qty = 1);
     bool countReset();
-    bool countRestart(int restartValue = 0);
+    bool countRestart(long restartValue = 0);
     bool countStop();
-    bool countToZero(int qty = 1);
-    bool countUp(int qty = 1);
-    int getCount();
-    int getStartVal();
+    bool countToZero(long qty = 1);
+    bool countUp(long qty = 1);
+    long getCount();
+    long getStartVal();
     bool noBlink();
     bool setBlinkRate(const unsigned long &newOnRate, const unsigned long &newOffRate = 0);
     bool updDisplay();

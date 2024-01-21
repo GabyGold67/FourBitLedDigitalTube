@@ -35,6 +35,7 @@ resetBlinkMask KEYWORD2
 send	    KEYWORD2
 setBlinkMask   KEYWORD2
 setBlinkRate    KEYWORD2
+setDigitsOrder KEYWORD2
 setWaitChar KEYWORD2
 setWaitRate KEYWORD2
 stop        KEYWORD2

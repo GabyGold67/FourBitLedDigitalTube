@@ -52,6 +52,7 @@ The first mechanism frees the user from the load of calling the refreshing metho
 |**resetBlinkMask()**|None|
 |**send()**|uint8_t **segments**, uint8_t **port**|
 |**setBlinkMask()**|bool **blnkPort[]**|
+|**setDigitsOrder()**|uint8_t* **newOrder**|
 |**setBlinkRate()**|unsigned long **newOnRate**, (unsigned long **newOffRate**)|
 |**setWaitChar()**|char **newWaitChar**|
 |**setWaitRate()**|unsigned long **newWaitRate**|
@@ -337,7 +338,7 @@ false: Otherwise, and the display will be blanked.
 Displays an integer value as long as the length representation fits the available space of the display.
 ### Parameters:  
 **value:** The integer value to display which must be in the range (-1)*(pow(10, (dspDigits - 1)) - 1) <= value <= (pow(10, dspDigits) - 1).  
-**rgtAlgn:** Boolean, optional parameter (if not specified the default value, false, will be assumed), indicates if the represented value must be displayed right aligned, with the missing heading characters being completed with spaces or zeros, depending in the zeroPad optional parameter. When a negative value is displayed and it's less than 3 digits long, a right aligned display will keep the '-' sign in the leftmost position, and the free space to the leftmost digit will be filled with spaces or zeros, depending in the zeroPad optional parameter.  
+**rgtAlgn:** Boolean, optional parameter (if not specified the default value, false, will be assumed), indicates if the represented value must be displayed right aligned, with the missing heading characters being completed with spaces or zeros, depending in the zeroPad optional parameter. When a negative value is displayed and it's less than (dspDigits - 1) digits long, a right aligned display will keep the '-' sign in the leftmost position, and the free space to the leftmost digit will be filled with spaces or zeros, depending in the zeroPad optional parameter.  
 **zeroPad:** Boolean, optional parameter (if not specified the default value, false, will be assumed), indicates if the heading free spaces of the integer right aligned displayed must be filled with zeros (true) or spaces (false). In the case of a negative integer the spaces or zeros will fill the gap between the '-' sign kept in the leftmost position, and the first digit.  
 ### Return value:  
 true: If the value could be represented.  
@@ -447,6 +448,20 @@ false: One or more of the parameters passed were out of range. The rate change w
 **`myLedDisp.setBlinkRate(800, 200);`** //Returns true and sets the blinking rate to 800 millisecs on, 200 millisecs off (asymmetrical blink)  
 **`myLedDisp.setBlinkRate(3000);`** //Returns false and the display blinking rate stays without change.  
 **`myLedDisp.setBlinkRate(600, 3500);`** //Returns false and the display blinking rate stays without change.  
+
+---
+
+### **setDigitsOrder**(uint8_t* **newOrderPtr**);
+### Description:
+As different 7 segments dynamic displays based on two 74HC595 are differently wired, some implement the leftmost display port as the LSb of the shift register driving the port selection, some implement it as the MSb. When more than one display modules are used it adds a new level of hardware implementation that differs from one supplier to the other. The library implements a mechanism to provide the instantiated object to relate the positions of the display ports to the bits of the selection byte through an array. The array has the size of the display instantiated, and each array elment is meant to hold the number of the bit that selects the corresponding port, being the first element of the array (array[0]) the corresponding to the leftmost display digit, array[1], the next to it's right and so on. The array is default defined in the constructor as (0, 1, 2,...) that is the most usual implementation found. If the order needs to be changed the `.setDigitsOrder()` method is the way to set a new mapping.
+### Parameters:  
+**newOrderPtr**: pointer to an uint8_t array of **_dspDigits** lenght containing the position of the bit corresponding to each display port. Each value will be checked against the _dspDigits value to ensure that they are all in the range acceptable, 0 <= value <= _dspDigits - 1. If one of the values is out of the valid range no change will be done. Please note that no checking will be done to ensure all of the array values are different. A repeated value will be accepted.  
+### Return value:  
+true: All of the elements of the array were in the accepted range. The change was performed  
+false: One or more of the parameters passed were out of range. The change wasn't performed.  
+### Use example:
+**`uint8_t diyMore8Bits[8] {3, 2, 1, 0, 7, 6, 5, 4};`** //Builds an array with the port order of the "DIY MORE 8-bit LED Display".  
+**`myLedDisp.setDigitsOrder(diyMore8Bits);`** //Changes the display bit to port mapping according to the display characteristics.  
 
 ---
 ### **setWaitChar**(char **newWaitChar**);
@@ -559,7 +574,7 @@ Class constructor, creates an instance of the class for each display to use. The
 **sclk:** uint8_t (unsigned char), passes the pin number that is connected to the sclk pin of the display (the **SH_CP** pin of the shift register if working in a custom display). The pin must be free to be used as a digital output.  
 **rclk:** uint8_t (unsigned char), passes the pin number that is connected to the rclk pin of the display (the **ST_CP** pin of the shift register if working in a custom display). The pin must be free to be used as a digital output.  
 **dio:** uint8_t (unsigned char), passes the pin number that is connected to the dio pin of the display (the **DS** pin of the shift register if working in a custom display). The pin must be free to be used as a digital output.  
-**rgtAlgn:** Boolean, optional parameter (if not specified the default value, true, will be assumed), indicates if the represented value must be displayed right aligned, with the missing heading characters being completed with spaces or zeros, depending in the zeroPad optional parameter. When a negative value is displayed and it's less than 3 digits long, a right aligned display will keep the '-' sign in the leftmost position, and the free space to the leftmost digit will be filled with spaces or zeros, depending in the zeroPad optional parameter.  
+**rgtAlgn:** Boolean, optional parameter (if not specified the default value, true, will be assumed), indicates if the represented value must be displayed right aligned, with the missing heading characters being completed with spaces or zeros, depending in the zeroPad optional parameter. When a negative value is displayed and it's less than (dspDigits - 1) digits long, a right aligned display will keep the '-' sign in the leftmost position, and the free space to the leftmost digit will be filled with spaces or zeros, depending in the zeroPad optional parameter.  
 **zeroPad:** Boolean, optional parameter (if not specified the default value, false, will be assumed), indicates if the heading free spaces of the integer right aligned displayed must be filled with zeros (true) or spaces (false). In the case of a negative integer the spaces or zeros will fill the gap between the '-' sign kept in the leftmost position, and the first digit.  
 **commAnode:** bool, indicates if the display uses common anode seven segment LED digits (**true** value, default to keep the implementation backwards compatible), or  common cathode kind (**false** value). The use of one kind or the other makes a difference in the fact that one is complementary of the other, meaning a translation must be done on the information sent to the display. Each display instantiated by the class might be independently set up as one kind or the other.  
 **dspDigits:** uint8_t (unsigned char), passes the number of digits in the instantiated display, the default value is 4, to keep the implementation backwards compatible.  
