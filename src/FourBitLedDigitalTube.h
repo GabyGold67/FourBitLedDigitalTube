@@ -111,6 +111,8 @@ public:
     void fastSend(const uint8_t &segments, const uint8_t &port);
     bool gauge(const int &level, char label = ' ');
     bool gauge(const double &level, char label = ' ');
+    long getDspValMax();
+    long getDspValMin();
     uint8_t getInstanceNbr();
     unsigned long getMaxBlinkRate();
     unsigned long getMinBlinkRate();
@@ -139,8 +141,9 @@ public:
 
 //============================================================> Class declarations separator
 
-class ClickCounter: protected TM74HC595LedTube{
+class ClickCounter{
 private:
+    TM74HC595LedTube _display;
     long _count{0};
     long _beginStartVal{0};
     bool _countRgthAlgn{true};

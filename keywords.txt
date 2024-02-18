@@ -22,6 +22,8 @@ fastRefresh  KEYWORD2
 fastSend    KEYWORD2
 gauge       KEYWORD2
 getDigitsQty   KEYWORD2
+getDspValMax   KEYWORD2
+getDspValMin   KEYWORD2
 getInstanceNbr  KEYWORD2
 getMaxBlinkRate KEYWORD2
 getMinBlinkRate KEYWORD2

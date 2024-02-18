@@ -302,6 +302,16 @@ bool TM74HC595LedTube::gauge(const double &level, char label) {
     return displayable;
 }
 
+    long TM74HC595LedTube::getDspValMax(){
+
+        return _dspValMax;
+    }
+
+    long TM74HC595LedTube::getDspValMin(){
+
+        return _dspValMin;
+    }
+
 uint8_t TM74HC595LedTube::getDigitsQty(){
 
     return _dspDigits;
@@ -769,7 +779,8 @@ bool TM74HC595LedTube::write(const String &character, const uint8_t &port){
 //============================================================> Class methods separator
 
 ClickCounter::ClickCounter(uint8_t ccSclk, uint8_t ccRclk, uint8_t ccDio, bool rgthAlgn, bool zeroPad, bool commAnode, const uint8_t dspDigits)
-:TM74HC595LedTube(ccSclk, ccRclk, ccDio, commAnode, dspDigits), _countRgthAlgn {rgthAlgn}, _countZeroPad {zeroPad}
+:_display(ccSclk, ccRclk, ccDio, commAnode, dspDigits), _countRgthAlgn {rgthAlgn}, _countZeroPad {zeroPad}
+// :TM74HC595LedTube(ccSclk, ccRclk, ccDio, commAnode, dspDigits), _countRgthAlgn {rgthAlgn}, _countZeroPad {zeroPad}
 {
     //Class constructor
 }
@@ -780,24 +791,24 @@ ClickCounter::~ClickCounter(){
 
 bool ClickCounter::blink(){
 
-    return TM74HC595LedTube::blink();
+    return _display.blink();
 }
 
 bool ClickCounter::blink(const unsigned long &onRate, const unsigned long &offRate){
 
-    return TM74HC595LedTube::blink(onRate, offRate);
+    return _display.blink(onRate, offRate);
 }
 
 void ClickCounter::clear(){
 
-    return TM74HC595LedTube::clear();
+    return _display.clear();
 }
 
 bool ClickCounter::countBegin(long startVal){
     bool result{false};
 
-    if ((startVal >= _dspValMin) && (startVal <= _dspValMax)){
-        if (TM74HC595LedTube::begin() == true){
+    if ((startVal >= _display.getDspValMin()) && (startVal <= _display.getDspValMax())){
+        if (_display.begin() == true){
             result = countRestart(startVal);
             if (result)
                 _beginStartVal = startVal;
@@ -811,7 +822,7 @@ bool ClickCounter::countDown(long qty){
     bool result {false};
     qty = abs(qty);
 
-    if((_count - qty) >= _dspValMin){
+    if((_count - qty) >= _display.getDspValMin()){
         _count -= qty;
         result = updDisplay();
     }
@@ -827,7 +838,7 @@ bool ClickCounter::countReset(){
 bool ClickCounter::countRestart(long restartValue){
    bool result{false};
 
-   if ((restartValue >= _dspValMin) && (restartValue <= _dspValMax)){
+   if ((restartValue >= _display.getDspValMin()) && (restartValue <= _display.getDspValMax())){
       _count = restartValue;
       result = updDisplay();
    }
@@ -837,7 +848,7 @@ bool ClickCounter::countRestart(long restartValue){
 
 bool ClickCounter::countStop(){
     
-    return TM74HC595LedTube::stop();
+    return _display.stop();
 }
 
 bool ClickCounter::countToZero(long qty){
@@ -855,7 +866,7 @@ bool ClickCounter::countUp(long qty){
     bool result {false};
     qty = abs(qty);
 
-    if((_count + qty) <= _dspValMax){
+    if((_count + qty) <= _display.getDspValMax()){
         _count += qty;
         result = updDisplay();
     }
@@ -875,15 +886,15 @@ long ClickCounter::getStartVal(){
 
 bool ClickCounter::noBlink(){
 
-    return TM74HC595LedTube::noBlink();
+    return _display.noBlink();
 }
 
 bool ClickCounter::setBlinkRate(const unsigned long &newOnRate, const unsigned long &newOffRate){
 
-    return TM74HC595LedTube::setBlinkRate(newOnRate, newOffRate);
+    return _display.setBlinkRate(newOnRate, newOffRate);
 }
 
 bool ClickCounter::updDisplay(){
 
-    return print(_count, _countRgthAlgn, _countZeroPad);
+    return _display.print(_count, _countRgthAlgn, _countZeroPad);
 }
