@@ -36,8 +36,8 @@ protected:
     uint8_t _firstRefreshed{0};
     bool _blinking{false};
     bool _blinkShowOn{false};
-    unsigned long _blinkOnRate{500};
     unsigned long _blinkOffRate{500};
+    unsigned long _blinkOnRate{500};
     unsigned long _blinkTimer{0};
 
     String _charSet{"0123456789AabCcdEeFGHhIiJLlnOoPqrStUuY-_=~* ."}; // for using indexOf() method
@@ -94,12 +94,14 @@ protected:
     String _zeroPadding{""};
     String _spacePadding{""};
 
+    void setAttrbts();
     void fastSend(uint8_t content);
     void send(const uint8_t &content);
     void updBlinkState();
     void updWaitState();
 
 public:
+    TM74HC595LedTube();
     TM74HC595LedTube(uint8_t sclk, uint8_t rclk, uint8_t dio, bool commAnode = true, uint8_t dspDigits = 4);
     ~TM74HC595LedTube();
     bool begin();
@@ -111,12 +113,12 @@ public:
     void fastSend(const uint8_t &segments, const uint8_t &port);
     bool gauge(const int &level, char label = ' ');
     bool gauge(const double &level, char label = ' ');
+    uint8_t getDigitsQty();
     long getDspValMax();
     long getDspValMin();
     uint8_t getInstanceNbr();
     unsigned long getMaxBlinkRate();
     unsigned long getMinBlinkRate();
-    uint8_t getDigitsQty();
     bool isBlinking();
     bool isWaiting();
     bool noBlink();

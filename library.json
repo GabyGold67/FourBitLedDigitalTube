@@ -1,6 +1,6 @@
 {
   "name": "FourBitLedDigitalTube",
-  "version": "2.2.0",
+  "version": "2.2.1",
   
   "description": "7 segment 1 to 8 digits LED display easy to use and powerful library for modules based on two 74HC595 (or similar) shift registers chips. Developed originally for the cheap and popular '4-bit Led Digital Tube Module' (and for all the custom made displays as: GIANTS COUNTERS, TIMERS, PRICING DISPLAYS, etc.) based on two 74HC595 (or similar) shift registers, the main focus was set on: ease of use, flexibility and basic prevention of 'misrepresentation' errors.",
   "keywords": "7 Segment, SevenSeg, 4 digits, 8 digits, LED, display, print, blink, gauge, floating point, negative, shift register, counter, tally counter, click counter",

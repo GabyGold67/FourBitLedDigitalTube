@@ -60,4 +60,6 @@ updDisplay  KEYWORD2
 ###############################################
 # Constants (LITERAL1)
 ###############################################
+_minBlinkRate  LITERAL1
+_maxBlinkRate  LITERAL1
 

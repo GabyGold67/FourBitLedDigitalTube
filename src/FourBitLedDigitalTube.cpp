@@ -7,43 +7,17 @@ uint8_t TM74HC595LedTube::_dspPtrArrLngth = 10;
 TM74HC595LedTube** TM74HC595LedTube::_instancesLstPtr = nullptr;
 bool TM74HC595LedTube::_intRfrshSrvcStrtd = false;
 
+TM74HC595LedTube::TM74HC595LedTube()
+{
+}
+
 TM74HC595LedTube::TM74HC595LedTube(uint8_t sclk, uint8_t rclk, uint8_t dio, bool commAnode, uint8_t dspDigits)
     :_sclk{sclk}, _rclk{rclk}, _dio{dio}, _commAnode{commAnode}, _dspDigits{dspDigits}, _digitPosPtr{new uint8_t[dspDigits]}, _digitPtr{new uint8_t[dspDigits]}, _blinkMaskPtr{new bool [dspDigits]}
 {
     pinMode(_sclk, OUTPUT);
     pinMode(_rclk, OUTPUT);
     pinMode(_dio, OUTPUT);
-
-    if(dspDigits > 1){ //Calculate the minimum integer value displayable with this display's available digits
-        _dspValMin = 1;
-        for (uint8_t i{0}; i < (dspDigits - 1); i++)
-            _dspValMin *= 10;
-        _dspValMin = (-1)*(_dspValMin - 1);   //_dspValMin =(-1)*(_dspValMin - 1);
-    }
-    else
-        _dspValMin = 0;
-
-    _dspValMax = 1; //Calculate the maximum integer value displayable with this display's available digits, create a Zero and a Space padding string for right alignement
-    for (uint8_t i{0}; i < dspDigits; i++){
-        _dspValMax *= 10;
-        _zeroPadding += "0";
-        _spacePadding += " ";
-        *(_digitPosPtr + i) = i;    
-        *(_blinkMaskPtr + i) = true;
-    }
-    --_dspValMax;
-
-    _dispInstNbr = _displaysCount++;
-    _dispInstance = this;
-
-    if(!_commAnode){
-        _waitChar = ~_waitChar;
-        _space = ~_space;
-        _dot = ~_dot;
-        for(int i {0}; i < (int)_charSet.length(); i++)
-            _charLeds[i] = ~_charLeds[i];
-    }
-
+    setAttrbts();
     clear();
 }
 
@@ -302,19 +276,19 @@ bool TM74HC595LedTube::gauge(const double &level, char label) {
     return displayable;
 }
 
-    long TM74HC595LedTube::getDspValMax(){
-
-        return _dspValMax;
-    }
-
-    long TM74HC595LedTube::getDspValMin(){
-
-        return _dspValMin;
-    }
-
 uint8_t TM74HC595LedTube::getDigitsQty(){
 
     return _dspDigits;
+}
+
+long TM74HC595LedTube::getDspValMax(){
+
+    return _dspValMax;
+}
+
+long TM74HC595LedTube::getDspValMin(){
+
+    return _dspValMin;
 }
 
 uint8_t TM74HC595LedTube::getInstanceNbr(){
@@ -469,7 +443,6 @@ bool TM74HC595LedTube::print(const double &value, const unsigned int &decPlaces,
         clear();
     }
     else if (long((decPlaces + String(long(value)).length())) > (((value < 0) && (value > (-1))) ? (_dspDigits - 1) : _dspDigits)) {
-    // else if (static_cast<int>(decPlaces + String(int(value)).length()) > (((value < 0) && (value > (-1))) ? (_dspDigits - 1) : _dspDigits)) {
         displayable = false;
         clear();
     }
@@ -481,7 +454,6 @@ bool TM74HC595LedTube::print(const double &value, const unsigned int &decPlaces,
         readOut += (String(value) + _zeroPadding).substring(start, start + decPlaces);
         if (rgtAlgn) {
             if ((long)(readOut.length()) < _dspDigits + 1) {
-            // if (readOut.length() < _dspDigits + 1) {
                 if (value < 0)
                     pad += "-";
                 if (zeroPad)
@@ -510,7 +482,6 @@ void TM74HC595LedTube::refresh(){
     if((_blinking == false)||(_blinkShowOn == true)){
         for (int i {0}; i < _dspDigits; i++){
             tmpDigToSend = *(_digitPtr + ((i + _firstRefreshed) % _dspDigits));
-            // send(tmpDigToSend, 1 << ((i + _firstRefreshed) % _dspDigits));
             send(tmpDigToSend, 1 << *(_digitPosPtr + ((i + _firstRefreshed) % _dspDigits)));
         }
     }
@@ -521,7 +492,6 @@ void TM74HC595LedTube::refresh(){
             for (int i {0}; i < _dspDigits; i++){
                 if(!*(_blinkMaskPtr + ((i + _firstRefreshed) % _dspDigits))){
                     tmpDigToSend = *(_digitPtr + ((i + _firstRefreshed) % _dspDigits));
-                    // send(tmpDigToSend, 1<<((i + *(_digitPosPtr + _firstRefreshed)) % _dspDigits));
                     send(tmpDigToSend, 1 << *(_digitPosPtr + ((i + _firstRefreshed) % _dspDigits)));
                 }
             }
@@ -547,6 +517,8 @@ void TM74HC595LedTube::send(const uint8_t &content){
     //consumed to shift an entire byte is unknown, issue that must be considered when the method is invoked 
     //from an ISR and multiple times depending on the qty of displays being used
     shiftOut(_dio, _sclk, MSBFIRST, content);
+
+    return;
 }
 
 void TM74HC595LedTube::send(const uint8_t &segments, const uint8_t &port){
@@ -559,6 +531,42 @@ void TM74HC595LedTube::send(const uint8_t &segments, const uint8_t &port){
     send(segments);
     send(port);
     digitalWrite(_rclk, HIGH);
+
+    return;
+}
+
+void TM74HC595LedTube::setAttrbts(){
+    if(_dspDigits > 1){ //Calculate the minimum integer value displayable with this display's available digits
+        _dspValMin = 1;
+        for (uint8_t i{0}; i < (_dspDigits - 1); i++)
+            _dspValMin *= 10;
+        _dspValMin = (-1)*(_dspValMin - 1);   //_dspValMin =(-1)*(_dspValMin - 1);
+    }
+    else
+        _dspValMin = 0;
+
+    _dspValMax = 1; //Calculate the maximum integer value displayable with this display's available digits, create a Zero and a Space padding string for right alignement
+    for (uint8_t i{0}; i < _dspDigits; i++){
+        _dspValMax *= 10;
+        _zeroPadding += "0";
+        _spacePadding += " ";
+        *(_digitPosPtr + i) = i;    
+        *(_blinkMaskPtr + i) = true;
+    }
+    --_dspValMax;
+
+    _dispInstNbr = _displaysCount++;
+    _dispInstance = this;
+
+    if(!_commAnode){
+        _waitChar = ~_waitChar;
+        _space = ~_space;
+        _dot = ~_dot;
+        for(int i {0}; i < (int)_charSet.length(); i++)
+            _charLeds[i] = ~_charLeds[i];
+    }
+
+    return;
 }
 
 void TM74HC595LedTube::setBlinkMask(const bool blnkPort[]){
@@ -716,7 +724,6 @@ void TM74HC595LedTube::updWaitState(){
          _waitCount++;
          if (_waitCount > _dspDigits)
             _waitCount = 0;
-
          _waitTimer = millis();
       }
    }
@@ -780,7 +787,6 @@ bool TM74HC595LedTube::write(const String &character, const uint8_t &port){
 
 ClickCounter::ClickCounter(uint8_t ccSclk, uint8_t ccRclk, uint8_t ccDio, bool rgthAlgn, bool zeroPad, bool commAnode, const uint8_t dspDigits)
 :_display(ccSclk, ccRclk, ccDio, commAnode, dspDigits), _countRgthAlgn {rgthAlgn}, _countZeroPad {zeroPad}
-// :TM74HC595LedTube(ccSclk, ccRclk, ccDio, commAnode, dspDigits), _countRgthAlgn {rgthAlgn}, _countZeroPad {zeroPad}
 {
     //Class constructor
 }
@@ -800,8 +806,9 @@ bool ClickCounter::blink(const unsigned long &onRate, const unsigned long &offRa
 }
 
 void ClickCounter::clear(){
+    _display.clear();
 
-    return _display.clear();
+    return;
 }
 
 bool ClickCounter::countBegin(long startVal){

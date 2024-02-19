@@ -58,8 +58,8 @@ The first mechanism frees the user from the load of calling the refreshing metho
 |**resetBlinkMask()**|None|
 |**send()**|uint8_t **segments**, uint8_t **port**|
 |**setBlinkMask()**|bool **blnkPort[]**|
-|**setDigitsOrder()**|uint8_t* **newOrder**|
 |**setBlinkRate()**|unsigned long **newOnRate**, (unsigned long **newOffRate**)|
+|**setDigitsOrder()**|uint8_t* **newOrder**|
 |**setWaitChar()**|char **newWaitChar**|
 |**setWaitRate()**|unsigned long **newWaitRate**|
 |**stop()**|None|
@@ -237,39 +237,6 @@ The unsigned short number indicating the quantity of digits of the instantiated 
 **`myLedDisp.getDigistsQty();`**
 
 ---
-### **getDigitsQty**();
-### Description:
-Returns an unsigned short integer value indicating the quantity of digits, or ports, the display have as indicated at the object instantiation. Each time the class is instantiated the object is created with the needed resources and the range of values are calculated based on the dspDigits parameter, and that value is the returned by this method.  
-### Parameters:  
-**None**  
-### Return value:  
-The unsigned short number indicating the quantity of digits of the instantiated display.  
-### Use example:  
-**`myLedDisp.getDigistsQty();`**
-
----
-### **getDspValMax**();
-### Description:
-Returns a long integer value indicating the smallest displayable number according to the quantity of digits, or ports, the display have as indicated at the object instantiation.   
-### Parameters:  
-**None**  
-### Return value:  
-The integer number indicating the minimum value that the display might display acording to the quantity of digits of the instantiated display.  
-### Use example:  
-**`long minLimit = myLedDisp.getDspMin();`**
-
----
-### **getDspValMax**();
-### Description:
-Returns a long integer value indicating the greatest displayable number according to the quantity of digits, or ports, the display have as indicated at the object instantiation.   
-### Parameters:  
-**None**  
-### Return value:  
-The integer number indicating the maximum value that the display might display acording to the quantity of digits of the instantiated display.  
-### Use example:  
-**`long maxLimit = myLedDisp.getDspMax();`**
-
----
 ### **getInstanceNbr**();
 ### Description:
 Returns an unsigned short integer value indicating the instantiation number it was given to the object. Each time the class is instantiated the created object receives a serial instantiation number that can be used in order to identify each object in case of need.
@@ -283,7 +250,7 @@ The unsigned short number indicating the identification Instance Number.
 ---
 ### **getMaxBlinkRate**();
 ### Description:
-Returns the maximum time the display can be configured to blink, helps keeping the blinkRate setters inside the accepted range.
+Returns the maximum time the display can be configured to blink, helps keeping the blinkRate setters inside the accepted range. The main concept behind this value is to keep the rythm at wich the display turns on and off as part of the information that it provides, and doesn't make it look like a display failure or any other kind of bug.  
 ### Parameters:  
 **None**  
 ### Return value:  
@@ -294,7 +261,7 @@ unsigned long integer: The maximum time, in milliseconds, the display can be set
 ---
 ### **getMinBlinkRate**();
 ### Description:
-Returns the minimum time the display can be configured to blink, helps keeping the BlinkRate setters inside the accepted range.
+Returns the minimum time the display can be configured to blink, helps keeping the BlinkRate setters inside the accepted range.The main concept behind this value is to keep the rythm at wich the display turns on and off as part of the information that it provides, and doesn't make it look like a display failure or any other kind of bug.  
 ### Parameters:  
 **None**  
 ### Return value:  
@@ -365,11 +332,11 @@ true: If the text could be represented.
 false: Otherwise, and the display will be blanked.
 
 ### Use example:  
-**`myLedDisp.print("Hi");`**  
-**`myLedDisp.print("Strt");`**  
-**`myLedDisp.print("L.O.L.");`**  
-**`myLedDisp.print("36.7*");`**  
-**`myLedDisp.print("....");`**  
+**`myLedDisp.print("Hi");`** //Valid for 2 or more digits displays  
+**`myLedDisp.print("Strt");`** //Valid for 4 or more digits displays  
+**`myLedDisp.print("L.O.L.");`**  //Valid for 3 or more digits displays  
+**`myLedDisp.print("36.70*");`** //Valid for 5 or more digits displays  
+**`myLedDisp.print("........");`**  //Valid for 8 digits displays
 
 ---
 ### **print**(int **value**(, bool **rgtAlgn**(, bool **zeroPad**)));
@@ -383,13 +350,13 @@ Displays an integer value as long as the length representation fits the availabl
 true: If the value could be represented.  
 false: Otherwise, and the display will be blanked.
 
-### Use example (on a 4-bits display):  
-**`myLedDisp.print(12);`** //Displays '**``12  ``**'  
-**`myLedDisp.print(12, true);`** //Displays '**``  12``**'  
-**`myLedDisp.print(12, true, true);`** //Displays '**``0012``**'    
-**`myLedDisp.print(-12);`** //Displays '**``-12``**'  
-**`myLedDisp.print(-12, true);`** //Displays '**``- 12``**'  
-**`myLedDisp.print(-12, true, true);`** //Displays '**``-012``**'    
+### Use example:  
+**`myLedDisp.print(12);`** //Displays '**``12  ``**' on a 4 digits display  
+**`myLedDisp.print(12, true);`** //Displays '**``  12``**' on a 4 digits display  
+**`myLedDisp.print(12, true, true);`** //Displays '**``0012``**' on a 4 digits display  
+**`myLedDisp.print(-12);`** //Displays '**``-12     ``**' on a 8 digits display  
+**`myLedDisp.print(-12, true);`** //Displays '**``-   12``**' on a 6 digits display  
+**`myLedDisp.print(-12, true, true);`** //Displays '**``-012``**' on a 4 digits display    
 
 ---
 ### **print**(double **value**, unsigned int **decPlaces**(, bool **rgtAlgn**(, bool **zeroPad**)));
@@ -454,8 +421,7 @@ None
 Changes the blinking mask that indicates which digits will be involved after a **`blink()`** method is invoked. Indicating true for a digit makes it blink when the method is called, indicating false makes it display steady independently of the others. The parameter is positional referenced to the display, and for ease of use the index numbers of the array indicate their position relative to the rightmost digit (blnkPort0). The mask might be reset to its original value (all digits set to blink) by using this method with all parameters set to **true** or by using the **`.resetBlinkMask()`** method.  
 
 ### Parameters:  
-**blnkPort[]**: array of booleans of length **dspDigits**, indexes are positional referenced to the display, indicating each one which digits must blink after a **`blink()`** method is invoked (true) or stay steady (false). The indexes valid range is 0 <= index <= (dspDigits-1), corresponding the [0] position withe the rightmost display port, the [1] position the second from the right and so on .  
- 
+**blnkPort[]**: array of booleans of length **dspDigits**, indexes are positional referenced to the display, indicating each one which digits must blink after a **`blink()`** method is invoked (true) or stay steady (false). The indexes valid range is 0 <= index <= (dspDigits-1), corresponding the [0] position withe the rightmost display port, the [1] position the second from the right and so on.  
 ### Return value:  
 None.  
 ### Use example:  
@@ -472,7 +438,6 @@ None.
 **`myLedDisp.setBlinkMask(tstMask);`**    //Sets the two central digits to blink.
 
 ---
-
 ### **setBlinkRate**(unsigned long **onRate**(,unsigned long **offRate**));
 ### Description:
 Changes the time parameters to use for the display blinking the contents it shows. The parameters change will take immediate effect, either if the display is already blinking or not, in the latter case the parameters will be the ones used when a **`blink()`** method is called without parameters. The blinking will be **symmetrical** if only one parameter is passed, **asymmetrical** if two different parameters are passed, meaning that the time the display shows the contents and the time the display is blank will be equal (symmetrical) or not (asymmetrical), depending of those two parameters. The blink rate set will be kept after a **`.noBlink()`** or new **`.blink()`** without parameters call is done, until it is modified with a new **`.setBlinkRate()`** call, or it is restarted by a **`.blink()`** with parameters. Note that to restart the blinking with a **`.blink()`** the service must first be stopped, as the method makes no changes if the blinking service was already running.  
@@ -489,7 +454,6 @@ false: One or more of the parameters passed were out of range. The rate change w
 **`myLedDisp.setBlinkRate(600, 3500);`** //Returns false and the display blinking rate stays without change.  
 
 ---
-
 ### **setDigitsOrder**(uint8_t* **newOrderPtr**);
 ### Description:
 As different 7 segments dynamic displays based on two 74HC595 are differently wired, some implement the leftmost display port as the LSb of the shift register driving the port selection, some implement it as the MSb. When more than one display modules are used it adds a new level of hardware implementation that differs from one supplier to the other. The library implements a mechanism to provide the instantiated object to relate the positions of the display ports to the bits of the selection byte through an array. The array has the size of the display instantiated, and each array elment is meant to hold the number of the bit that selects the corresponding port, being the first element of the array (array[0]) the corresponding to the leftmost display digit, array[1], the next to it's right and so on. The array is default defined in the constructor as (0, 1, 2,...) that is the most usual implementation found. If the order needs to be changed the `.setDigitsOrder()` method is the way to set a new mapping.
@@ -513,7 +477,7 @@ true: If the character passed is whitin the displayable characters range, and th
 false: The parameter passed was invalid, i.e. it was a non displayable character. In this case the character change will not be made.  
 ### Use example:  
 **`myLedDisp.setWaitRate('_');`** //Returns true and sets the wait character to '_'.  
-**`myLedDisp.setWaitRate('#');`** //Returns false and the display wait character stays without change.  
+**`myLedDisp.setWaitRate('#');`** //Error, returns false and the display wait character stays without change.  
 
 ---
 ### **setWaitRate**(unsigned long **newWaitRate**);
@@ -553,7 +517,7 @@ false: The display was already set to wait, and/or the parameter passed was out 
 ### Use example:  
 **`myLedDisp.wait();`** //Returns true and shows advancement animation to the already set value.  
 **`myLedDisp.wait(800);`** //Returns true and sets the advancement animation rate to 800 millisecs.  
-**`myLedDisp.wait(3000);`** //Returns false and the display stays without change.  
+**`myLedDisp.wait(getMaxBlinkRate() + 10);`** //Returns false and the display stays without change.  
 
 ---
 ### **write**(uint8_t **segments**, uint8_t **port**);
@@ -617,26 +581,11 @@ Class constructor, creates an instance of the class for each display to use. The
 **zeroPad:** Boolean, optional parameter (if not specified the default value, false, will be assumed), indicates if the heading free spaces of the integer right aligned displayed must be filled with zeros (true) or spaces (false). In the case of a negative integer the spaces or zeros will fill the gap between the '-' sign kept in the leftmost position, and the first digit.  
 **commAnode:** bool, indicates if the display uses common anode seven segment LED digits (**true** value, default to keep the implementation backwards compatible), or  common cathode kind (**false** value). The use of one kind or the other makes a difference in the fact that one is complementary of the other, meaning a translation must be done on the information sent to the display. Each display instantiated by the class might be independently set up as one kind or the other.  
 **dspDigits:** uint8_t (unsigned char), passes the number of digits in the instantiated display, the default value is 4, to keep the implementation backwards compatible.  
-
-
 ### Return value:  
-The object created.
-
+The object created.  
 ### Use example:  
 **`ClickCounter myClickCounter(6, 7, 10, true, true);`**  
 **`ClickCounter myClickCounter(6, 7, 10, true, true, true, 5);`**  // 5 digits common anode counter  
-
----
-### **countBegin**();
-### Description:
-Refer to **TM74HC595LedTube::begin()** method.
-### Parameters:  
-None
-### Return value:  
-Refer to **TM74HC595LedTube::begin()** method.
-
-### Use example:  
-**`myClickCounter.countBegin();`**  
 
 ---
 ### **blink**();
@@ -667,11 +616,11 @@ false: The display was already set to blink, and/or one or more of the parameter
 ---
 ### **countBegin**(int **startVal**);
 ### Description:
-Attaches the display to a timer interrupt service, as described in the **TM74HC595LedTube::begin()** method. The display then is started with the current count value represented according to the selected options of alignement and padding.
+Attaches the display to a timer interrupt service, as described in the **SevenSeg74HC595::begin()** method. The display then is started with the **startVal** count value, or **0** if no parameter is provided, represented according to the selected options of alignement and padding.
 ### Parameters:  
 startVal: Optional integer value at wich the counter starts which must be in the range (-1)*(pow(10, (dspDigits - 1)) - 1) <= startValue <= (pow(10, dspDigits) - 1).  
 ### Return value:  
-true: If the display could be attached to the ISR, or if the display was already attached to it, and the startValue was within the valid limits.  
+true: If the display could be attached to the ISR, or if the display was already attached to it, and the startValue was within the valid representable values range according to dspDigits.  
 false: If the display couldn't be attached to the ISR, due to lack of free slots, or the startValue was out of range.  
 ### Use example:  
 **`myClickCounter.countBegin();`**  
@@ -711,12 +660,11 @@ Restarts the count from the value provided as parameter. The display is updated 
 restartValue: Optional integer value, a value of 0 is set if no parameter is provided. The parameter must be in the range (-1)*(pow(10, (dspDigits - 1)) - 1) <= restartValue <= (pow(10, dspDigits) - 1).  
 ### Return value:  
 true: If the parameter value was within valid range. 
-false: If the parameter value was outside valid range. 
-
+false: If the parameter value was outside valid range.  
 ### Use example:  
 **`myClickCounter.countRestart();`**  //sets the counter to 0  
-**`myClickCounter.countRestart(-100);`**  //sets the counter to -100  
-**`myClickCounter.countRestart(10000);`**  //Returns false, the counter is not changed  
+**`myClickCounter.countRestart(-100);`**  //Sets the counter to -100 if the display is more than 3 digits long, false otherwise  
+**`myClickCounter.countRestart(10000);`**  //Returns false if the display is less than 5 digits long, the counter is not changed  
 
 ---
 ### **countStop**();
@@ -725,8 +673,7 @@ Refer to **TM74HC595LedTube::stop()** method.
 ### Parameters:  
 **None**  
 ### Return value:  
-Refer to **TM74HC595LedTube::stop()** method.
- 
+Refer to **TM74HC595LedTube::stop()** method.   
 ### Use example:  
 **`myClickCounter.countStop();`**  
 
@@ -754,9 +701,9 @@ qty: Optional integer value, its **absolute** value will be incremented in the c
 true: If the count could be incremented by the corresponding value without setting count out of range.  The counter value will be updated
 false: If the count couldn't be incremented by the parameter value without getting out of range. The counter will keep its current value.  
 ### Use example:  
-**`myClickCounter.countDown();`**  //Decrements the current count by 1  
-**`myClickCounter.countDown(2);`**  //Decrements the current count by 2  
-**`myClickCounter.countDown(-2);`**  //Decrements the current count by 2  
+**`myClickCounter.countUp();`**  //Increments the current count by 1  
+**`myClickCounter.countUp(2);`**  //Increments the current count by 2  
+**`myClickCounter.countUp(-2);`**  //Increments the current count by 2  
 
 ---
 ## **getCount()**;  
@@ -767,7 +714,7 @@ None.
 ### Return value:  
 The current value held by the counter, due to the 4 digits limitations, it will be in the range (-1)*(pow(10, (dspDigits - 1)) - 1) <= counter <= (pow(10, dspDigits) - 1)  
 ### Use example:  
-int finalCount = **`myClickCounter.getCount();`**  
+**`long finalCount = myClickCounter.getCount();`**  
 
 ---
 ## **getStartVal()**  
@@ -778,7 +725,7 @@ None.
 ### Return value:  
 The value to wich the counter was originally started, it will be in the range (-1)*(pow(10, (dspDigits - 1)) - 1) <= counter <= (pow(10, dspDigits) - 1)  
 ### Use example:  
-int countStarted = **`myClickCounter.getStartVal();`**  
+**`long countStarted = myClickCounter.getStartVal();`**  
 
 ---
 ### **noBlink**();
@@ -803,7 +750,6 @@ Refer to **TM74HC595LedTube::setBlinkRate()** method.
 ### Use example:  
 **`myClickCounter.setBlinkRate(400);`** //Returns true and sets the blinking rate to 400 millisecs on, 400 millisecs off (symmetrical blink).  
 **`myClickCounter.setBlinkRate(800, 200);`** //Returns true and sets the blinking rate to 800 millisecs on, 200 millisecs off (asymmetrical blink)  
-**`myClickCounter.setBlinkRate(3000);`** //Returns false and the display blinking rate stays without change.  
 **`myClickCounter.setBlinkRate(600, 3500);`** //Returns false and the display blinking rate stays without change.  
 
 ---
