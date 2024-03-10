@@ -27,6 +27,13 @@ This kind of displays need to be periodically refreshed, as it can actively turn
 
 The first mechanism frees the user from the load of calling the refreshing methods periodically, specially considering that long looping times (when executing **`for`**, **`while`** and **`do`** loops included), or the use of **`delay()`** could make the display flicker or simply stop until next refresh. The second option is given in the case that the timer/interrupt library used (see de dependencies information provided as it might be changed in a future) doesn't support the architecture being used by the developer, or too many displays are already attached to the ISR that makes the system unstable. In any case the library is capable of working in any platform, using one way when possible, or the other always.  
 
+Another class is implemented in this library: the _**ClickCounter**_ class, designed as a **subclass** of the TM74HC595 class.  
+The _inheritance_ relation between this two classes presented in this library are far from the optimal relation that must have been used, a Dependency might describe better the relation between these classes, but the porpouse of this implementation is to give the user not only the optimal version, but to illustrate some aspects of the inheritance, specially about the access to the attributes of the **superclass** by the **subclass**, in this case limiting the access to the _**`.wait()`**_ method and it's associated attributes as they make no sense in a clickcounter mechanism implemented by this class. If the developer using this library finds out he needs to use the `.wait()` method and the associated methods and attributes feel free to modify it's access.  
+Anyway, feel free to change the relation between those two classes at your own will. The change is implemented in the **SevenSegDisplays** library v3.0.0 and up ([text](https://github.com/GabyGold67/SevenSegDisplaysRTOSLib)).  
+
+This library is now in **Maintenance Stage**, no new features are planned, software and documentation bugs will be solved by requests if needed through the **Issues** mechanisms of the Github repository.  
+
+---  
 # **Included Methods for TM74HC595LedTube class**
 
 |Method | Parameters|

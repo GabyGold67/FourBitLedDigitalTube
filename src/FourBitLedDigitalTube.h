@@ -10,37 +10,37 @@ class TM74HC595LedTube {
     static bool _intRfrshSrvcStrtd;
 
 private:
-    uint8_t _waitChar  {0xBF};
+    uint8_t _waitChar {0xBF};
     uint8_t _waitCount {0};
-    bool _waiting{false};
-    unsigned long _waitRate{250};
-    unsigned long _waitTimer{0};
+    bool _waiting {false};
+    unsigned long _waitRate {250};
+    unsigned long _waitTimer {0};
 
 protected:
     uint8_t _sclk;
     uint8_t _rclk;
     uint8_t _dio;
-    bool _commAnode{true};
-    uint8_t _dspDigits{};
-    uint8_t* _digitPosPtr{nullptr};
-    uint8_t* _digitPtr{nullptr};
-    bool* _blinkMaskPtr{nullptr};
+    bool _commAnode {true};
+    uint8_t _dspDigits {};
+    uint8_t* _digitPosPtr {nullptr};
+    uint8_t* _digitPtr {nullptr};
+    bool* _blinkMaskPtr {nullptr};
 
-    long _dspValMax{};
-    long _dspValMin{};
+    long _dspValMax {};
+    long _dspValMin {};
     
-    const unsigned long _minBlinkRate{100};
-    const unsigned long _maxBlinkRate{2000};
+    const unsigned long _minBlinkRate {100};
+    const unsigned long _maxBlinkRate {2000};
     TM74HC595LedTube* _dispInstance;
-    uint8_t _dispInstNbr{0};
-    uint8_t _firstRefreshed{0};
-    bool _blinking{false};
-    bool _blinkShowOn{false};
-    unsigned long _blinkOffRate{500};
-    unsigned long _blinkOnRate{500};
-    unsigned long _blinkTimer{0};
+    uint8_t _dispInstNbr {0};
+    uint8_t _firstRefreshed {0};
+    bool _blinking {false};
+    bool _blinkShowOn {false};
+    unsigned long _blinkOffRate {500};
+    unsigned long _blinkOnRate {500};
+    unsigned long _blinkTimer {0};
 
-    String _charSet{"0123456789AabCcdEeFGHhIiJLlnOoPqrStUuY-_=~* ."}; // for using indexOf() method
+    String _charSet {"0123456789AabCcdEeFGHhIiJLlnOoPqrStUuY-_=~* ."}; // for using indexOf() method
     uint8_t _charLeds[45] = {
         0xC0, // 0
         0xF9, // 1
@@ -90,9 +90,9 @@ protected:
     };
     
     uint8_t _space {0xFF};
-    uint8_t _dot{0x7F};
-    String _zeroPadding{""};
-    String _spacePadding{""};
+    uint8_t _dot {0x7F};
+    String _zeroPadding {""};
+    String _spacePadding {""};
 
     void setAttrbts();
     void fastSend(uint8_t content);
@@ -145,11 +145,11 @@ public:
 
 class ClickCounter{
 private:
+    long _beginStartVal {0};
+    long _count {0};
+    bool _countRgthAlgn {true};
+    bool _countZeroPad {false};
     TM74HC595LedTube _display;
-    long _count{0};
-    long _beginStartVal{0};
-    bool _countRgthAlgn{true};
-    bool _countZeroPad{false};
 
 public:
     ClickCounter(uint8_t ccSclk, uint8_t ccRclk, uint8_t ccDio, bool rgthAlgn = true, bool zeroPad = false, bool commAnode = true, const uint8_t dspDigits = 4);

@@ -87,14 +87,12 @@ bool TM74HC595LedTube::blink(){
 
 bool TM74HC595LedTube::blink(const unsigned long &onRate, const unsigned long &offRate){
     bool result {false};
+    unsigned long newOffRate{offRate};
 
     if (!_blinking){
-        if (offRate == 0)
-            result = setBlinkRate(onRate, onRate);
-        else
-            result = setBlinkRate(onRate, offRate);
-        
-        if (result)
+        if (newOffRate == 0)
+            newOffRate = onRate;
+        if (setBlinkRate(onRate, newOffRate))
             result = blink();
     }
 
@@ -512,7 +510,7 @@ void TM74HC595LedTube::resetBlinkMask(){
 }
 
 void TM74HC595LedTube::send(const uint8_t &content){
-    //Sends the byte value (char <=> unsigned short int) to the 4 7-segment display bit by bit
+    //Sends the byte value (char <=> unsigned short int) to the 7-segment display bit by bit
     //by using the shiftOut() function. The time added (or not) to send it bit is unknown, so the total time
     //consumed to shift an entire byte is unknown, issue that must be considered when the method is invoked 
     //from an ISR and multiple times depending on the qty of displays being used
