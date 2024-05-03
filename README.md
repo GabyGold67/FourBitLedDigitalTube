@@ -54,6 +54,7 @@ This library is now in **Maintenance Stage**, no new features are planned, softw
 |**getInstanceNbr()**|None|
 |**getMaxBlinkRate()**|None|
 |**getMinBlinkRate()**|None|
+|**isBlank()**|None|
 |**isBlinking()**|None|
 |**isWaiting()**|None|
 |**noBlink()**|None|
@@ -275,6 +276,18 @@ Returns the minimum time the display can be configured to blink, helps keeping t
 unsigned long integer: The minimum time, in milliseconds, the display can be set to blink. This value is the minimum to set as the turned-on or the turned-off stage of the blinking process started by a **`.blink()`** method.  
 ### Use example:  
 **`myLedDisp.getMinBlinkRate();`**
+
+---
+### **isBlank**();
+### Description:
+Returns a boolean value indicating if the display is blank or not. The condition to be blank is that all the display ports are exhibiting the _space character, not to be confused with '\0'.  
+### Parameters:  
+**None**  
+### Return value:  
+true: All the display ports hold a _space value.    
+false: One or more of the display ports hold a value different to _space value.  
+### Use example:  
+**`myLedDisp.isBlank();`**
 
 ---
 ### **isBlinking**();

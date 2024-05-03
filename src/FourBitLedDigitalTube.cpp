@@ -314,6 +314,19 @@ void TM74HC595LedTube::intRefresh(){
     return;
 }
 
+bool TM74HC595LedTube::isBlank(){
+   uint8_t result{true};
+
+   for (int i{0}; i < _dspDigits; i++){
+      if(*(_digitPtr + i) != _space){
+         result = false;
+         break;
+      }
+   }
+
+   return result;
+}
+
 bool TM74HC595LedTube::isBlinking(){
 
     return _blinking;

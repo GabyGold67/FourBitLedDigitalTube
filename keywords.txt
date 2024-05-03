@@ -27,6 +27,7 @@ getDspValMin   KEYWORD2
 getInstanceNbr  KEYWORD2
 getMaxBlinkRate KEYWORD2
 getMinBlinkRate KEYWORD2
+isBlank  KEYWORD2
 isBlinking  KEYWORD2
 isWaiting   KEYWORD2
 noBlink     KEYWORD2

@@ -119,6 +119,15 @@ public:
     uint8_t getInstanceNbr();
     unsigned long getMaxBlinkRate();
     unsigned long getMinBlinkRate();
+    /**
+     * @brief Returns a value indicating if the display is blank
+     * 
+     * @retval true: all the display ports hold a _space value.  
+     * @retval false: one or more of the display ports hold a value different to _space value.  
+     * 
+     * @note The condition to be blank is that all the display ports are exhibiting the _space character, not to be confused with '\0'
+    */
+    bool isBlank();
     bool isBlinking();
     bool isWaiting();
     bool noBlink();
