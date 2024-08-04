@@ -840,9 +840,11 @@ bool ClickCounter::countDown(long qty){
     bool result {false};
     qty = abs(qty);
 
-    if((_count - qty) >= _display.getDspValMin()){
-        _count -= qty;
-        result = updDisplay();
+    if(qty != 0){
+        if((_count - qty) >= _display.getDspValMin()){
+            _count -= qty;
+            result = updDisplay();
+        }
     }
 
     return result;
@@ -871,12 +873,20 @@ bool ClickCounter::countStop(){
 
 bool ClickCounter::countToZero(long qty){
     bool result {false};
+    qty = abs(qty);
 
-    if (_count > 0)
-        result = countDown(qty);
-    else if (_count < 0)
-        result = countUp(qty);
-    
+	if(qty != 0){
+        if(_count != 0){
+			if(abs(_count) >= qty){
+				if(_count > 0)
+					_count -= qty;
+				else
+					_count += qty;
+				result = true;
+			}
+		}
+	}
+
     return result;
 }
 
@@ -884,9 +894,11 @@ bool ClickCounter::countUp(long qty){
     bool result {false};
     qty = abs(qty);
 
-    if((_count + qty) <= _display.getDspValMax()){
-        _count += qty;
-        result = updDisplay();
+    if(qty != 0){
+        if((_count + qty) <= _display.getDspValMax()){
+            _count += qty;
+            result = updDisplay();
+        }
     }
 
     return result;
