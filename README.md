@@ -20,6 +20,7 @@ Integers, floating point or strings they'll show as long as the display is capab
 ## Trustworthy representation basic checking:
 The representation of different data types in this kind of displays is limited, and many implementations of the libraries to drive them take arbitrary or personally biased decisions on how to handle the problem.
 The danger of misrepresenting values in the display are usually ignored so when a value can't be faithfully represented by the display, the data is rounded, floored, ceiled, sliced, characters are replaced by others or whatever criteria the developer defined. When trying to display the value __"90153"__ through a 4 digits  module, displaying __"9015"__ is no better (nor worse) than displaying __"0153"__, those are __misrepresentations__. This library returns a boolean value indicating if it was able to display a trustworthy representation of the value, as long as it is able to. If a trustworthy representation was not possible it will return a **false** value and blank the display.  
+
 ## Crossplatform:
 This kind of displays need to be periodically refreshed, as it can actively turn on only one digit at a time, so to keep all de digits visible the user must activate periodically each digit one by one independently to generate a "cinematic effect". The library takes care of this, and offers two solutions to do so.  
 * The first is to attach the refreshing methods to a timer interrupt service (ISR) of the microcontroller.  
@@ -30,6 +31,8 @@ The first mechanism frees the user from the load of calling the refreshing metho
 Another class is implemented in this library: the _**ClickCounter**_ class, designed as a **subclass** of the TM74HC595 class.  
 The _inheritance_ relation between this two classes presented in this library are far from the optimal relation that must have been used, a Dependency might describe better the relation between these classes, but the porpouse of this implementation is to give the user not only the optimal version, but to illustrate some aspects of the inheritance, specially about the access to the attributes of the **superclass** by the **subclass**, in this case limiting the access to the _**`.wait()`**_ method and it's associated attributes as they make no sense in a clickcounter mechanism implemented by this class. If the developer using this library finds out he needs to use the `.wait()` method and the associated methods and attributes feel free to modify it's access.  
 Anyway, feel free to change the relation between those two classes at your own will. The change is implemented in the **SevenSegDisplays** library v3.0.0 and up ([text](https://github.com/GabyGold67/SevenSegDisplaysRTOSLib)).  
+
+# Now includes on-line simulations for most of the example files ON-LINE (simulator provided by WOKWI.com)
 
 This library is now in **Maintenance Stage**, no new features are planned, software and documentation bugs will be solved by requests if needed through the **Issues** mechanisms of the Github repository.  
 

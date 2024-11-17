@@ -1,12 +1,15 @@
 /*
-  oneDisplaysExample.ino - Example file to demonstrate TM74HC595LedTube class use with a single display
+  oneDisplayExample.ino - Example file to demonstrate TM74HC595LedTube class use with a single display
   Created by Gabriel D. Goldman, May, 2023.
   Updated by Gabriel D. Goldman, October, 2023.
   Released into the public domain in accordance with "GPL-3.0-or-later" license terms.
+
+  WOKWI simulation available at: https://wokwi.com/projects/414740776518446081
 */
 #include <Arduino.h>
 #include <FourBitLedDigitalTube.h>
 
+// Pin connection for Display
 // Pin connected to DS of 74HC595 AKA DIO
 const uint8_t dio {A3}; // Pin A3 of Arduino Nano
 // Pin connected to ST_CP of 74HC595 AKA RCLK
@@ -46,21 +49,21 @@ void loop()
     // time to change the test
     testNum++;
     if (testNum == firstTest)
-      //Attaching the display refresh to an ISR trough the begin() method
+      // Attaching the display refresh to an ISR trough the begin() method
       myLedDisp.begin();
 
     switch (testNum)
     {
     case -5:
-      //print() with a string argument, two characters long, all characters included in the representable characters list
+      // print() with a string argument, two characters long, all characters included in the representable characters list
       testResult = myLedDisp.print("On");
       break;
     case -4:
-      //print() with a string argument, four characters long, all characters included in the representable characters list
+      // print() with a string argument, four characters long, all characters included in the representable characters list
       testResult = myLedDisp.print("Strt");
       break;
     case -3:
-      //print() with a string argument, fails to represent as it is 5 chars long (enough to fail), AND has a non-representable char included (!)
+      // print() with a string argument, FAILS to represent as it is 5 chars long (enough to fail), AND has a non-representable char included (!)
       testResult = myLedDisp.print("Hello!");
       break;
     case -2:
@@ -70,12 +73,12 @@ void loop()
       testResult = myLedDisp.print("teSt");
       break;
     case 0:
-      //print() with a string argument, four characters long AND usable dots, all characters included in the representable characters list
-      //Each valid character might be followed by a "." if needed, without being counted as a character, even spaces and special chars
+      // print() with a string argument, four characters long AND usable dots, all characters included in the representable characters list
+      // Each valid character might be followed by a "." if needed, without being counted as a character, even spaces and special chars
       testResult = myLedDisp.print("I.F.Y.I.");
       break;
     case 1:
-      //print() with a floating point argument, one decimal digit argument, ONE decimal digit place to display, no alignment specified
+      // print() with a floating point argument, one decimal digit argument, ONE decimal digit place to display, no alignment specified
       testResult = myLedDisp.print(2.3, 1);
       break;
     case 2:

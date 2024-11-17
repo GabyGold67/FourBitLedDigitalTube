@@ -3,11 +3,13 @@
   Created by Gabriel D. Goldman, May, 2023.
   Updated by Gabriel D. Goldman, October, 2023.
   Released into the public domain in accordance with "GPL-3.0-or-later" license terms.
+
+    WOKWI simulation available at: https://wokwi.com/projects/414743484710761473
 */
 #include <Arduino.h>
 #include <FourBitLedDigitalTube.h>
 
-//Pin connection for Display
+// Pin connection for Display
 // Pin connected to DS of 74HC595 AKA DIO
 const uint8_t dsp1Dio {2}; // Pin A3 of Arduino Nano
 // Pin connected to ST_CP of 74HC595 AKA RCLK

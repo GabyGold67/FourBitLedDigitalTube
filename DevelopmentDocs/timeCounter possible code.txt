@@ -1,0 +1,10 @@
+  myClickCounter.begin();
+  delay(250);
+
+  for (int i {0}; i < 100; i++){
+    testResultOne = myClickCounter.countUp();
+    delay(100);
+  }
+
+  delay(150);
+  myClickCounter.stop();
