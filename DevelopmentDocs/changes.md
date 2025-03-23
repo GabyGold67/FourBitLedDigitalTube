@@ -1,4 +1,9 @@
-# v2.3.1 Simulations added for example files and documentation corrections and updates
+# v2.4.0 Code simplification and display improvement
+- Several methods simplified for faster execution.  
+- Several methods simplified for easy code understanding.  
+- Order and times for driving display pins modified for better display latching and artifacts and ghosting avoidance.  
+
+# v2.3.1 On-line simulation added for example files, documentation corrections and updates
 - WOKWI simulation added for the following examples:
    - blinkExample (https://wokwi.com/projects/414743484710761473)
    - oneDisplayExample (https://wokwi.com/projects/414740776518446081)

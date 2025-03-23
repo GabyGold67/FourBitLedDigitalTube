@@ -32,7 +32,7 @@ Another class is implemented in this library: the _**ClickCounter**_ class, desi
 The _inheritance_ relation between this two classes presented in this library are far from the optimal relation that must have been used, a Dependency might describe better the relation between these classes, but the porpouse of this implementation is to give the user not only the optimal version, but to illustrate some aspects of the inheritance, specially about the access to the attributes of the **superclass** by the **subclass**, in this case limiting the access to the _**`.wait()`**_ method and it's associated attributes as they make no sense in a clickcounter mechanism implemented by this class. If the developer using this library finds out he needs to use the `.wait()` method and the associated methods and attributes feel free to modify it's access.  
 Anyway, feel free to change the relation between those two classes at your own will. The change is implemented in the **SevenSegDisplays** library v3.0.0 and up ([text](https://github.com/GabyGold67/SevenSegDisplaysRTOSLib)).  
 
-# Now includes on-line simulations for most of the example files ON-LINE (simulator provided by WOKWI.com)
+## Now includes on-line simulations for most of the example files (simulator provided by WOKWI.com)
 
 This library is now in **Maintenance Stage**, no new features are planned, software and documentation bugs will be solved by requests if needed through the **Issues** mechanisms of the Github repository.  
 
