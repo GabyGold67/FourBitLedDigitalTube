@@ -154,11 +154,11 @@ public:
 
 class ClickCounter{
 private:
+    TM74HC595LedTube _display;
     long _beginStartVal {0};
     long _count {0};
     bool _countRgthAlgn {true};
     bool _countZeroPad {false};
-    TM74HC595LedTube _display;
 
 public:
     ClickCounter(uint8_t ccSclk, uint8_t ccRclk, uint8_t ccDio, bool rgthAlgn = true, bool zeroPad = false, bool commAnode = true, const uint8_t dspDigits = 4);

@@ -2,6 +2,11 @@
 - Several methods simplified for faster execution.  
 - Several methods simplified for easy code understanding.  
 - Order and times for driving display pins modified for better display latching and artifacts and ghosting avoidance.  
+- `void send(const uint8_t &)` and `void send(const uint8_t &, const uint8_t &)` methods code replaced with the corresponding `void fastSend(uint8_t)` and `void fastSend(uint8_t, uint8_t)` methods code. Considerations:
+   - Not the `.send()`, nor the `.fastSend()` methods were removed for back compatibility reasons. In other versions of analog libraries I developed for other platforms the `.send()` name for the method was the one kept.
+   - The use of the `.send()` code was deprecated as it was based on the use of the `.shiftOut()` Arduino command, not compatible nor with direct replacement in other environments, and avoids the detailed management of the control lines timming of the 74HC595 chips.
+   
+
 
 # v2.3.1 On-line simulation added for example files, documentation corrections and updates
 - WOKWI simulation added for the following examples:
