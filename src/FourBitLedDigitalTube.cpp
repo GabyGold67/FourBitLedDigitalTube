@@ -100,7 +100,7 @@ bool TM74HC595LedTube::blink(const unsigned long &onRate, const unsigned long &o
 }
 
 void TM74HC595LedTube::clear(){
-   memset(_digitPtr, _space, _dspDigits);   // Checked OK
+   memset(_digitPtr, _space, _dspDigits);
 
    return;
 }
@@ -385,8 +385,12 @@ bool TM74HC595LedTube::print(String text){
    else 
       displayable = false;
    if (displayable) {
-      for (uint8_t i{0}; i < _dspDigits; ++i)
-         *(_digitPtr + i) = temp7SegData[i] & tempDpData[i];
+      for (uint8_t i{0}; i < _dspDigits; ++i){
+         if(_commAnode)
+            *(_digitPtr + i) = temp7SegData[i] & tempDpData[i];
+         else
+            *(_digitPtr + i) = temp7SegData[i] | tempDpData[i];
+      }
    }
 
    return displayable;
