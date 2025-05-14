@@ -12,11 +12,11 @@
 
 //Pin connection for Display
 // Pin connected to DS of 74HC595 AKA DIO
-const uint8_t dsp1Dio {2}; // Pin A3 of Arduino Nano
+const uint8_t dsp1Dio {A3}; // Pin A3 of Arduino Nano
 // Pin connected to ST_CP of 74HC595 AKA RCLK
-const uint8_t dsp1Rclk {3}; // Pin A4 of Arduino Nano
+const uint8_t dsp1Rclk {A4}; // Pin A4 of Arduino Nano
 // Pin connected to SH_CP of 74HC595 AKA SCLK
-const uint8_t dsp1Sclk {4}; // Pin A5 of Arduino Nano
+const uint8_t dsp1Sclk {A5}; // Pin A5 of Arduino Nano
 
 //Set of variables and constants needed just for Demo purposes
 
@@ -115,7 +115,7 @@ void loop()
   myLedDispOne.noBlink();
 
   //Stop and disengage the display from the ISR... and this is the end of the loop()
-  myLedDispOne.stop();
+  myLedDispOne.end();
   delay(1000);
  
 

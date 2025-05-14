@@ -14,9 +14,6 @@ TM74HC595LedTube::TM74HC595LedTube()
 TM74HC595LedTube::TM74HC595LedTube(uint8_t sclk, uint8_t rclk, uint8_t dio, bool commAnode, uint8_t dspDigits)
 :_sclk{sclk}, _rclk{rclk}, _dio{dio}, _commAnode{commAnode}, _dspDigits{dspDigits}, _digitPosPtr{new uint8_t[dspDigits]}, _digitPtr{new uint8_t[dspDigits]}, _blinkMaskPtr{new bool [dspDigits]}
 {
-   pinMode(_sclk, OUTPUT);
-   pinMode(_rclk, OUTPUT);
-   pinMode(_dio, OUTPUT);
    setAttrbts();
    clear();
 }
@@ -32,6 +29,10 @@ TM74HC595LedTube::~TM74HC595LedTube(){
 bool TM74HC595LedTube::begin(){
    bool result {false};
    int frstFreeSlot{-1};
+
+   pinMode(_sclk, OUTPUT);
+   pinMode(_rclk, OUTPUT);
+   pinMode(_dio, OUTPUT);
 
    if (!_intRfrshSrvcStrtd){   //Verify if the timer interrupt service was started 
       //Initialize the Interrupt timer
@@ -156,6 +157,38 @@ bool TM74HC595LedTube::doubleGauge(const int &levelLeft, const int &levelRight, 
    }
 
    return displayable;
+}
+
+bool TM74HC595LedTube::end() {
+   //This object's pointer will be deleted from the arrays of pointers. If the array has no more valid pointers the timer will be stopped to avoid loosing processing time.
+   bool pointersFound(false);
+   bool result {false};
+
+   for(uint8_t i {0}; i < _dspPtrArrLngth; i++){
+      if (*(_instancesLstPtr + i) == _dispInstance){
+         *(_instancesLstPtr + i) = nullptr;
+         result = true;
+      }
+      else if (*(_instancesLstPtr + i) != nullptr){
+         // There are still objects pointers in the vector, so the refresh display services must continue active
+         pointersFound = true;
+         if(result)
+            break;
+      }
+   }
+   if (!pointersFound){
+      //There are no more display instances active, there's no point in keeping the ISR active, the timer is stopped and the interrupt service detached
+      delete [] _instancesLstPtr;
+      _instancesLstPtr = nullptr;
+      
+      if(_intRfrshSrvcStrtd){   //if the timer still exists and is running, stop and delete
+         Timer1.stop();
+         Timer1.detachInterrupt();
+         _intRfrshSrvcStrtd = false;
+      }
+   }   
+
+   return result;
 }
 
 void TM74HC595LedTube::fastRefresh(){
@@ -638,35 +671,8 @@ bool TM74HC595LedTube::setWaitRate(const unsigned long &newWaitRate){
 }
 
 bool TM74HC595LedTube::stop() {
-   //This object's pointer will be deleted from the arrays of pointers. If the array has no more valid pointers the timer will be stopped to avoid loosing processing time.
-   bool pointersFound(false);
-   bool result {false};
 
-   for(uint8_t i {0}; i < _dspPtrArrLngth; i++){
-      if (*(_instancesLstPtr + i) == _dispInstance){
-         *(_instancesLstPtr + i) = nullptr;
-         result = true;
-      }
-      else if (*(_instancesLstPtr + i) != nullptr){
-         // There are still objects pointers in the vector, so the refresh display services must continue active
-         pointersFound = true;
-         if(result)
-            break;
-      }
-   }
-   if (!pointersFound){
-      //There are no more display instances active, there's no point in keeping the ISR active, the timer is stopped and the interrupt service detached
-      delete [] _instancesLstPtr;
-      _instancesLstPtr = nullptr;
-      
-      if(_intRfrshSrvcStrtd){   //if the timer still exists and is running, stop and delete
-         Timer1.stop();
-         Timer1.detachInterrupt();
-         _intRfrshSrvcStrtd = false;
-      }
-   }   
-
-   return result;
+   return end();
 }
 
 void TM74HC595LedTube::updBlinkState(){

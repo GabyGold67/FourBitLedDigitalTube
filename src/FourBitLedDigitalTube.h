@@ -109,6 +109,7 @@ public:
     bool blink(const unsigned long &onRate, const unsigned long &offRate = 0);
     void clear();
     bool doubleGauge(const int &levelLeft, const int &levelRight, char labelLeft = ' ', char labelRight = ' ');
+    bool end();
     void fastRefresh();
     void fastSend(const uint8_t &segments, const uint8_t &port);
     bool gauge(const int &level, char label = ' ');

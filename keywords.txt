@@ -18,6 +18,7 @@ begin       KEYWORD2
 blink       KEYWORD2
 clear	    KEYWORD2
 doubleGauge KEYWORD2
+end   KEYWORD2
 fastRefresh  KEYWORD2
 fastSend    KEYWORD2
 gauge       KEYWORD2

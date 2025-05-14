@@ -1,3 +1,7 @@
+# v2.5.0
+- `end()` method added as is the standard method name to complement the `begin()` method. The current `stop()` method is conserved to keep backwards compatibility.
+- Constructor and `begin()` methods modified according to **constructor definition best practices**.  
+
 # v2.4.1 Bug correction
 - Bug related to displaying dots in common cathode displays fixed.
 
